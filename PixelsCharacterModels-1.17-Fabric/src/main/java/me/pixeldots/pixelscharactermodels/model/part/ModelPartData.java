@@ -1,7 +1,10 @@
 package me.pixeldots.pixelscharactermodels.model.part;
 
+import com.google.gson.Gson;
+
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
 import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData.PresetPartData;
@@ -23,7 +26,7 @@ public class ModelPartData {
 	
 	public boolean meshEnabled = false;
 	public ObjectList<ModelPartMesh> meshes = new ObjectArrayList<ModelPartMesh>();
-	public ObjectList<ModelPart.Cuboid> cubes = new ObjectArrayList<ModelPart.Cuboid>();
+	public ObjectList<ModelPartCube> cubes = new ObjectArrayList<ModelPartCube>();
 	
 	public PlayerEntityModel<?> model = null;
 	public PlayerEntity entity = null;
@@ -46,6 +49,18 @@ public class ModelPartData {
 		this.pos = data.pos;
 		this.scale = data.scale;
 		this.rot = data.rot;
+	}
+	
+	public void fromJsonString(String s) {
+		ModelPartData data = new Gson().fromJson(s, ModelPartData.class);
+		this.pos = data.pos;
+		this.scale = data.scale;
+		this.Show = data.Show;
+	}
+	
+	public String toJsonString() {
+		String s = new Gson().toJson(this);
+		return s;
 	}
 	
 	public ModelPartData() {}

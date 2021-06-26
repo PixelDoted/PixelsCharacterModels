@@ -22,8 +22,10 @@ public class OptionsGui extends GuiHandler {
 	public TextFieldWidget AnimThreeID;
 	public TextFieldWidget AnimFourID;
 	public TextFieldWidget AnimFiveID;
+	
 	public ButtonWidget showNameTags;
 	public ButtonWidget sendUpdateMessages;
+	public ButtonWidget showArmor;
 	
 	public OptionsGui() {
 		super("Options");
@@ -59,6 +61,10 @@ public class OptionsGui extends GuiHandler {
 			PixelsCharacterModels.localData.showUpdateMessage = !PixelsCharacterModels.localData.showUpdateMessage;
 			button.setMessage(Text.of(PixelsCharacterModels.localData.showUpdateMessage ? "true" : "false"));
 		}));
+		showArmor = addButton(new ButtonWidget(85, 235, 50, 20, Text.of(PixelsCharacterModels.localData.showArmor ? "true" : "false"), (button) -> {
+			PixelsCharacterModels.localData.showArmor = !PixelsCharacterModels.localData.showArmor;
+			button.setMessage(Text.of(PixelsCharacterModels.localData.showArmor ? "true" : "false"));
+		}));
 		
 		AnimOneID.setText(PixelsCharacterModels.localData.AnimationIDOne);
 		AnimTwoID.setText(PixelsCharacterModels.localData.AnimationIDTwo);
@@ -93,6 +99,7 @@ public class OptionsGui extends GuiHandler {
 		
 		drawString(matrices, "show NameTags", 5, 185);
 		drawString(matrices, "show Messages", 5, 210);
+		drawString(matrices, "show Armor", 5, 235);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

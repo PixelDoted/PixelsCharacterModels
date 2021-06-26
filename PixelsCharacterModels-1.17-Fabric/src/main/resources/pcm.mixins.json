@@ -9,7 +9,8 @@
   	"PlayerEntityModelMixin",
   	"ModelPartMixin",
   	"HeldItemLayerMixin",
-  	"LivingEntityRendererMixin"
+  	"LivingEntityRendererMixin",
+  	"ArmorFeatureRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

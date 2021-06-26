@@ -35,6 +35,7 @@ public class AnimationGui extends GuiHandler {
 	public ButtonWidget removePlayerTransform;
 	
 	public String selectedAnimation = "";
+	public String selectedPart = "";
 	
 	public AnimationGui() {
 		super("Animation");
@@ -57,7 +58,7 @@ public class AnimationGui extends GuiHandler {
 		}));
 		Animation.active = false;
 		
-		String selectedPart = PixelsCharacterModels.GuiData.SelectedPart;
+		selectedPart = PixelsCharacterModels.GuiData.SelectedPart;
 		selectedAnimation = PixelsCharacterModels.GuiData.SelectedAnimation;
 		Parts = addButton(new ButtonWidget(120, 30, 50, 20, Text.of(selectedPart == "" ? PixelsCharacterModels.TranslatedText.Parts : selectedPart), (button) -> {
 			client.openScreen(new PartsGui(this));
@@ -110,7 +111,7 @@ public class AnimationGui extends GuiHandler {
 	}
 	
 	public void setRotation() {
-		if (PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel) == null) return;
+		if (!PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) return;
 		if (!PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
 			PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.put(PixelsCharacterModels.GuiData.SelectedPartModel, new MapVec3(0,0,0));
 		}
@@ -145,9 +146,13 @@ public class AnimationGui extends GuiHandler {
 	
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		if (selectedAnimation == "") drawString(matrices, "select an animation to show options", 240, 30, 16777215);
+		if (selectedAnimation == "") drawString(matrices, "select an animation to show transform options", 240, 30, 16777215);
+		else if (selectedPart == "") drawString(matrices, "select a part/limb to show rotation options", 240, 30, 16777215);
 		drawString(matrices, "Limb Rotation", 225, 85, 16777215);
 		drawString(matrices, "Player Transform", 335, 85, 16777215);
+		drawString(matrices, "X/Pitch", 185, 103);
+		drawString(matrices, "Y/Yaw", 190, 133);
+		drawString(matrices, "Z/Roll", 190, 163);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

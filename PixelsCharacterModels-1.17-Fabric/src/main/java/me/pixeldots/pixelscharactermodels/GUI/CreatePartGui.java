@@ -35,8 +35,8 @@ public class CreatePartGui extends GuiHandler {
 	public TextFieldWidget SizeY;
 	public TextFieldWidget SizeZ;
 	
-	public TextFieldWidget TextureWidth;
-	public TextFieldWidget TextureHeight;
+	public TextFieldWidget TextureOffsetX;
+	public TextFieldWidget TextureOffsetY;
 	
 	public ButtonWidget CreatePart;
 	
@@ -76,15 +76,15 @@ public class CreatePartGui extends GuiHandler {
 		SizeY = addTextField(new TextFieldWidget(textRendererGUI, 222, 135, 35, 20, Text.of("Size Y")));
 		SizeZ = addTextField(new TextFieldWidget(textRendererGUI, 259, 135, 35, 20, Text.of("Size Z")));
 		
-		TextureWidth = addTextField(new TextFieldWidget(textRendererGUI, 185, 160, 54, 20, Text.of("Texture Width")));
-		TextureHeight = addTextField(new TextFieldWidget(textRendererGUI, 241, 160, 53, 20, Text.of("Texture Height")));
+		TextureOffsetX = addTextField(new TextFieldWidget(textRendererGUI, 185, 160, 54, 20, Text.of("Texture Width")));
+		TextureOffsetY = addTextField(new TextFieldWidget(textRendererGUI, 241, 160, 53, 20, Text.of("Texture Height")));
 		
 		CreatePart = addButton(new ButtonWidget(200, 185, 75, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
 			GuiData data = PixelsCharacterModels.GuiData;
 			if (data.createPartData.mesh != "Cube") {
 				createPartHelper.createMesh(data.createPartData.mesh, data.createPartData.Position, data.createPartData.Size, data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText());
 			} else {
-				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, data.createPartData.UV, new MapVec2(), data.model, data.entity, data.SelectedPartModel, PartName.getText());
+				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText());
 			}
 			MinecraftClient.getInstance().openScreen(new PartsGui());
 		}));
@@ -119,11 +119,11 @@ public class CreatePartGui extends GuiHandler {
 			PixelsCharacterModels.GuiData.createPartData.Position.Z = Float.parseFloat(SizeZ.getText());
 		}
 		
-		if (isNumeric(TextureWidth.getText())) {
-			PixelsCharacterModels.GuiData.createPartData.UV.X = Float.parseFloat(TextureWidth.getText());
+		if (isNumeric(TextureOffsetX.getText())) {
+			PixelsCharacterModels.GuiData.createPartData.UV.X = Float.parseFloat(TextureOffsetX.getText());
 		}
-		if (isNumeric(TextureHeight.getText())) {
-			PixelsCharacterModels.GuiData.createPartData.UV.Y = Float.parseFloat(TextureHeight.getText());
+		if (isNumeric(TextureOffsetY.getText())) {
+			PixelsCharacterModels.GuiData.createPartData.UV.Y = Float.parseFloat(TextureOffsetY.getText());
 		}
 		
 		super.tick();
@@ -137,7 +137,7 @@ public class CreatePartGui extends GuiHandler {
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		drawString(matrices, "Position", 145, 110);
 		drawString(matrices, "Size", 163, 135);
-		drawString(matrices, "Texture Size", 119, 160);
+		drawString(matrices, "Texture Offset", 119, 160);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

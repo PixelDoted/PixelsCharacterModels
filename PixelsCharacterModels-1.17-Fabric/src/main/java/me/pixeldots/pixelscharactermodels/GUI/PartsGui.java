@@ -82,12 +82,12 @@ public class PartsGui extends GuiHandler {
 			SelectPart("RightLeg",5,PixelsCharacterModels.GuiData.model.rightLeg);
 		})));
 		
-		Create = addButton(new ButtonWidget(5, 100, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
-			//MinecraftClient.getInstance().openScreen(new CreatePartGui());
-		}));
-		Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
-			//RemovePart(PixelsCharacterModels.GuiData.SelectedPartModel);
-		}));
+		//Create = addButton(new ButtonWidget(5, 100, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
+		//	MinecraftClient.getInstance().openScreen(new CreatePartGui());
+		//}));
+		//Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
+		//	RemovePart(PixelsCharacterModels.GuiData.SelectedPartModel);
+		//}));
 		if (PixelsCharacterModels.GuiData.model != null) {
 			List<ModelPart> parts = ((PlayerModelAccessor)PixelsCharacterModels.GuiData.model).getParts();
 			for (int i = 0; i < parts.size(); i++) {

@@ -10,6 +10,7 @@ public class LocalData {
 	
 	public boolean showUpdateMessage = true;
 	public boolean showNameTags = true;
+	public boolean showArmor = true;
 	
 	/*public boolean Anim1isFrames = false;
 	public boolean Anim2isFrames = false;

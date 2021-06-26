@@ -20,7 +20,7 @@ public class LivingEntityRendererMixin {
 	@Inject(at = @At("HEAD"), method = "render")
 	public void render(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
 		if (livingEntity instanceof PlayerEntity) {
-			PixelsCharacterModels.Rendering.playerRenderHead((PlayerEntityModel<?>)((LivingEntityRenderer<?,?>)(Object)this).getModel(), (PlayerEntity)livingEntity);
+			PixelsCharacterModels.Rendering.playerRenderHead((PlayerEntityModel<?>)((LivingEntityRenderer<?,?>)(Object)this).getModel(), (PlayerEntity)livingEntity, (LivingEntityRenderer<?,?>)(Object)this);
 			PixelsCharacterModels.Rendering.currentPlayerRendering = ((PlayerEntity)livingEntity).getGameProfile();
 		}
 	}

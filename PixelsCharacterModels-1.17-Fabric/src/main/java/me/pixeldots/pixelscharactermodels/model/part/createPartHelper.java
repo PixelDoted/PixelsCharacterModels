@@ -1,17 +1,10 @@
 package me.pixeldots.pixelscharactermodels.model.part;
 
-import java.io.File;
-
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.mixins.ModelPartMixin;
 import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
-import me.pixeldots.pixelscharactermodels.utils.MapVecAny;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -51,8 +44,8 @@ public class createPartHelper {
 	}
 	
 	public static void createCuboid(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name) {
-		//ModelPartCube cube = new ModelPartCube(Math.round(textureOffset.X), Math.round(textureOffset.Y), Pos.X+(Size.X*-.5f), Pos.Y+(Size.Y*-1f), Pos.Z+(Size.Z*-.5f), (float)Size.X, (float)Size.Y, (float)Size.Z, 0, 0, 0, false, textureSize.X, textureSize.Y);
-		ModelPart.Cuboid cube = ModelPartBuilder.create().cuboid(name, Pos.X, Pos.Y, Pos.Z, Size.X, Size.Y, Size.Z).build().get(0).createCuboid(64, 64);
+		ModelPartCube cube = new ModelPartCube(Math.round(textureOffset.X), Math.round(textureOffset.Y), Pos.X+(Size.X*-.5f), Pos.Y+(Size.Y*-1f), Pos.Z+(Size.Z*-.5f), (float)Size.X, (float)Size.Y, (float)Size.Z, 0, 0, 0, false, textureSize.X, textureSize.Y);
+		//ModelPart.Cuboid cube = ModelPartBuilder.create().cuboid(name, Pos.X, Pos.Y, Pos.Z, Size.X, Size.Y, Size.Z).build().get(0).createCuboid(64, 64);
 		PixelsCharacterModels.dataPackets.get(parent).cubes.add(cube);
 	}
 }

@@ -12,8 +12,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import virtuoel.pehkui.api.ScaleData;
@@ -38,6 +36,7 @@ public class EditorGui extends GuiHandler {
 	public TextFieldWidget ScaleXField;
 	public TextFieldWidget ScaleYField;
 	public TextFieldWidget ScaleZField;
+	public ButtonWidget ShowButton;
 	
 	public EditorGui() {
 		super("Editor");
@@ -83,6 +82,11 @@ public class EditorGui extends GuiHandler {
 		ScaleYField = addTextField(new TextFieldWidget(textRendererGUI, 575, 160, 100, 20, Text.of("ScaleY")));
 		ScaleZField = addTextField(new TextFieldWidget(textRendererGUI, 575, 185, 100, 20, Text.of("ScaleZ")));
 		
+		ShowButton = addButton(new ButtonWidget(575, 210, 100, 20, Text.of("Showing"), (button) -> {
+			if (ShowButton.getMessage().asString() == "Showing") ShowButton.setMessage(Text.of("Hiding"));
+			else ShowButton.setMessage(Text.of("Showing"));
+		}));
+		
 		if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
 			PosXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.X));
 			PosYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Y));
@@ -91,6 +95,7 @@ public class EditorGui extends GuiHandler {
 			ScaleXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.X));
 			ScaleYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Y));
 			ScaleZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Z));
+			ShowButton.setMessage(Text.of(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).Show ? "Showing" : "Hiding"));
 		}
 		//drawEntity(575/2, 200, 30, 0f, 0f, PixelsCharacterModels.GuiData.entity);
 	}
@@ -140,13 +145,9 @@ public class EditorGui extends GuiHandler {
 	public void setPlayerLimbData() {
 		if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel);
-			if (isNumeric(PosXField.getText())) data.pos.X = Float.parseFloat(PosXField.getText());
-			if (isNumeric(PosYField.getText())) data.pos.Y = Float.parseFloat(PosYField.getText());
-			if (isNumeric(PosZField.getText())) data.pos.Z = Float.parseFloat(PosZField.getText());
-			
-			if (isNumeric(ScaleXField.getText())) data.scale.X = Float.parseFloat(ScaleXField.getText());
-			if (isNumeric(ScaleYField.getText())) data.scale.Y = Float.parseFloat(ScaleYField.getText());
-			if (isNumeric(ScaleZField.getText())) data.scale.Z = Float.parseFloat(ScaleZField.getText());
+			setModelPartScale(data);
+			setModelPartPos(data);
+			setModelPartVisible(data);
 		}
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
 			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
@@ -174,6 +175,46 @@ public class EditorGui extends GuiHandler {
 	
 	public boolean isNumeric(String s) {
 		return NumberUtils.isCreatable(s);
+	}
+	
+	public boolean setModelPartScale(ModelPartData data) {
+		boolean updated = false;
+		if (isNumeric(ScaleXField.getText())) {
+			if (data.scale.X != Float.parseFloat(ScaleXField.getText()))
+				data.scale.X = Float.parseFloat(ScaleXField.getText()); updated = true;
+		}
+		if (isNumeric(ScaleYField.getText())) { 
+			if (data.scale.Y != Float.parseFloat(ScaleYField.getText()))
+				data.scale.Y = Float.parseFloat(ScaleYField.getText()); updated = true;
+		}
+		if (isNumeric(ScaleZField.getText())) { 
+			if (data.scale.Z != Float.parseFloat(ScaleZField.getText()))
+				data.scale.Z = Float.parseFloat(ScaleZField.getText()); updated = true;
+		}
+		return updated;
+	}
+	
+	public boolean setModelPartPos(ModelPartData data) {
+		boolean updated = false;
+		if (isNumeric(PosXField.getText())) {
+			if (data.pos.X != Float.parseFloat(PosXField.getText()))
+				data.pos.X = Float.parseFloat(PosXField.getText()); updated = true;
+		}
+		if (isNumeric(PosYField.getText())) { 
+			if (data.pos.Y != Float.parseFloat(PosYField.getText()))
+				data.pos.Y = Float.parseFloat(PosYField.getText()); updated = true;
+		}
+		if (isNumeric(PosZField.getText())) { 
+			if (data.pos.Z != Float.parseFloat(PosZField.getText()))
+				data.pos.Z = Float.parseFloat(PosZField.getText()); updated = true;
+		}
+		return updated;
+	}
+	
+	public boolean setModelPartVisible(ModelPartData data) {
+		if (data.Show == (ShowButton.getMessage().asString() == "Showing" ? true : false)) return false;
+		data.Show = ShowButton.getMessage().asString() == "Showing" ? true : false;
+		return true;
 	}
 	
 }

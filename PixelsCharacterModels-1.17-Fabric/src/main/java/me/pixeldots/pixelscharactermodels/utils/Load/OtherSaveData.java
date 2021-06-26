@@ -31,12 +31,6 @@ public class OtherSaveData {
 	public List<Integer> Meshes = new ArrayList<Integer>();
 	public List<String> MeshNames = new ArrayList<String>();
 	public Map<String, Integer> MeshesfromName = Maps.newHashMap();
-
-	public OtherSaveData() {
-		System.out.println("Loading Data");
-		Load();
-		//getMeshes();
-	}
 	
 	public void Save() {
 		File folder = new File(path);
@@ -63,6 +57,7 @@ public class OtherSaveData {
 	}
 	
 	public void Load() {
+		System.out.println("Loading Data");
 		File folder = new File(path);
 		if (!(folder.exists())) return;
 		File[] files = folder.listFiles();

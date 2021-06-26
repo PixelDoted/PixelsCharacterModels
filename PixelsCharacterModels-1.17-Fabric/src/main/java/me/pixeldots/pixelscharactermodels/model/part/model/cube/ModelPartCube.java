@@ -1,10 +1,20 @@
 package me.pixeldots.pixelscharactermodels.model.part.model.cube;
 
+import java.io.File;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.texture.AbstractTexture;
+import net.minecraft.client.texture.MissingSprite;
+import net.minecraft.client.texture.PlayerSkinTexture;
+import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ChatUtil;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
@@ -70,7 +80,7 @@ public class ModelPartCube {
    }
    
    public void render(MatrixStack.Entry entry, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-       Matrix4f matrix4f = entry.getModel();
+	   Matrix4f matrix4f = entry.getModel();
        Matrix3f matrix3f = entry.getNormal();
        ModelCubeQuad[] var11 = this.sides;
        int var12 = var11.length;

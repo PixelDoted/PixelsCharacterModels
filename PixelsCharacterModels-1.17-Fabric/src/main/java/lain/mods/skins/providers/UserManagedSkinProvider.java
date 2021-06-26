@@ -9,6 +9,7 @@ import lain.mods.skins.impl.Shared;
 import lain.mods.skins.impl.SkinData;
 import lain.mods.skins.impl.fabric.ImageUtils;
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
@@ -36,11 +37,12 @@ public class UserManagedSkinProvider implements ISkinProvider {
             skin.setSkinFilter(_filter);
         SharedPool.execute(() -> {
             byte[] data = null;
+            String suffix = FabricOfflineSkins.skinSuffix;
             if (!Shared.isOfflinePlayer(profile.getPlayerID(), profile.getPlayerName()))
-                data = readFile(_dirU, "%s"+FabricOfflineSkins.skinSuffix+".png", profile.getPlayerID().toString().replaceAll("-", ""));
+                data = readFile(_dirU, "%s"+suffix+".png", profile.getPlayerID().toString().replaceAll("-", ""));
             if (data == null && !Shared.isBlank(profile.getPlayerName()))
-                data = readFile(_dirN, "%s"+FabricOfflineSkins.skinSuffix+".png", profile.getPlayerName());
-            if (data != null)
+                data = readFile(_dirN, "%s"+suffix+".png", profile.getPlayerName());
+            if (data != null)   
                 skin.put(data, ImageUtils.judgeSkinType(data));
         });
         return skin;
