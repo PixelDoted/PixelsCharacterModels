@@ -75,15 +75,19 @@ public class AnimationGui extends GuiHandler {
 					setRotation();
 				}));
 				removeRot = addButton(new ButtonWidget(225, 220, 100, 20, Text.of("Remove"), (button) -> {
-					if (PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-						PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.remove(PixelsCharacterModels.GuiData.SelectedPartModel);
+					if (PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+						PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.remove(PixelsCharacterModels.GuiData.SelectedPartModel);
 					}
 				}));
 				
-				if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-					RotXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).rot.X));
-					RotYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).rot.Y));
-					RotZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).rot.Z));
+				if (PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+					RotXField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).X));
+					RotYField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Y));
+					RotZField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Z));
+				} else {
+					RotXField.setText("0.0");
+					RotYField.setText("0.0");
+					RotZField.setText("0.0");
 				}
 			}
 			
@@ -94,15 +98,13 @@ public class AnimationGui extends GuiHandler {
 				setTransform();
 			}));
 			removePlayerTransform = addButton(new ButtonWidget(335, 220, 100, 20, Text.of("Remove"), (button) -> {
-				PixelsCharacterModels.animations.get(selectedAnimation).playerTransform = new MapVec3(0,0,0);
+				PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform = new MapVec3(0,0,0);
 			}));
+			
+			PlayerTransformXField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.X));
+			PlayerTransformYField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.Y));
+			PlayerTransformZField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.Z));
 		}
-		
-		/*if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-			RotXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).rot.X));
-			RotYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).rot.Y));
-			RotZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).rot.Z));
-		}*/
 	}
 	
 	@Override
@@ -112,32 +114,35 @@ public class AnimationGui extends GuiHandler {
 	
 	public void setRotation() {
 		if (!PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) return;
-		if (!PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-			PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.put(PixelsCharacterModels.GuiData.SelectedPartModel, new MapVec3(0,0,0));
+		if (!PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.contains(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.add(PixelsCharacterModels.GuiData.SelectedPartModel);
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.put(PixelsCharacterModels.GuiData.SelectedPartModel, new MapVec3(0,0,0));
 		}
 		if (isNumeric(RotXField.getText())) {
-			PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).X = Float.parseFloat(RotXField.getText());
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).X = Float.parseFloat(RotXField.getText());
 		}
 		if (isNumeric(RotYField.getText())) {
-			PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Y = Float.parseFloat(RotYField.getText());
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Y = Float.parseFloat(RotYField.getText());
 		}
 		if (isNumeric(RotZField.getText())) {
-			PixelsCharacterModels.animations.get(selectedAnimation).LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Z = Float.parseFloat(RotZField.getText());
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Z = Float.parseFloat(RotZField.getText());
 		}
-		PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).useRotation = true;
+		PixelsCharacterModels.PCMClient.writeAnimation(selectedAnimation, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+		//PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).useRotation = true;
 	}
 	
 	public void setTransform() {
 		String selectedAnimation = PixelsCharacterModels.GuiData.SelectedAnimation;
 		if (isNumeric(PlayerTransformXField.getText())) {
-			PixelsCharacterModels.animations.get(selectedAnimation).playerTransform.X = Float.parseFloat(PlayerTransformXField.getText());
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.X = Float.parseFloat(PlayerTransformXField.getText());
 		}
 		if (isNumeric(PlayerTransformYField.getText())) {
-			PixelsCharacterModels.animations.get(selectedAnimation).playerTransform.Y = Float.parseFloat(PlayerTransformYField.getText());
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.Y = Float.parseFloat(PlayerTransformYField.getText());
 		}
 		if (isNumeric(PlayerTransformZField.getText())) {
-			PixelsCharacterModels.animations.get(selectedAnimation).playerTransform.Z = Float.parseFloat(PlayerTransformZField.getText());
+			PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.Z = Float.parseFloat(PlayerTransformZField.getText());
 		}
+		PixelsCharacterModels.PCMClient.writeAnimation(selectedAnimation, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 	}
 	
 	public boolean isNumeric(String s) {

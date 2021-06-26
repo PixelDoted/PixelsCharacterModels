@@ -4,6 +4,8 @@ import java.io.File;
 
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
+import me.pixeldots.pixelscharactermodels.utils.data.AnimationData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -15,7 +17,10 @@ import virtuoel.pehkui.api.ScaleType;
 public class ClientHandler {
 	
 	public boolean isConnectedToWorld = false;
+	public PCMAnimation currentStoredAnimation = null;
+	
 	public int currentPreset = -1;
+	public int playingAnimation = -1;
 	
 	public void onDisconnect() {
 		PixelsCharacterModels.saveData.Save();
@@ -34,10 +39,8 @@ public class ClientHandler {
 		sendClientMessage("Loading Preset");
 		this.currentPreset = id;
 		boolean success = PixelsCharacterModels.PresetsData.loadPreset(id, entity, model);
-		if (PixelsCharacterModels.localData.showUpdateMessage) {
-			if (success == false) sendClientMessage("Failed to load Preset with file index: " + id);
-			else sendClientMessage("Success fully loaded preset");
-		}
+		if (success == false) sendClientMessage("Failed to load Preset with file index: " + id);
+		else sendClientMessage("Success fully loaded preset");
 	}
 	
 	public void writePreset(String name, PlayerEntity entity, PlayerEntityModel<?> model) {
@@ -58,6 +61,32 @@ public class ClientHandler {
 		else
 			sendClientMessage("Failed to Delete Preset");
 	}
+	
+	//Animation
+	public void LoadAnimation(int id, PlayerEntity entity, PlayerEntityModel<?> model) {
+		sendClientMessage("Loading Animation");
+		this.playingAnimation = id;
+		boolean success = PixelsCharacterModels.AnimationsData.loadAnimation(id, entity, model);
+		if (success == false) sendClientMessage("Failed to load Animation with file index: " + id);
+		else sendClientMessage("Success fully loaded Animation");
+	}
+	
+	public void writeAnimation(String name, PlayerEntity entity, PlayerEntityModel<?> model) {
+		if (this.currentStoredAnimation == null) return;
+		AnimationData data = this.currentStoredAnimation.convertToData(model);
+		System.out.println(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.size());
+		System.out.println(data.LimbIDs.size());
+		PixelsCharacterModels.AnimationsData.writeAnimationFile(data, name);
+	}
+	
+	public void DeleteAnimation(int id) {
+		File file = PixelsCharacterModels.AnimationsData.getAnimation(id);
+		if (file.delete()) 
+			sendClientMessage("Deleted Animation");
+		else
+			sendClientMessage("Failed to Delete Animation");
+	}
+	//Animation
 	
 	public void sendClientMessage(String message) {
 		if (PixelsCharacterModels.localData.showUpdateMessage)

@@ -50,21 +50,27 @@ public class RenderingHandler {
 			if (!isPartFromPlayer(part, data)) return;
 			if (data.Show == false) { info.cancel(); return; }
 			
-			if (data.useRotation) {
-				part.pitch = 0;
-				part.yaw = 0;
-				part.roll = 0;
-				data.useRotation = false;
-			}
-			if (PixelsCharacterModels.animations.containsKey(PixelsCharacterModels.playingAnimation)) {
-				PCMAnimation anim = PixelsCharacterModels.animations.get(PixelsCharacterModels.playingAnimation);
+			if (!data.useRotation && data.activeRotation) { data.useRotation = true; data.activeRotation = false; }
+			if (PixelsCharacterModels.playingAnimationData != null) {
+				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
 				if (anim.LimbRotations.containsKey(part)) {
 					data.useRotation = true;
+					data.activeRotation = true;
 					data.rot = anim.LimbRotations.get(part);
 					part.pitch = (float)Math.toRadians(data.rot.X);
 					part.yaw = (float)Math.toRadians(data.rot.Y);
 					part.roll = (float)Math.toRadians(data.rot.Z);
+				} else if (data.useRotation) {
+					part.pitch = 0;
+					part.yaw = 0;
+					part.roll = 0;
+					data.useRotation = false;
 				}
+			} else if (data.useRotation) {
+				part.pitch = 0;
+				part.yaw = 0;
+				part.roll = 0;
+				data.useRotation = false;
 			}
 			//Scale
 			if (data.scale.X <= 0) data.scale.X = 0.01f;
@@ -74,8 +80,8 @@ public class RenderingHandler {
 			matrices.scale(data.scale.X, data.scale.Y, data.scale.Z);
 			//Scale
 			MapVec3 animOffset = new MapVec3(0,0,0);
-			if (PixelsCharacterModels.animations.containsKey(PixelsCharacterModels.playingAnimation)) {
-				PCMAnimation anim = PixelsCharacterModels.animations.get(PixelsCharacterModels.playingAnimation);
+			if (PixelsCharacterModels.playingAnimationData != null) {
+				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
 				animOffset = anim.playerTransform;
 			}
 			matrices.translate(data.pos.X + animOffset.X, -data.pos.Y - animOffset.Y, -data.pos.Z - animOffset.Z);
@@ -112,8 +118,8 @@ public class RenderingHandler {
 			matrices.scale(1/data.scale.X, 1/data.scale.Y, 1/data.scale.Z);
 			//Scale
 			MapVec3 animOffset = new MapVec3(0,0,0);
-			if (PixelsCharacterModels.animations.containsKey(PixelsCharacterModels.playingAnimation)) {
-				PCMAnimation anim = PixelsCharacterModels.animations.get(PixelsCharacterModels.playingAnimation);
+			if (PixelsCharacterModels.playingAnimationData != null) {
+				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
 				animOffset = anim.playerTransform;
 			}
 			matrices.translate((-data.pos.X - animOffset.X)*data.scale.X, (data.pos.Y + animOffset.Y)*data.scale.Y, (data.pos.Z + animOffset.Z)*data.scale.Z);

@@ -63,7 +63,8 @@ public class AnimationsGui extends GuiHandler {
 		CreateAnimation = addButton(new ButtonWidget(120,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
 			if (AnimationName.getText().replace(" ", "") == "") MinecraftClient.getInstance().player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setAnimName), false);
 			else {
-				PixelsCharacterModels.animations.put(AnimationName.getText(), new PCMAnimation());
+				PixelsCharacterModels.PCMClient.currentStoredAnimation = new PCMAnimation(AnimationName.getText());
+				PixelsCharacterModels.PCMClient.writeAnimation(AnimationName.getText(), PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 				PixelsCharacterModels.GuiData.SelectedAnimation = AnimationName.getText();
 			}
 		}));
@@ -71,8 +72,8 @@ public class AnimationsGui extends GuiHandler {
 		
 		int Col = 1;
 		int Row = 1;
-		for (int i = 0; i < PixelsCharacterModels.animations.size(); i++) {
-			String key = (String) PixelsCharacterModels.animations.keySet().toArray()[i];
+		for (int i = 0; i < PixelsCharacterModels.AnimationsData.getAnimations().length; i++) {
+			String key = (String) PixelsCharacterModels.AnimationsData.getAnimations()[i].getName().replace(".json", "");
 			Animations.add(addButton(new ButtonWidget(200+(Row*55), 50+(Col*25), 50, 20, Text.of(key), (button) -> {
 				button.active = false;
 				SelectAnimation(key);
@@ -93,6 +94,7 @@ public class AnimationsGui extends GuiHandler {
 	
 	public void SelectAnimation(String name) {
 		PixelsCharacterModels.GuiData.SelectedAnimation = name;
+		PixelsCharacterModels.AnimationsData.loadAnimation(name, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		MinecraftClient.getInstance().openScreen(lastGui);
 	}
 	

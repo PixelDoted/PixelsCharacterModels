@@ -32,6 +32,8 @@ public class ModelPartData {
 	public PlayerEntity entity = null;
 	
 	public ModelPart copyFromPart = null;
+	//Other
+	public boolean activeRotation = false;
 	
 	public void setCopyFromPart(ModelPart part) {
 		if (copyFromPart == null) copyFromPart = part;

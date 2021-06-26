@@ -13,6 +13,7 @@ import me.pixeldots.pixelscharactermodels.model.LocalData;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
 import me.pixeldots.pixelscharactermodels.utils.TranslatedText;
+import me.pixeldots.pixelscharactermodels.utils.Load.AnimationsSaveData;
 import me.pixeldots.pixelscharactermodels.utils.Load.OtherSaveData;
 import me.pixeldots.pixelscharactermodels.utils.Load.PresetsSaveData;
 import net.fabricmc.api.ClientModInitializer;
@@ -30,6 +31,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static TranslatedText TranslatedText = new TranslatedText();
 	public static PlayerEntity thisPlayer = null;
 	
+	public static AnimationsSaveData AnimationsData = new AnimationsSaveData();
 	public static PresetsSaveData PresetsData = new PresetsSaveData();
 	public static OtherSaveData saveData = new OtherSaveData();
 	
@@ -37,7 +39,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static RenderingHandler Rendering = new RenderingHandler();
 	public static ClientHandler PCMClient = new ClientHandler();
 	
-	public static Map<String, PCMAnimation> animations = new HashMap<String, PCMAnimation>();
+	public static PCMAnimation playingAnimationData = null;
 	public static String playingAnimation = "";
 	
 	public static LocalData localData = new LocalData();
@@ -52,6 +54,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		client = MinecraftClient.getInstance();
 		saveData.Load();
 		PresetsData.Initialize();
+		AnimationsData.Initialize();
 		
 		KeyBindings.registerKeyBindings();
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
