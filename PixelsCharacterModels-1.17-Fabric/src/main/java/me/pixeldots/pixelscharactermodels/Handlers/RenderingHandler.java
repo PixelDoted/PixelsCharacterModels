@@ -37,6 +37,9 @@ public class RenderingHandler {
 	
 	public void playerRenderHead(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
 		if (!PixelsCharacterModels.EntityModelList.containsKey(entity)) PixelsCharacterModels.EntityModelList.put(entity, model);
+	}
+	
+	public void playerRenderTail(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
 		if (PixelsCharacterModels.dataPackets != null) {
 			setPlayerModelPartsData(model, entity);
 		}
@@ -46,7 +49,13 @@ public class RenderingHandler {
 		if (part == null) return;
 		if (PixelsCharacterModels.dataPackets.containsKey(part)) {
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
-			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
+			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) {
+				part.pitch = data.copyFromPart.pitch;
+				part.yaw = data.copyFromPart.yaw;
+				part.roll = data.copyFromPart.roll;
+				data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
+			}
+			
 			if (!isPartFromPlayer(part, data)) return;
 			if (data.Show == false) { info.cancel(); return; }
 			
@@ -57,9 +66,14 @@ public class RenderingHandler {
 					data.useRotation = true;
 					data.activeRotation = true;
 					data.rot = anim.LimbRotations.get(part);
-					part.pitch = (float)Math.toRadians(data.rot.X);
-					part.yaw = (float)Math.toRadians(data.rot.Y);
-					part.roll = (float)Math.toRadians(data.rot.Z);
+					if (data.rot != null) {
+						part.pitch = (float)Math.toRadians(data.rot.X);
+						part.yaw = (float)Math.toRadians(data.rot.Y);
+						part.roll = (float)Math.toRadians(data.rot.Z);
+					} else {
+						data.useRotation = false;
+						data.activeRotation = false;
+					}
 				} else if (data.useRotation) {
 					part.pitch = 0;
 					part.yaw = 0;

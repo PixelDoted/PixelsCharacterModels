@@ -75,8 +75,10 @@ public class AnimationGui extends GuiHandler {
 					setRotation();
 				}));
 				removeRot = addButton(new ButtonWidget(225, 220, 100, 20, Text.of("Remove"), (button) -> {
-					if (PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+					if (PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.contains(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+						PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.remove(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.indexOf(PixelsCharacterModels.GuiData.SelectedPartModel));
 						PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.remove(PixelsCharacterModels.GuiData.SelectedPartModel);
+						PixelsCharacterModels.PCMClient.writeAnimation(selectedAnimation, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 					}
 				}));
 				
@@ -99,6 +101,7 @@ public class AnimationGui extends GuiHandler {
 			}));
 			removePlayerTransform = addButton(new ButtonWidget(335, 220, 100, 20, Text.of("Remove"), (button) -> {
 				PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform = new MapVec3(0,0,0);
+				PixelsCharacterModels.PCMClient.writeAnimation(selectedAnimation, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 			}));
 			
 			PlayerTransformXField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.playerTransform.X));

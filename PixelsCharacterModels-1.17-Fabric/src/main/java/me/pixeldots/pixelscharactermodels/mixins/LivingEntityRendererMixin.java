@@ -18,10 +18,17 @@ import net.minecraft.entity.player.PlayerEntity;
 public class LivingEntityRendererMixin {
 	
 	@Inject(at = @At("HEAD"), method = "render")
-	public void render(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
+	public void renderHead(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
 		if (livingEntity instanceof PlayerEntity) {
 			PixelsCharacterModels.Rendering.playerRenderHead((PlayerEntityModel<?>)((LivingEntityRenderer<?,?>)(Object)this).getModel(), (PlayerEntity)livingEntity, (LivingEntityRenderer<?,?>)(Object)this);
 			PixelsCharacterModels.Rendering.currentPlayerRendering = ((PlayerEntity)livingEntity).getGameProfile();
+		}
+	}
+	
+	@Inject(at = @At("TAIL"), method = "render")
+	public void renderTail(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
+		if (livingEntity instanceof PlayerEntity) {
+			PixelsCharacterModels.Rendering.playerRenderTail((PlayerEntityModel<?>)((LivingEntityRenderer<?,?>)(Object)this).getModel(), (PlayerEntity)livingEntity, (LivingEntityRenderer<?,?>)(Object)this);
 		}
 	}
 	
