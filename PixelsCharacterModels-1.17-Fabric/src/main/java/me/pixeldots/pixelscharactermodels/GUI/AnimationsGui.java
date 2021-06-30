@@ -4,18 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.spongepowered.asm.mixin.Overwrite;
-
-import com.mojang.brigadier.arguments.FloatArgumentType;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
@@ -61,7 +56,7 @@ public class AnimationsGui extends GuiHandler {
 		}));
 		
 		CreateAnimation = addButton(new ButtonWidget(120,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
-			if (AnimationName.getText().replace(" ", "") == "") MinecraftClient.getInstance().player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setAnimName), false);
+			if (AnimationName.getText().replace(" ", "") == "") PixelsCharacterModels.client.player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setAnimName), false);
 			else {
 				PixelsCharacterModels.PCMClient.currentStoredAnimation = new PCMAnimation(AnimationName.getText());
 				PixelsCharacterModels.PCMClient.writeAnimation(AnimationName.getText(), PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);

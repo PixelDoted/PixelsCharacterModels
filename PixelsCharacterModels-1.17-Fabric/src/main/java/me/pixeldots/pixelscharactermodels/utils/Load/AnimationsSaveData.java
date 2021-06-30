@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.utils.data.AnimationData;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -26,7 +25,7 @@ public class AnimationsSaveData {
 	
 	public void Initialize() {
 		System.out.println("Checking Animations Folder");
-		AnimationsPath = AnimationsPath.replace("{mcdir}", MinecraftClient.getInstance().runDirectory.toString());
+		AnimationsPath = AnimationsPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
 		File folder = new File(AnimationsPath);
 		if (!folder.exists()) {
 			try {
@@ -60,9 +59,7 @@ public class AnimationsSaveData {
 			PixelsCharacterModels.PCMClient.currentStoredAnimation = data.convertToAnimation(player, model);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
+		} finally {
 			try { reader.close(); } catch (IOException e) { }
 		}
 		return true;

@@ -25,8 +25,11 @@ public class PresetsGui extends GuiHandler {
 	public ButtonWidget CreatePreset;
 	public ButtonWidget DeletePreset;
 	
+	public String update;
+	
 	public PresetsGui() {
 		super("Presets");
+		update = PixelsCharacterModels.checkForUpdate();
 	}
 	
 	@Override
@@ -106,6 +109,10 @@ public class PresetsGui extends GuiHandler {
 	
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		if (update != "") {
+			drawString(matrices, "Pixel's Character Models - Fabric", 5, this.height-30);
+			drawString(matrices, "has a new update available", 5, this.height-20);
+		}
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

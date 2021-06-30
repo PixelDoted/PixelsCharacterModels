@@ -1,11 +1,6 @@
 package me.pixeldots.offlinereload;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Paths;
-
-import com.google.common.io.Files;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 

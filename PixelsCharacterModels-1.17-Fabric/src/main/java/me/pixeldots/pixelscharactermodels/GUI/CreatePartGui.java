@@ -1,7 +1,6 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.spongepowered.asm.mixin.Overwrite;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
@@ -37,6 +36,8 @@ public class CreatePartGui extends GuiHandler {
 	
 	public TextFieldWidget TextureOffsetX;
 	public TextFieldWidget TextureOffsetY;
+	public TextFieldWidget TextureSizeX;
+	public TextFieldWidget TextureSizeY;
 	
 	public ButtonWidget CreatePart;
 	
@@ -84,7 +85,7 @@ public class CreatePartGui extends GuiHandler {
 			if (data.createPartData.mesh != "Cube") {
 				createPartHelper.createMesh(data.createPartData.mesh, data.createPartData.Position, data.createPartData.Size, data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText());
 			} else {
-				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText());
+				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText());
 			}
 			MinecraftClient.getInstance().openScreen(new PartsGui());
 		}));
@@ -110,13 +111,13 @@ public class CreatePartGui extends GuiHandler {
 		}
 		
 		if (isNumeric(SizeX.getText())) {
-			PixelsCharacterModels.GuiData.createPartData.Position.X = Float.parseFloat(SizeX.getText());
+			PixelsCharacterModels.GuiData.createPartData.Size.X = Float.parseFloat(SizeX.getText());
 		}
 		if (isNumeric(SizeY.getText())) {
-			PixelsCharacterModels.GuiData.createPartData.Position.Y = Float.parseFloat(SizeY.getText());
+			PixelsCharacterModels.GuiData.createPartData.Size.Y = Float.parseFloat(SizeY.getText());
 		}
 		if (isNumeric(SizeZ.getText())) {
-			PixelsCharacterModels.GuiData.createPartData.Position.Z = Float.parseFloat(SizeZ.getText());
+			PixelsCharacterModels.GuiData.createPartData.Size.Z = Float.parseFloat(SizeZ.getText());
 		}
 		
 		if (isNumeric(TextureOffsetX.getText())) {
@@ -137,7 +138,7 @@ public class CreatePartGui extends GuiHandler {
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		drawString(matrices, "Position", 145, 110);
 		drawString(matrices, "Size", 163, 135);
-		drawString(matrices, "Texture Offset", 119, 160);
+		drawString(matrices, "Texture Offset", 109, 160);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

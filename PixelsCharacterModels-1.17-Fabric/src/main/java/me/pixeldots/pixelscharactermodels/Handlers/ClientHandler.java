@@ -7,7 +7,6 @@ import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.utils.data.AnimationData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -90,7 +89,7 @@ public class ClientHandler {
 	
 	public void sendClientMessage(String message) {
 		if (PixelsCharacterModels.localData.showUpdateMessage)
-			MinecraftClient.getInstance().player.sendMessage(new LiteralText(message), false);
+			PixelsCharacterModels.client.player.sendMessage(new LiteralText(message), false);
 	}
 	
 }

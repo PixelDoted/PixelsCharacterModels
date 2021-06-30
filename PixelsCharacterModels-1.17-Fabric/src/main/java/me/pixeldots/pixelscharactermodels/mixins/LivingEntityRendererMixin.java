@@ -33,7 +33,7 @@ public class LivingEntityRendererMixin {
 	}
 	
 	@Inject(at = @At("HEAD"), method = "hasLabel", cancellable = true)
-	public void hasLabel(LivingEntity entity, CallbackInfoReturnable info) {
+	public void hasLabel(LivingEntity entity, CallbackInfoReturnable<Boolean> info) {
 		if (!PixelsCharacterModels.localData.showNameTags) info.setReturnValue(false);
 	}
 	

@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.spongepowered.asm.mixin.Overwrite;
-
-import com.mojang.brigadier.arguments.FloatArgumentType;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,8 +20,7 @@ public class MeshesGui extends GuiHandler {
 	public ButtonWidget Animation;
 	public ButtonWidget Frames;
 	
-	public ButtonWidget Create;
-	public ButtonWidget Remove;
+	public ButtonWidget BackButton;
 	
 	public List<ButtonWidget> Meshes = new ArrayList<ButtonWidget>();
 	public GuiHandler lastGui;
@@ -54,18 +49,33 @@ public class MeshesGui extends GuiHandler {
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
 			MinecraftClient.getInstance().openScreen(new FramesGui());
 		}));
+		if (lastGui != null) {
+			BackButton = addButton(new ButtonWidget(5, 55, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Back), (button) -> {
+				MinecraftClient.getInstance().openScreen(lastGui);
+			}));
+		}
 		
 		Meshes.add(addButton(new ButtonWidget(200, 50, 50, 20, Text.of("Cube"), (button) -> {
 			button.active = true;
 			SelectMesh("Cube");
 		})));
 		
-		/*for (int i = 0; i < PixelsCharacterModels.OtherSaveData.MeshNames.size(); i++) {
-			String name = PixelsCharacterModels.OtherSaveData.MeshNames.get(i);
-			Meshes.add(addButton(new ButtonWidget(200,50,50,20, Text.of(name), (button) -> {
-				button.active = true;
-				SelectMesh(name);
-			})));
+		/*File[] MeshFiles = PixelsCharacterModels.saveData.getMeshes();
+		int row = 1;
+		int col = 0;
+		if (MeshFiles != null) {
+			for (int i = 0; i < MeshFiles.length; i++) {
+				String name = MeshFiles[i].getName().replace(".obj", "");
+				Meshes.add(addButton(new ButtonWidget(200+(55*col),50+(25*row),50,20, Text.of(name), (button) -> {
+					button.active = true;
+					SelectMesh(name);
+				})));
+				row++;
+				if (row > 8) {
+					col++;
+					row = 0;
+				}
+			}
 		}*/
 		
 		for (int i = 0; i < Meshes.size(); i++) {

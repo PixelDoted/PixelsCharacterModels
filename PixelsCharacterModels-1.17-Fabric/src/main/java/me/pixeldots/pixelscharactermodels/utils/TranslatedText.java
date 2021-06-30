@@ -13,6 +13,7 @@ public class TranslatedText {
 	
 	public String Create = "Create";
 	public String Remove = "Remove";
+	public String Back = "Back";
 
 	public String ListSkins = "List All Skins";
 	//Chat Messages

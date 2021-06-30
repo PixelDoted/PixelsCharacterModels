@@ -164,13 +164,13 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void ListSkins() {
-		File[] files = new File(MinecraftClient.getInstance().runDirectory+"/cachedImages/skins").listFiles();
-		MinecraftClient.getInstance().player.sendMessage(new LiteralText("local skins >"), false);
+		File[] files = new File(PixelsCharacterModels.client.runDirectory+"/cachedImages/skins").listFiles();
+		PixelsCharacterModels.client.player.sendMessage(new LiteralText("local skins >"), false);
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory()) continue;
-			MinecraftClient.getInstance().player.sendMessage(new LiteralText(files[i].getName()), false);
+			PixelsCharacterModels.client.player.sendMessage(new LiteralText(files[i].getName()), false);
 		}
-		MinecraftClient.getInstance().player.sendMessage(new LiteralText("< local skins"), false);
+		PixelsCharacterModels.client.player.sendMessage(new LiteralText("< local skins"), false);
 	}
 	
 	public boolean isNumeric(String s) {

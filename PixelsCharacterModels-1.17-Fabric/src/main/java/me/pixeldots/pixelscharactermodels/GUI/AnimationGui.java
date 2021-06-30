@@ -1,7 +1,6 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.spongepowered.asm.mixin.Overwrite;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;

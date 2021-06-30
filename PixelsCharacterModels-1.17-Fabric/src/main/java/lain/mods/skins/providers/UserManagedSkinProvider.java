@@ -4,13 +4,10 @@ import lain.lib.SharedPool;
 import lain.mods.skins.api.interfaces.IPlayerProfile;
 import lain.mods.skins.api.interfaces.ISkin;
 import lain.mods.skins.api.interfaces.ISkinProvider;
-import lain.mods.skins.impl.PlayerProfile;
 import lain.mods.skins.impl.Shared;
 import lain.mods.skins.impl.SkinData;
 import lain.mods.skins.impl.fabric.ImageUtils;
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
 import java.nio.ByteBuffer;

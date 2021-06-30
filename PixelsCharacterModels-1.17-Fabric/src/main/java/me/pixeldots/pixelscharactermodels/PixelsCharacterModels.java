@@ -1,5 +1,10 @@
 package me.pixeldots.pixelscharactermodels;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +24,14 @@ import me.pixeldots.pixelscharactermodels.utils.Load.PresetsSaveData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PixelsCharacterModels implements ClientModInitializer {
+	
+	public static String modVersion = "1R Fabric";
 	
 	public static TranslatedText TranslatedText = new TranslatedText();
 	public static PlayerEntity thisPlayer = null;
@@ -52,7 +57,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public void onInitializeClient() {
 		System.out.println("(Pixel's Character Models) Initializing Client");
 		client = MinecraftClient.getInstance();
-		saveData.Load();
+		saveData.Initialize();
 		PresetsData.Initialize();
 		AnimationsData.Initialize();
 		
@@ -72,6 +77,30 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	public static void OpenGUI() {
 		MinecraftClient.getInstance().openScreen(new PresetsGui());
+	}
+	
+	public static String checkForUpdate() {
+		String s = "";
+		try {
+			URL tracker = new URL("https://raw.githubusercontent.com/PixelDoted/PixelsCharacterModels/main/PCM.Update");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(tracker.openStream()));
+			Object[] version = reader.lines().toArray();
+			for (int i = 0; i < version.length; i++) {
+				if (((String)version[i]).equalsIgnoreCase(modVersion.split(" ")[1] + ": ")) {
+					s = ((String)version[i]).split(": ")[1];
+					break;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("(Pixel's Character Models) Failed to collect version checker data");
+			System.out.println(e);
+			System.out.println("(Pixel's Character Models) Failed to collect version checker data");
+		}
+		String versionType = s.endsWith("B") ? "B" : "R";
+		if (modVersion.endsWith(versionType)) {
+			if (Float.parseFloat(modVersion.replace(versionType, "")) >= Float.parseFloat(s.replace(versionType, ""))) return "";
+		}
+		return s;
 	}
 
 }

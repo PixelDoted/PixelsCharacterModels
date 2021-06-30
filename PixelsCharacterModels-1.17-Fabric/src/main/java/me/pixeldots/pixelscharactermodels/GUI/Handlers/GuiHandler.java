@@ -1,13 +1,10 @@
 package me.pixeldots.pixelscharactermodels.GUI.Handlers;
 
-import java.util.Iterator;
 import java.util.List;
-
-import org.spongepowered.asm.mixin.Overwrite;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.client.MinecraftClient;
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,7 +20,7 @@ public class GuiHandler extends Screen {
 	
 	public GuiHandler(String title) {
 		super(Text.of(title));
-		textRendererGUI = MinecraftClient.getInstance().textRenderer;
+		textRendererGUI = PixelsCharacterModels.client.textRenderer;
 		buttons.clear();
 		TextFieldWidgets.clear();
 	}

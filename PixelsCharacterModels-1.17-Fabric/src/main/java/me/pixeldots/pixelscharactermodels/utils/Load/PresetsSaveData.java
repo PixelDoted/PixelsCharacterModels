@@ -14,8 +14,8 @@ import java.nio.file.Paths;
 
 import com.google.gson.Gson;
 
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -25,7 +25,7 @@ public class PresetsSaveData {
 	
 	public void Initialize() {
 		System.out.println("Checking Presets Folder");
-		PresetsPath = PresetsPath.replace("{mcdir}", MinecraftClient.getInstance().runDirectory.toString());
+		PresetsPath = PresetsPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
 		File folder = new File(PresetsPath);
 		if (!folder.exists()) {
 			try {
@@ -49,9 +49,7 @@ public class PresetsSaveData {
 			data.convertToModel(player, model);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
+		} finally {
 			try { reader.close(); } catch (IOException e) { }
 		}
 		return true;

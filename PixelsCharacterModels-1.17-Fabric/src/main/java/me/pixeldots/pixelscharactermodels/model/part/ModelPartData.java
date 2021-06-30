@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
 import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
+import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData.PresetPartData;
 import net.minecraft.client.model.ModelPart;
@@ -46,11 +47,21 @@ public class ModelPartData {
 		}
 	}
 	
-	public void copyData(PresetPartData data) {
+	public void copyData(PresetPartData data, ModelPart part) {
 		this.Show = data.Show;
 		this.pos = data.pos;
 		this.scale = data.scale;
 		this.rot = data.rot;
+		if (data.cubes != null) {
+			for (int i = 0; i < data.cubes.size(); i++) {
+				createPartHelper.createCuboid(data.cubes.get(i).pos, data.cubes.get(i).size, new MapVec3(0,0,0), new MapVec2(64, 64), data.cubes.get(i).uvOffset, part, "");
+			}
+		}
+		if (data.meshes != null) {
+			for (int i = 0; i < data.meshes.size(); i++) {
+				createPartHelper.createMesh(data.meshes.get(i).meshID, data.meshes.get(i).pos, data.meshes.get(i).size, new MapVec2(64, 64), model, entity, part, "");
+			}
+		}
 	}
 	
 	public void fromJsonString(String s) {

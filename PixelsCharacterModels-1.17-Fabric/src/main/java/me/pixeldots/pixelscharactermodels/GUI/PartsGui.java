@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.spongepowered.asm.mixin.Overwrite;
-
-import com.mojang.brigadier.arguments.FloatArgumentType;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.accessors.PlayerModelAccessor;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
@@ -28,6 +24,7 @@ public class PartsGui extends GuiHandler {
 	
 	public ButtonWidget Create;
 	public ButtonWidget Remove;
+	public ButtonWidget BackButton;
 	
 	public List<ButtonWidget> Parts = new ArrayList<ButtonWidget>();
 	public GuiHandler lastGui;
@@ -56,6 +53,11 @@ public class PartsGui extends GuiHandler {
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
 			MinecraftClient.getInstance().openScreen(new FramesGui());
 		}));
+		if (lastGui != null) {
+			BackButton = addButton(new ButtonWidget(5, 55, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Back), (button) -> {
+				MinecraftClient.getInstance().openScreen(lastGui);
+			}));
+		}
 		
 		Parts.add(addButton(new ButtonWidget(200, 50, 50, 20, Text.of("Head"), (button) -> {
 			button.active = false;
@@ -82,12 +84,12 @@ public class PartsGui extends GuiHandler {
 			SelectPart("RightLeg",5,PixelsCharacterModels.GuiData.model.rightLeg);
 		})));
 		
-		//Create = addButton(new ButtonWidget(5, 100, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
-		//	MinecraftClient.getInstance().openScreen(new CreatePartGui());
-		//}));
-		//Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
-		//	RemovePart(PixelsCharacterModels.GuiData.SelectedPartModel);
-		//}));
+		Create = addButton(new ButtonWidget(5, 100, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
+			MinecraftClient.getInstance().openScreen(new CreatePartGui());
+		}));
+		Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
+			RemovePart(PixelsCharacterModels.GuiData.SelectedPartModel);
+		}));
 		if (PixelsCharacterModels.GuiData.model != null) {
 			List<ModelPart> parts = ((PlayerModelAccessor)PixelsCharacterModels.GuiData.model).getParts();
 			for (int i = 0; i < parts.size(); i++) {

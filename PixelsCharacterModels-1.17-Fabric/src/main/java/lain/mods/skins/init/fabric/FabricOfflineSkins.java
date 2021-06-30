@@ -12,14 +12,12 @@ import lain.mods.skins.impl.fabric.CustomSkinTexture;
 import lain.mods.skins.impl.fabric.ImageUtils;
 import lain.mods.skins.providers.*;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.Handlers.KeyBindings;
 import me.pixeldots.offlinereload.SuffixCommand;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 import java.io.Writer;

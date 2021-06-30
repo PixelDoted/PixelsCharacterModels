@@ -5,6 +5,7 @@ import java.util.List;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
@@ -14,10 +15,10 @@ import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -26,10 +27,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Vector4f;
   
 public class RenderingHandler {
 	
@@ -110,6 +108,13 @@ public class RenderingHandler {
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
 			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
 			if (!isPartFromPlayer(part, data)) return;
+			
+			for (int i = 0; i < data.cubes.size(); i++) {
+				data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+			}
+			for (int i = 0; i < data.meshes.size(); i++) {
+				data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+			}
 		}
 	}
 	
@@ -162,6 +167,63 @@ public class RenderingHandler {
 		if (PixelsCharacterModels.dataPackets.containsKey(model.rightPants)) PixelsCharacterModels.dataPackets.get(model.rightPants).setCopyFromPart(model.rightLeg);
 		if (PixelsCharacterModels.dataPackets.containsKey(model.leftSleeve)) PixelsCharacterModels.dataPackets.get(model.leftSleeve).setCopyFromPart(model.leftArm);
 		if (PixelsCharacterModels.dataPackets.containsKey(model.rightSleeve)) PixelsCharacterModels.dataPackets.get(model.rightSleeve).setCopyFromPart(model.rightArm);
+	}
+	
+	public void drawTexturedCube(MatrixStack mst, float x, float y, float z, float w, float h, float d, PlayerEntity entity){
+		RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)entity).getSkinTexture());
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		
+		Tessellator tes = Tessellator.getInstance();
+		BufferBuilder buffer = tes.getBuffer();
+		Matrix4f m = mst.peek().getModel();
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(m, x + w, y, z).texture(1, 1).next();
+		buffer.vertex(m, x, y, z).texture(0, 1).next();
+		buffer.vertex(m, x, y + h, z).texture(0, 0).next();
+		buffer.vertex(m, x + w, y + h, z).texture(1, 0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
+
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(m, x, y, z + d).texture(1, 1).next();
+		buffer.vertex(m, x + w, y, z + d).texture(0, 1).next();
+		buffer.vertex(m, x + w, y + h, z + d).texture(0, 0).next();
+		buffer.vertex(m, x, y + h, z + d).texture(1, 0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
+
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(m, x + w, y, z + d).texture(1, 1).next();
+		buffer.vertex(m, x + w, y, z).texture(0, 1).next();
+		buffer.vertex(m, x + w, y + h, z).texture(0, 0).next();
+		buffer.vertex(m, x + w, y + h, z + d).texture(1, 0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
+
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(m, x, y, z).texture(1, 1).next();
+		buffer.vertex(m, x, y, z + d).texture(0, 1).next();
+		buffer.vertex(m, x, y + h, z + d).texture(0, 0).next();
+		buffer.vertex(m, x, y + h, z).texture(1, 0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
+
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(m, x + w, y, z).texture(1, 1).next();
+		buffer.vertex(m, x + w, y, z + d).texture(0, 1).next();
+		buffer.vertex(m, x, y, z + d).texture(0, 0).next();
+		buffer.vertex(m, x, y, z).texture(1, 0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
+
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+		buffer.vertex(m, x + w, y + h, z + d).texture(1, 1).next();
+		buffer.vertex(m, x + w, y + h, z).texture(0, 1).next();
+		buffer.vertex(m, x, y + h, z).texture(0, 0).next();
+		buffer.vertex(m, x, y + h, z + d).texture(1, 0).next();
+		buffer.end();
+		BufferRenderer.draw(buffer);
 	}
 
 }

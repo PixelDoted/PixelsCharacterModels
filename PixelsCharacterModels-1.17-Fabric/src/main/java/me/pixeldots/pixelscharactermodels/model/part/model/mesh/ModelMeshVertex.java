@@ -14,6 +14,10 @@ public class ModelMeshVertex {
 		this(new Vec3f(x, y, z), u, v);
 	}
 	
+	public ModelMeshVertex(float x, float y, float z, String u, String v) {
+		this(new Vec3f(x, y, z), Float.parseFloat(u), Float.parseFloat(v));
+	}
+	
 	public ModelMeshVertex remap(float u, float v) {
 		return new ModelMeshVertex(this.pos, u, v);
 	}

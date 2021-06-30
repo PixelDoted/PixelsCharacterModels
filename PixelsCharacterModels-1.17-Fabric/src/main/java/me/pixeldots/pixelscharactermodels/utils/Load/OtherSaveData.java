@@ -9,28 +9,33 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.model.LocalData;
+import me.pixeldots.pixelscharactermodels.utils.MapModelVectors;
 import net.minecraft.client.MinecraftClient;
 
 public class OtherSaveData {
 	
 	public String path = MinecraftClient.getInstance().runDirectory + "\\PCM";
-	public List<Integer> Meshes = new ArrayList<Integer>();
-	public List<String> MeshNames = new ArrayList<String>();
-	public Map<String, Integer> MeshesfromName = Maps.newHashMap();
+	
+	public void Initialize() {
+		Load();
+		System.out.println("Checking Models Folder");
+		File meshFolder = new File(path + "\\Models");
+		if (!meshFolder.exists()) {
+			try {
+				Files.createDirectories(Paths.get(meshFolder.getAbsolutePath()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public void Save() {
 		File folder = new File(path);
@@ -69,9 +74,7 @@ public class OtherSaveData {
 					formatData(reader);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}finally {
+				} finally {
 					try { reader.close(); } catch (IOException e) { }
 				}
 			}
@@ -89,23 +92,9 @@ public class OtherSaveData {
 		PixelsCharacterModels.localData = gson.fromJson(reader, LocalData.class);
 	}
 	//Mesh
-	public void getMeshes() {
+	public File[] getMeshes() {
 		File folder = new File(path + "\\Models");
-		if (!folder.exists()) {
-			try {
-				Files.createDirectories(Paths.get(folder.getAbsolutePath()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		File[] files = folder.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].getName().endsWith(".obj")) {
-				Meshes.add(i);
-				MeshesfromName.put(files[i].getName().replace(".obj", ""), i);
-				MeshNames.add(files[i].getName().replace(".obj", ""));
-			}
-		}
+		return folder.listFiles();
 	}
 	
 	public String ReadMesh(int id) {
@@ -128,53 +117,46 @@ public class OtherSaveData {
 		return s;
 	}
 	
-	public String ParseFile(Object[] text) {
-		String parsed = "";
-		String verts = "";
-		String faces = "";
-		String uvs = "";
-		String normals = "";
+	public MapModelVectors ParseFile(Object[] text) {
+		MapModelVectors parsed = new MapModelVectors();
 		for (int i = 0; i < text.length; i++) {
 			if (((String)text[i]).startsWith("v ")) {
 				String s = (String)text[i]; 
-				if (text.length - 1 > i) if (((String)text[i]).startsWith("v "))  s += ";";
-				verts += s; 
+				parsed.Vertices.add(s);
 			}
 			else if (((String)text[i]).startsWith("vt ")) { 
 				String s = (String)text[i]; 
-				if (text.length - 1 > i) if (((String)text[i]).startsWith("vt "))  s += ";";
-				uvs += s; 
+				parsed.VertexUVs.add(s);
 			}
 			else if (((String)text[i]).startsWith("vn ")) {
 				String s = (String)text[i];
-				if (text.length - 1 > i) if (((String)text[i]).startsWith("vn ")) s += ";";
-				normals += s;
+				parsed.VertexNormals.add(s);
 			}
 			else if (((String)text[i]).startsWith("f ")) { 
 				String s = (String)text[i]; 
-				if (text.length - 1 > i) if (((String)text[i]).startsWith("f "))  s += ";";
-				faces += s; 
+				parsed.Faces.add(s); 
 			}
  		}
-		parsed = verts + "#" + faces + "#" + uvs + "#" + normals;
 		return parsed;
 	}
 	
-	public String getMeshData(String name) {
-		String s = "";
-		if (name == "" || name == "cube") return s;
+	public MapModelVectors getMeshData(String name) {
+		if (name == "" || name == "cube") return null;
 		File folder = new File(path + "\\Models");
 		File[] files = folder.listFiles();
-		File file = files[MeshesfromName.get(name)];
 		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			s = ParseFile(reader.lines().toArray());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try { if (reader != null) reader.close(); } catch (IOException e) { }
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].getName().replace(".obj", "").startsWith(name)) {
+				try {
+					reader = new BufferedReader(new FileReader(files[i]));
+					return ParseFile(reader.lines().toArray());
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} finally {
+					try { if (reader != null) reader.close(); } catch (IOException e) { }
+				}
+			}
 		}
-		return s;
+		return null;
 	}
 }

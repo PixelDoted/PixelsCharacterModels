@@ -1,5 +1,7 @@
 package me.pixeldots.pixelscharactermodels.utils;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 public class MapVecAny {
 
 	public float[] nums;
@@ -11,7 +13,7 @@ public class MapVecAny {
 	public MapVecAny(String[] nums) {
 		float[] n = new float[nums.length];
 		for (int i = 0; i < nums.length; i++) {
-			n[i] = Float.parseFloat(nums[i]);
+			if (isNumeric(nums[i])) n[i] = Float.parseFloat(nums[i]);
 		}
 		this.nums = n;
 	}
@@ -30,6 +32,10 @@ public class MapVecAny {
 			nums[i] -= values[i];
 		}
 		return this;
+	}
+	
+	public boolean isNumeric(String s) {
+		return NumberUtils.isCreatable(s);
 	}
 	
 }
