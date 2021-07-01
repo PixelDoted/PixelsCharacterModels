@@ -60,7 +60,7 @@ public class EditorGui extends GuiHandler {
 		Editor.active = false;
 		
 		int selectedPart = PixelsCharacterModels.GuiData.SelectedPartID;
-		Parts = addButton(new ButtonWidget(575, 5, 100, 20, Text.of(PixelsCharacterModels.TranslatedText.Parts), (button) -> {
+		Parts = addButton(new ButtonWidget(this.width-108, 5, 100, 20, Text.of(PixelsCharacterModels.TranslatedText.Parts), (button) -> {
 			client.openScreen(new PartsGui(this));
 		}));
 		if (selectedPart > -1) Parts.setMessage(Text.of(PixelsCharacterModels.GuiData.SelectedPart)); 
@@ -74,15 +74,15 @@ public class EditorGui extends GuiHandler {
 			ListSkins();
 		}));
 		
-		PosXField = addTextField(new TextFieldWidget(textRendererGUI, 575, 45, 100, 20, Text.of("PositionX")));
-		PosYField = addTextField(new TextFieldWidget(textRendererGUI, 575, 70, 100, 20, Text.of("PositionY")));
-		PosZField = addTextField(new TextFieldWidget(textRendererGUI, 575, 95, 100, 20, Text.of("PositionZ")));
+		PosXField = addTextField(new TextFieldWidget(textRendererGUI, this.width-108, 45, 100, 20, Text.of("PositionX")));
+		PosYField = addTextField(new TextFieldWidget(textRendererGUI, this.width-108, 70, 100, 20, Text.of("PositionY")));
+		PosZField = addTextField(new TextFieldWidget(textRendererGUI, this.width-108, 95, 100, 20, Text.of("PositionZ")));
 		
-		ScaleXField = addTextField(new TextFieldWidget(textRendererGUI, 575, 135, 100, 20, Text.of("ScaleX")));
-		ScaleYField = addTextField(new TextFieldWidget(textRendererGUI, 575, 160, 100, 20, Text.of("ScaleY")));
-		ScaleZField = addTextField(new TextFieldWidget(textRendererGUI, 575, 185, 100, 20, Text.of("ScaleZ")));
+		ScaleXField = addTextField(new TextFieldWidget(textRendererGUI, this.width-108, 135, 100, 20, Text.of("ScaleX")));
+		ScaleYField = addTextField(new TextFieldWidget(textRendererGUI, this.width-108, 160, 100, 20, Text.of("ScaleY")));
+		ScaleZField = addTextField(new TextFieldWidget(textRendererGUI, this.width-108, 185, 100, 20, Text.of("ScaleZ")));
 		
-		ShowButton = addButton(new ButtonWidget(575, 210, 100, 20, Text.of("Showing"), (button) -> {
+		ShowButton = addButton(new ButtonWidget(this.width-108, 210, 100, 20, Text.of("Showing"), (button) -> {
 			if (ShowButton.getMessage().asString() == "Showing") ShowButton.setMessage(Text.of("Hiding"));
 			else ShowButton.setMessage(Text.of("Showing"));
 		}));
@@ -105,15 +105,15 @@ public class EditorGui extends GuiHandler {
 		drawString(matrices, "Global Scale", 5, 63, 16777215);
 		drawString(matrices, "Skin Suffix", 5, 93, 16777215);
 		
-		drawString(matrices, "Position", 565, 25, 16777215);
-		drawString(matrices, "X", 565, 45, 16777215);
-		drawString(matrices, "Y", 565, 70, 16777215);
-		drawString(matrices, "Z", 565, 95, 16777215);
+		drawString(matrices, "Position", this.width-118, 25, 16777215);
+		drawString(matrices, "X", this.width-118, 45, 16777215);
+		drawString(matrices, "Y", this.width-118, 70, 16777215);
+		drawString(matrices, "Z", this.width-118, 95, 16777215);
 		
-		drawString(matrices, "Scale", 565, 115, 16777215);
-		drawString(matrices, "X", 565, 135, 16777215);
-		drawString(matrices, "Y", 565, 160, 16777215);
-		drawString(matrices, "Z", 565, 185, 16777215);
+		drawString(matrices, "Scale", this.width-118, 115, 16777215);
+		drawString(matrices, "X", this.width-118, 135, 16777215);
+		drawString(matrices, "Y", this.width-118, 160, 16777215);
+		drawString(matrices, "Z", this.width-118, 185, 16777215);
 		drawString(matrices, "Preset: " + PixelsCharacterModels.GuiData.SelectedPresetName, 120, 5);
 		super.render(matrices, mouseX, mouseY, delta);
 	}

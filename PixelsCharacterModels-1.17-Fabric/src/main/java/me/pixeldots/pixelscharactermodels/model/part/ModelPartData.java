@@ -52,14 +52,18 @@ public class ModelPartData {
 		this.pos = data.pos;
 		this.scale = data.scale;
 		this.rot = data.rot;
+		
+		this.cubes.clear();
+		this.meshes.clear();
+		
 		if (data.cubes != null) {
 			for (int i = 0; i < data.cubes.size(); i++) {
-				createPartHelper.createCuboid(data.cubes.get(i).pos, data.cubes.get(i).size, new MapVec3(0,0,0), new MapVec2(64, 64), data.cubes.get(i).uvOffset, part, "");
+				createPartHelper.createCuboid(data.cubes.get(i).pos, data.cubes.get(i).size, new MapVec3(0,0,0), new MapVec2(64, 64), data.cubes.get(i).uvOffset, part, data.cubes.get(i).name);
 			}
 		}
 		if (data.meshes != null) {
 			for (int i = 0; i < data.meshes.size(); i++) {
-				createPartHelper.createMesh(data.meshes.get(i).meshID, data.meshes.get(i).pos, data.meshes.get(i).size, new MapVec2(64, 64), model, entity, part, "");
+				createPartHelper.createMesh(data.meshes.get(i).meshID, data.meshes.get(i).pos, data.meshes.get(i).size, new MapVec2(64, 64), model, entity, part, data.cubes.get(i).name);
 			}
 		}
 	}

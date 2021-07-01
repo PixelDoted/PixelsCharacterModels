@@ -29,6 +29,9 @@ public class PartsGui extends GuiHandler {
 	public List<ButtonWidget> Parts = new ArrayList<ButtonWidget>();
 	public GuiHandler lastGui;
 	
+	public int PartModelID = 0;
+	public boolean PartModelisMesh = false;
+	
 	public PartsGui() {
 		super("Parts");
 	}
@@ -59,27 +62,27 @@ public class PartsGui extends GuiHandler {
 			}));
 		}
 		
-		Parts.add(addButton(new ButtonWidget(200, 50, 50, 20, Text.of("Head"), (button) -> {
+		Parts.add(addButton(new ButtonWidget(125, 5, 50, 20, Text.of("Head"), (button) -> {
 			button.active = false;
 			SelectPart("Head",0,PixelsCharacterModels.GuiData.model.head);
 		})));
-		Parts.add(addButton(new ButtonWidget(200, 80, 50, 20, Text.of("Body"), (button) -> {
+		Parts.add(addButton(new ButtonWidget(125, 30, 50, 20, Text.of("Body"), (button) -> {
 			button.active = false;
 			SelectPart("Body",1,PixelsCharacterModels.GuiData.model.body);
 		})));
-		Parts.add(addButton(new ButtonWidget(200, 120, 50, 20, Text.of("LeftArm"), (button) -> {
+		Parts.add(addButton(new ButtonWidget(125, 55, 50, 20, Text.of("LeftArm"), (button) -> {
 			button.active = false;
 			SelectPart("LeftArm",2,PixelsCharacterModels.GuiData.model.leftArm);
 		})));
-		Parts.add(addButton(new ButtonWidget(200, 150, 50, 20, Text.of("RightArm"), (button) -> {
+		Parts.add(addButton(new ButtonWidget(125, 80, 50, 20, Text.of("RightArm"), (button) -> {
 			button.active = false;
 			SelectPart("RightArm",3,PixelsCharacterModels.GuiData.model.rightArm);
 		})));
-		Parts.add(addButton(new ButtonWidget(200, 180, 50, 20, Text.of("LeftLeg"), (button) -> {
+		Parts.add(addButton(new ButtonWidget(125, 105, 50, 20, Text.of("LeftLeg"), (button) -> {
 			button.active = false;
 			SelectPart("LeftLeg",4,PixelsCharacterModels.GuiData.model.leftLeg);
 		})));
-		Parts.add(addButton(new ButtonWidget(200, 210, 50, 20, Text.of("RightLeg"), (button) -> {
+		Parts.add(addButton(new ButtonWidget(125, 130, 50, 20, Text.of("RightLeg"), (button) -> {
 			button.active = false;
 			SelectPart("RightLeg",5,PixelsCharacterModels.GuiData.model.rightLeg);
 		})));
@@ -88,20 +91,34 @@ public class PartsGui extends GuiHandler {
 			MinecraftClient.getInstance().openScreen(new CreatePartGui());
 		}));
 		Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
-			RemovePart(PixelsCharacterModels.GuiData.SelectedPartModel);
+			RemovePart();
 		}));
-		if (PixelsCharacterModels.GuiData.model != null) {
-			List<ModelPart> parts = ((PlayerModelAccessor)PixelsCharacterModels.GuiData.model).getParts();
-			for (int i = 0; i < parts.size(); i++) {
-				ModelPartData part = PixelsCharacterModels.dataPackets.get(parts.get(i));
-				if (part != null) {	
-					if (part.name != "") {
-						int num = i;
-						Parts.add(addButton(new ButtonWidget(200, 240, 50, 20, Text.of(part.name), (button) -> {
-							button.active = false;
-							SelectPart(part.name, 6+num, parts.get(num));
-						})));
-					}
+		if (PixelsCharacterModels.GuiData.SelectedPartModel != null) {
+			ModelPartData data = PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel);
+			int col = 0;
+			int row = 0;
+			for (int i = 0; i < data.cubes.size(); i++) {
+				int num = i;
+				Parts.add(addButton(new ButtonWidget(200+(55*col), 5+(25*row), 50, 20, Text.of(data.cubes.get(i).name), (button) -> {
+					button.active = false;
+					SelectPartModel(data.cubes.get(num).name, num, false);
+				})));
+				row++;
+				if (row >= 8) {
+					col++;
+					row = 0;
+				}
+			}
+			for (int i = 0; i < data.meshes.size(); i++) {
+				int num = i;
+				Parts.add(addButton(new ButtonWidget(200+(55*col), 5+(25*row), 50, 20, Text.of(data.meshes.get(i).name), (button) -> {
+					button.active = false;
+					SelectPartModel(data.meshes.get(num).name, num, true);
+				})));
+				row++;
+				if (row >= 8) {
+					col++;
+					row = 0;
 				}
 			}
 		}
@@ -117,8 +134,15 @@ public class PartsGui extends GuiHandler {
 		PixelsCharacterModels.GuiData.SelectedPartModel = part;
 		MinecraftClient.getInstance().openScreen(lastGui);
 	}
-	public void RemovePart(ModelPart part) {
-		
+	
+	public void SelectPartModel(String name, int id, boolean isMesh) {
+		PartModelID = id;
+		PartModelisMesh = isMesh;
+	}
+	public void RemovePart() {
+		if (PartModelisMesh) PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
+		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
+		MinecraftClient.getInstance().openScreen(new PartsGui(lastGui));
 	}
 	
 	@Override

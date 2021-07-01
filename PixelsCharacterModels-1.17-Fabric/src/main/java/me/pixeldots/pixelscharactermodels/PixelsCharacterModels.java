@@ -1,9 +1,7 @@
 package me.pixeldots.pixelscharactermodels;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +22,16 @@ import me.pixeldots.pixelscharactermodels.utils.Load.PresetsSaveData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.crash.CrashReport;
 
 public class PixelsCharacterModels implements ClientModInitializer {
 	
-	public static String modVersion = "1R Fabric";
+	public static String modVersion = "3B";
 	
 	public static TranslatedText TranslatedText = new TranslatedText();
 	public static PlayerEntity thisPlayer = null;
@@ -55,6 +55,11 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	@Override
 	public void onInitializeClient() {
+		if (FabricLoader.getInstance().isModLoaded("pehkui") || FabricLoader.getInstance().isModLoaded("offlineskins")) {
+			String pehkui = FabricLoader.getInstance().isModLoaded("pehkui") ? "Please remove Pehkui from the mods folder" : "";
+			String offlineskin = FabricLoader.getInstance().isModLoaded("offlineskins") ? "Please remove OfflineSkins from the mods folder" : "";
+			MinecraftClient.printCrashReport(new CrashReport(pehkui + (pehkui != "" && offlineskin != "" ? ", " : "") + offlineskin, null));
+		}
 		System.out.println("(Pixel's Character Models) Initializing Client");
 		client = MinecraftClient.getInstance();
 		saveData.Initialize();
@@ -86,7 +91,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(tracker.openStream()));
 			Object[] version = reader.lines().toArray();
 			for (int i = 0; i < version.length; i++) {
-				if (((String)version[i]).equalsIgnoreCase(modVersion.split(" ")[1] + ": ")) {
+				if (((String)version[i]).startsWith("Fabric: ")) {
 					s = ((String)version[i]).split(": ")[1];
 					break;
 				}

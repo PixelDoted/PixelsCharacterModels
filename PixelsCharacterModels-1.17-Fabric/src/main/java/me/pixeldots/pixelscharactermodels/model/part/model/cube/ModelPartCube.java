@@ -34,10 +34,15 @@ public class ModelPartCube {
 	public MapVec3 size;
 	public MapVec2 uv;
 
-	public ModelPartCube(int u, int v, float x, float y, float z, float sizeX, float sizeY, float sizeZ, float textureWidth, float textureHeight) {
+	public ModelPartCube(int u, int v, float x, float y, float z, float sizeX, float sizeY, float sizeZ, float textureWidth, float textureHeight, String name) {
 		this.pos = new MapVec3(x, y, z);
 		this.size = new MapVec3(sizeX, sizeY, sizeZ);
 		this.uv = new MapVec2(u, v);
+		this.name = name;
+		
+		x+=(sizeX*-.5f);
+		y+=(sizeY*-1);
+		z+=(sizeZ*-.5f);
 		
 		this.minX = x;
         this.minY = y;

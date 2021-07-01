@@ -27,12 +27,12 @@ public class createPartHelper {
 			meshData.parsedFaces.add(array);
 		}
 		
-		ModelPartMesh mesh = new ModelPartMesh(meshData, Pos, Size, textureSize);
+		ModelPartMesh mesh = new ModelPartMesh(meshData, Pos, Size, textureSize, name);
 		PixelsCharacterModels.dataPackets.get(parent).meshes.add(mesh);
 	}
 	
 	public static void createCuboid(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name) {
-		ModelPartCube cube = new ModelPartCube(Math.round(textureOffset.X), Math.round(textureOffset.Y), Pos.X+(Size.X*-.5f), Pos.Y+(Size.Y*-1), Pos.Z+(Size.Z*-.5f), (float)Size.X, (float)Size.Y, (float)Size.Z, textureSize.X, textureSize.Y);
+		ModelPartCube cube = new ModelPartCube(Math.round(textureOffset.X), Math.round(textureOffset.Y), Pos.X, Pos.Y, Pos.Z, Size.X, Size.Y, Size.Z, textureSize.X, textureSize.Y, name);
 		PixelsCharacterModels.dataPackets.get(parent).cubes.add(cube);
 	}
 }

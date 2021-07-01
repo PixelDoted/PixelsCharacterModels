@@ -32,11 +32,12 @@ public class ModelPartMesh {
 	public MapVec2 uv;
 	public String meshID;
 
-	public ModelPartMesh(MapModelVectors meshData, MapVec3 Pos, MapVec3 Size, MapVec2 textureSize) {
+	public ModelPartMesh(MapModelVectors meshData, MapVec3 Pos, MapVec3 Size, MapVec2 textureSize, String name) {
 		this.pos = Pos;
 		this.size = Size;
 		this.uv = new MapVec2(0,0);
 		this.meshID = meshData.meshID;
+		this.name = name;
 		
 		ModelMeshVertex[] verts = new ModelMeshVertex[meshData.Vertices.size()];
 		for (int i = 0; i < verts.length; i++) {

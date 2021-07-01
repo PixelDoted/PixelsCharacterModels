@@ -109,9 +109,9 @@ public class PresetsGui extends GuiHandler {
 	
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		drawString(matrices, "Pixel's Character Models - Fabric, Version: " + PixelsCharacterModels.modVersion, 5, this.height-20);
 		if (update != "") {
-			drawString(matrices, "Pixel's Character Models - Fabric", 5, this.height-30);
-			drawString(matrices, "has a new update available", 5, this.height-20);
+			drawString(matrices, "an update is available, Version: " + update, 5, this.height-30);
 		}
 		super.render(matrices, mouseX, mouseY, delta);
 	}
