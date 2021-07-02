@@ -10,15 +10,11 @@ import net.minecraft.util.math.Vec3f;
 @Environment(EnvType.CLIENT)
 public class ModelMeshQuad {
 	public final ModelMeshVertex[] vertices;
-	public final Vec3f direction;
 	
-	public ModelMeshQuad(List<ModelMeshVertex> vertices, float squishU, float squishV, MapVec3 direction) {
+	public ModelMeshQuad(List<ModelMeshVertex> vertices, float squishU, float squishV) {
 		this.vertices = new ModelMeshVertex[vertices.size()];
 		for (int i = 0; i < vertices.size(); i++) {
 			this.vertices[i] = vertices.get(i);
 		}
-	
-		this.direction = direction.toVec();
-	
 	}
 }

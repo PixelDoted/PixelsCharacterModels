@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class MeshesGui extends GuiHandler {
 			SelectMesh("Cube");
 		})));
 		
-		/*File[] MeshFiles = PixelsCharacterModels.saveData.getMeshes();
+		File[] MeshFiles = PixelsCharacterModels.saveData.getMeshes();
 		int row = 1;
 		int col = 0;
 		if (MeshFiles != null) {
@@ -76,7 +77,7 @@ public class MeshesGui extends GuiHandler {
 					row = 0;
 				}
 			}
-		}*/
+		}
 		
 		for (int i = 0; i < Meshes.size(); i++) {
 			if (Meshes.get(i).getMessage().asString() == PixelsCharacterModels.GuiData.createPartData.mesh)

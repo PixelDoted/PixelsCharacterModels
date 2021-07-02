@@ -63,7 +63,7 @@ public class ModelPartData {
 		}
 		if (data.meshes != null) {
 			for (int i = 0; i < data.meshes.size(); i++) {
-				createPartHelper.createMesh(data.meshes.get(i).meshID, data.meshes.get(i).pos, data.meshes.get(i).size, new MapVec2(64, 64), model, entity, part, data.cubes.get(i).name);
+				createPartHelper.createMesh(data.meshes.get(i).meshID, data.meshes.get(i).pos, data.meshes.get(i).size, new MapVec2(64, 64), model, entity, part, data.meshes.get(i).name);
 			}
 		}
 	}

@@ -87,6 +87,9 @@ public class CreatePartGui extends GuiHandler {
 			} else {
 				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText());
 			}
+			if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
+				PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			}
 			MinecraftClient.getInstance().openScreen(new PartsGui());
 		}));
 		

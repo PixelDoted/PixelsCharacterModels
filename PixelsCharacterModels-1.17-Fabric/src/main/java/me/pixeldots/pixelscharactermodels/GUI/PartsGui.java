@@ -7,7 +7,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
-import me.pixeldots.pixelscharactermodels.accessors.PlayerModelAccessor;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -142,6 +141,10 @@ public class PartsGui extends GuiHandler {
 	public void RemovePart() {
 		if (PartModelisMesh) PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
 		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
+		
+		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
+			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		}
 		MinecraftClient.getInstance().openScreen(new PartsGui(lastGui));
 	}
 	
