@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pixelscharactermodels",
-  "version": "1B Fabric",
+  "version": "3B Fabric",
 
   "name": "Pixel's Character Models",
   "description": "a way to customize you're player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
@@ -9,11 +9,11 @@
     "PixelDots"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/mod/pixels-character-models",
+    "sources": "https://github.com/PixelDoted/PixelsCharacterModels"
   },
 
-  "license": "CC0-1.0",
+  "license": "LGPL-3",
   "icon": "assets/pcm/icon.png",
 
   "environment": "*",

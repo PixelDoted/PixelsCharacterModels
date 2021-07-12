@@ -28,7 +28,7 @@ public class PartsGui extends GuiHandler {
 	public List<ButtonWidget> Parts = new ArrayList<ButtonWidget>();
 	public GuiHandler lastGui;
 	
-	public int PartModelID = 0;
+	public int PartModelID = -1;
 	public boolean PartModelisMesh = false;
 	
 	public PartsGui() {
@@ -139,6 +139,7 @@ public class PartsGui extends GuiHandler {
 		PartModelisMesh = isMesh;
 	}
 	public void RemovePart() {
+		if (PartModelID == -1) return;
 		if (PartModelisMesh) PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
 		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
 		

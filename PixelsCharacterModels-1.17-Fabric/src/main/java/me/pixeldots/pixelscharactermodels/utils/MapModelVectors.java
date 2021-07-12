@@ -12,5 +12,6 @@ public class MapModelVectors {
 	public List<String> VertexNormals = new ArrayList<String>();
 	
 	public List<List<String>> parsedFaces = new ArrayList<List<String>>();
+	public List<MapVec2> parsedUVs = new ArrayList<MapVec2>();
 	
 }

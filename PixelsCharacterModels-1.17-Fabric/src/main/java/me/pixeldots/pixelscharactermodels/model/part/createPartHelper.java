@@ -15,7 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class createPartHelper {
 
-	public static void createMesh(String meshName, MapVec3 Pos, MapVec3 Size, MapVec2 textureSize, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name) {
+	public static void createMesh(String meshName, MapVec3 Pos, MapVec3 Size, MapVec2 textureOffset, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name) {
 		MapModelVectors meshData = PixelsCharacterModels.saveData.getMeshData(meshName);
 		if (meshData == null) return;
 		meshData.meshID = meshName;
@@ -26,8 +26,13 @@ public class createPartHelper {
 			array.add(face[1]); array.add(face[2]); array.add(face[3]);
 			meshData.parsedFaces.add(array);
 		}
+		for (int i = 0; i < meshData.VertexUVs.size(); i++) {
+			MapVec2 uv = new MapVec2(meshData.VertexUVs.get(i).split(" ")[1], meshData.VertexUVs.get(i).split(" ")[2]);
+			MapVec2 finalUV = new MapVec2(0, 1).minus(uv.X, uv.Y).times(-1, 1).times(64f, 32f).add(textureOffset.X, textureOffset.Y);
+			meshData.parsedUVs.add(finalUV);
+		}
 		
-		ModelPartMesh mesh = new ModelPartMesh(meshData, Pos, Size, textureSize, name);
+		ModelPartMesh mesh = new ModelPartMesh(meshData, Pos, Size, textureOffset, name);
 		PixelsCharacterModels.dataPackets.get(parent).meshes.add(mesh);
 	}
 	

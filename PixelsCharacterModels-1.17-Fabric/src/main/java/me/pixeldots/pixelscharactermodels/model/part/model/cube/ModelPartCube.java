@@ -2,6 +2,8 @@ package me.pixeldots.pixelscharactermodels.model.part.model.cube;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.accessors.WorldRendererAccessor;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;
@@ -9,12 +11,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
@@ -81,6 +85,12 @@ public class ModelPartCube {
 	}
    
 	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
+		/*if (PixelsCharacterModels.Rendering.currentPlayerRendering != null) {
+			Box box = new Box(this.minX,this.minY,this.minZ,(this.maxX-this.minX),(this.maxY-this.minY),(this.maxZ-this.minZ));
+			Frustum frustum = ((WorldRendererAccessor)PixelsCharacterModels.client.worldRenderer).getFrustum();
+	        if (!(box.isValid() || box.getAverageSideLength() == 0.0D)) if (!frustum.isVisible(box)) return;
+		}*/
+		
 		RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)entity).getSkinTexture());
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
