@@ -28,6 +28,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
   
 public class RenderingHandler {
 	
@@ -112,6 +113,10 @@ public class RenderingHandler {
 			for (int i = 0; i < data.cubes.size(); i++) {
 				data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 			}
+			matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+		    matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+		    matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+		    matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
 			for (int i = 0; i < data.meshes.size(); i++) {
 				data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 			}

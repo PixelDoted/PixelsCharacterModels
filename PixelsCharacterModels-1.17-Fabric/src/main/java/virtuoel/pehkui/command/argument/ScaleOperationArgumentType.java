@@ -68,7 +68,7 @@ public class ScaleOperationArgumentType implements ArgumentType<ScaleOperationAr
 		return EXAMPLES;
 	}
 	
-	private static Operation getOperator(String string) throws CommandSyntaxException
+	public static Operation getOperator(String string) throws CommandSyntaxException
 	{
 		switch (string)
 		{

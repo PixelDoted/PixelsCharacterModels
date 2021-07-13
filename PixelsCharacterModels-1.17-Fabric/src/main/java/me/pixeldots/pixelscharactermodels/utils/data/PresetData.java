@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.brigadier.arguments.FloatArgumentType;
+
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
@@ -12,8 +14,12 @@ import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleModifier;
 import virtuoel.pehkui.api.ScaleType;
+import virtuoel.pehkui.command.argument.ScaleOperationArgumentType;
 
 public class PresetData {
 
@@ -31,8 +37,12 @@ public class PresetData {
 	}
 	
 	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model) {
-		ScaleData data = ScaleType.BASE.getScaleData(player);
-		data.setTargetScale(GlobalScale);
+		if (PixelsCharacterModels.client.isInSingleplayer()) {
+			PixelsCharacterModels.client.getServer().getCommandManager().execute(
+					PixelsCharacterModels.client.getServer().getCommandSource(), 
+					"/scale set " + GlobalScale + " " + player.getDisplayName().asString());
+		}
+		
 		FabricOfflineSkins.skinSuffix = skinSuffix;
 		FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client);
 		

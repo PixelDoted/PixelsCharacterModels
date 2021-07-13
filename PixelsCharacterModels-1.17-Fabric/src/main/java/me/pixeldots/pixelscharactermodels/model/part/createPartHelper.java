@@ -28,7 +28,7 @@ public class createPartHelper {
 		}
 		for (int i = 0; i < meshData.VertexUVs.size(); i++) {
 			MapVec2 uv = new MapVec2(meshData.VertexUVs.get(i).split(" ")[1], meshData.VertexUVs.get(i).split(" ")[2]);
-			MapVec2 finalUV = new MapVec2(0, 1).minus(uv.X, uv.Y).times(-1, 1).times(64f, 32f).add(textureOffset.X, textureOffset.Y);
+			MapVec2 finalUV = new MapVec2(0, 1).minus(-uv.X, uv.Y).add(textureOffset.X, textureOffset.Y);
 			meshData.parsedUVs.add(finalUV);
 		}
 		

@@ -31,7 +31,7 @@ import net.minecraft.util.crash.CrashReport;
 
 public class PixelsCharacterModels implements ClientModInitializer {
 	
-	public static String modVersion = "3B";
+	public static String modVersion = "4B";
 	
 	public static TranslatedText TranslatedText = new TranslatedText();
 	public static PlayerEntity thisPlayer = null;

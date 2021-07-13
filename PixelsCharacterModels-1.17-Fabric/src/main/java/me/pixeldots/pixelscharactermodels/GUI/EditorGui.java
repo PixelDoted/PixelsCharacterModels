@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.mojang.brigadier.arguments.FloatArgumentType;
+
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
@@ -12,10 +14,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleType;
+import virtuoel.pehkui.command.argument.ScaleOperationArgumentType;
+import virtuoel.pehkui.command.argument.ScaleTypeArgumentType;
 
 public class EditorGui extends GuiHandler {
 	
@@ -130,8 +136,12 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerScale() {
-		ScaleData data = ScaleType.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
-		data.setTargetScale(Float.parseFloat(GlobalScaleField.getText()));
+		if (PixelsCharacterModels.client.isInSingleplayer()) {
+			PixelsCharacterModels.client.getServer().getCommandManager().execute(
+					PixelsCharacterModels.client.getServer().getCommandSource(), 
+					"/scale set " + GlobalScaleField.getText() + " " + PixelsCharacterModels.thisPlayer.getDisplayName().asString());
+		}
+		
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
 			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		}
@@ -139,7 +149,7 @@ public class EditorGui extends GuiHandler {
 	
 	public float getPlayerScale() {
 		ScaleData data = ScaleType.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
-		return data.getTargetScale();
+		return data.getBaseScale();
 	}
 	
 	public void setPlayerLimbData() {

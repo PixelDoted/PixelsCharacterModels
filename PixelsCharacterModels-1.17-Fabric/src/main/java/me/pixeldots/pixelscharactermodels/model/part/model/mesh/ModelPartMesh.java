@@ -65,17 +65,18 @@ public class ModelPartMesh {
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.enableDepthTest();
+		RenderSystem.disableCull();
 		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		for (int i = 0; i < sides.length; i++) {
-			if (sides[i].vertices.length == 4) buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
-			else buffer.begin(DrawMode.TRIANGLES, VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
+			if (sides[i].vertices.length == 4) buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+			else buffer.begin(DrawMode.TRIANGLES, VertexFormats.POSITION_TEXTURE_COLOR);
 			for (int j = 0; j < sides[i].vertices.length; j++) {
 				ModelMeshVertex vertex = sides[i].vertices[j];
 				buffer.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).texture(
-						vertex.u, vertex.v).color(red, green, blue, alpha).normal(vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
+						vertex.u, vertex.v).color(red, green, blue, alpha).next();
 			}
 			buffer.end();
 			BufferRenderer.draw(buffer);
