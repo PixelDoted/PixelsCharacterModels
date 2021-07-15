@@ -23,8 +23,13 @@ public class ModelPartMixin {
 		PixelsCharacterModels.Rendering.renderPartTail(matrices, vertices, (ModelPart)(Object)this, light, overlay, info);
     }
 	
+	@Inject(at = @At("HEAD"), method = "renderCuboids(Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V", cancellable = true)
+	public void renderCuboidsHead(MatrixStack.Entry matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
+		PixelsCharacterModels.Rendering.renderPartCubioudsHead(matrices, (ModelPart)(Object)this, vertexConsumer, light, overlay, info);
+	}
+	
 	@Inject(at = @At("TAIL"), method = "renderCuboids(Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V", cancellable = true)
-	public void renderCuboids(MatrixStack.Entry matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
+	public void renderCuboidsTail(MatrixStack.Entry matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
 		PixelsCharacterModels.Rendering.renderPartCubioudsTail(matrices, (ModelPart)(Object)this, vertexConsumer, light, overlay, info);
 	}
 	

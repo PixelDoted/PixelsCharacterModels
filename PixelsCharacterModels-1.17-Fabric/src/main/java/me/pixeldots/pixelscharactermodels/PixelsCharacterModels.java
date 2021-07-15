@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
+import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.Handlers.ClientHandler;
 import me.pixeldots.pixelscharactermodels.Handlers.CommandsHandler;
@@ -17,6 +18,7 @@ import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
 import me.pixeldots.pixelscharactermodels.utils.TranslatedText;
 import me.pixeldots.pixelscharactermodels.utils.Load.AnimationsSaveData;
+import me.pixeldots.pixelscharactermodels.utils.Load.FramesSaveData;
 import me.pixeldots.pixelscharactermodels.utils.Load.OtherSaveData;
 import me.pixeldots.pixelscharactermodels.utils.Load.PresetsSaveData;
 import net.fabricmc.api.ClientModInitializer;
@@ -37,6 +39,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static PlayerEntity thisPlayer = null;
 	
 	public static AnimationsSaveData AnimationsData = new AnimationsSaveData();
+	public static FramesSaveData FramesData = new FramesSaveData();
 	public static PresetsSaveData PresetsData = new PresetsSaveData();
 	public static OtherSaveData saveData = new OtherSaveData();
 	
@@ -45,7 +48,9 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static ClientHandler PCMClient = new ClientHandler();
 	
 	public static PCMAnimation playingAnimationData = null;
+	public static PCMFrames playingFramesData = null;
 	public static String playingAnimation = "";
+	public static boolean isPlayingFrames = false;
 	
 	public static LocalData localData = new LocalData();
 	public static Map<ModelPart, ModelPartData> dataPackets = new HashMap<ModelPart, ModelPartData>();

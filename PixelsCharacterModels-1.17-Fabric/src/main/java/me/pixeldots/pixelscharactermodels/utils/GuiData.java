@@ -18,6 +18,9 @@ public class GuiData {
 	
 	public String SelectedAnimation = "";
 	
+	public String SelectedFrames = "";
+	public int SelectedFramesID = -1;
+	
 	public CreatePartData createPartData = new CreatePartData();
 	
 }

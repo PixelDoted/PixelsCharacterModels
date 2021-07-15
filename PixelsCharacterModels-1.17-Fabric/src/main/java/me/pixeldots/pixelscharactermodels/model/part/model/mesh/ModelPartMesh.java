@@ -61,12 +61,6 @@ public class ModelPartMesh {
 	}
    
 	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
-		RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)entity).getSkinTexture());
-		RenderSystem.setShaderColor(1, 1, 1, 1);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.enableDepthTest();
-		RenderSystem.disableCull();
-		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();

@@ -27,6 +27,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
   
@@ -85,13 +87,7 @@ public class RenderingHandler {
 				part.roll = 0;
 				data.useRotation = false;
 			}
-			//Scale
-			if (data.scale.X <= 0) data.scale.X = 0.01f;
-			if (data.scale.Y <= 0) data.scale.Y = 0.01f;
-			if (data.scale.Z <= 0) data.scale.Z = 0.01f;
 			
-			matrices.scale(data.scale.X, data.scale.Y, data.scale.Z);
-			//Scale
 			MapVec3 animOffset = new MapVec3(0,0,0);
 			if (PixelsCharacterModels.playingAnimationData != null) {
 				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
@@ -103,6 +99,24 @@ public class RenderingHandler {
 		}
 	}
 	
+	public void renderPartCubioudsHead(MatrixStack.Entry matrices, ModelPart part, VertexConsumer vertex, int light, int overlay, CallbackInfo info) {
+		if (part == null) return;
+		if (PixelsCharacterModels.dataPackets.containsKey(part)) {
+			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
+			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
+			if (!isPartFromPlayer(part, data)) return;
+			
+			//Scale
+			if (data.scale.X <= 0) data.scale.X = 0.01f;
+			if (data.scale.Y <= 0) data.scale.Y = 0.01f;
+			if (data.scale.Z <= 0) data.scale.Z = 0.01f;
+			ScaleMatrixEntry(matrices, data.scale);
+			//matrices.scale(data.scale.X, data.scale.Y, data.scale.Z);
+			//Scale
+			
+		}
+	}
+	
 	public void renderPartCubioudsTail(MatrixStack.Entry matrices, ModelPart part, VertexConsumer vertex, int light, int overlay, CallbackInfo info) {
 		if (part == null) return;
 		if (PixelsCharacterModels.dataPackets.containsKey(part)) {
@@ -110,13 +124,22 @@ public class RenderingHandler {
 			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
 			if (!isPartFromPlayer(part, data)) return;
 			
+			if (data.cubes.size()+data.meshes.size() >= 1) {
+				RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)data.entity).getSkinTexture());
+				RenderSystem.setShaderColor(1, 1, 1, 1);
+				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				RenderSystem.enableDepthTest();
+			}
 			for (int i = 0; i < data.cubes.size(); i++) {
 				data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 			}
-			matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
-		    matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
-		    matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
-		    matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+			if (data.meshes.size() >= 1) {
+				RenderSystem.disableCull();
+				matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+			    matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+			    matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+			    matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+			}
 			for (int i = 0; i < data.meshes.size(); i++) {
 				data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 			}
@@ -134,13 +157,7 @@ public class RenderingHandler {
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
 			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
 			if (!isPartFromPlayer(part, data)) return;
-			//Scale
-			if (data.scale.X <= 0) data.scale.X = 0.01f;
-			if (data.scale.Y <= 0) data.scale.Y = 0.01f;
-			if (data.scale.Z <= 0) data.scale.Z = 0.01f;
 			
-			matrices.scale(1/data.scale.X, 1/data.scale.Y, 1/data.scale.Z);
-			//Scale
 			MapVec3 animOffset = new MapVec3(0,0,0);
 			if (PixelsCharacterModels.playingAnimationData != null) {
 				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
@@ -174,61 +191,24 @@ public class RenderingHandler {
 		if (PixelsCharacterModels.dataPackets.containsKey(model.rightSleeve)) PixelsCharacterModels.dataPackets.get(model.rightSleeve).setCopyFromPart(model.rightArm);
 	}
 	
-	public void drawTexturedCube(MatrixStack mst, float x, float y, float z, float w, float h, float d, PlayerEntity entity){
-		RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)entity).getSkinTexture());
-		RenderSystem.setShaderColor(1, 1, 1, 1);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		
-		Tessellator tes = Tessellator.getInstance();
-		BufferBuilder buffer = tes.getBuffer();
-		Matrix4f m = mst.peek().getModel();
-		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(m, x + w, y, z).texture(1, 1).next();
-		buffer.vertex(m, x, y, z).texture(0, 1).next();
-		buffer.vertex(m, x, y + h, z).texture(0, 0).next();
-		buffer.vertex(m, x + w, y + h, z).texture(1, 0).next();
-		buffer.end();
-		BufferRenderer.draw(buffer);
+	public void ScaleMatrixEntry(MatrixStack.Entry entry, MapVec3 value) {
+		float x = value.X;
+		float y = value.Y;
+		float z = value.Z;
+	    entry.getModel().multiply(Matrix4f.scale(x, y, z));
+	    if (x == y && y == z) {
+		    if (x > 0.0F) {
+		    	return;
+		    }
+	
+		    entry.getNormal().multiply(-1.0F);
+	    }
 
-		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(m, x, y, z + d).texture(1, 1).next();
-		buffer.vertex(m, x + w, y, z + d).texture(0, 1).next();
-		buffer.vertex(m, x + w, y + h, z + d).texture(0, 0).next();
-		buffer.vertex(m, x, y + h, z + d).texture(1, 0).next();
-		buffer.end();
-		BufferRenderer.draw(buffer);
-
-		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(m, x + w, y, z + d).texture(1, 1).next();
-		buffer.vertex(m, x + w, y, z).texture(0, 1).next();
-		buffer.vertex(m, x + w, y + h, z).texture(0, 0).next();
-		buffer.vertex(m, x + w, y + h, z + d).texture(1, 0).next();
-		buffer.end();
-		BufferRenderer.draw(buffer);
-
-		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(m, x, y, z).texture(1, 1).next();
-		buffer.vertex(m, x, y, z + d).texture(0, 1).next();
-		buffer.vertex(m, x, y + h, z + d).texture(0, 0).next();
-		buffer.vertex(m, x, y + h, z).texture(1, 0).next();
-		buffer.end();
-		BufferRenderer.draw(buffer);
-
-		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(m, x + w, y, z).texture(1, 1).next();
-		buffer.vertex(m, x + w, y, z + d).texture(0, 1).next();
-		buffer.vertex(m, x, y, z + d).texture(0, 0).next();
-		buffer.vertex(m, x, y, z).texture(1, 0).next();
-		buffer.end();
-		BufferRenderer.draw(buffer);
-
-		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		buffer.vertex(m, x + w, y + h, z + d).texture(1, 1).next();
-		buffer.vertex(m, x + w, y + h, z).texture(0, 1).next();
-		buffer.vertex(m, x, y + h, z).texture(0, 0).next();
-		buffer.vertex(m, x, y + h, z + d).texture(1, 0).next();
-		buffer.end();
-		BufferRenderer.draw(buffer);
+	    float f = 1.0F / x;
+	    float g = 1.0F / y;
+	    float h = 1.0F / z;
+	    float i = MathHelper.fastInverseCbrt(f * g * h);
+	    entry.getNormal().multiply(Matrix3f.scale(i * f, i * g, i * h));
 	}
 
 }

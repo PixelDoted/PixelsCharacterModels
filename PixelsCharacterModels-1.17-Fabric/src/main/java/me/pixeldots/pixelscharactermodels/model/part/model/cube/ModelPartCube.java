@@ -85,17 +85,6 @@ public class ModelPartCube {
 	}
    
 	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
-		/*if (PixelsCharacterModels.Rendering.currentPlayerRendering != null) {
-			Box box = new Box(this.minX,this.minY,this.minZ,(this.maxX-this.minX),(this.maxY-this.minY),(this.maxZ-this.minZ));
-			Frustum frustum = ((WorldRendererAccessor)PixelsCharacterModels.client.worldRenderer).getFrustum();
-	        if (!(box.isValid() || box.getAverageSideLength() == 0.0D)) if (!frustum.isVisible(box)) return;
-		}*/
-		
-		RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)entity).getSkinTexture());
-		RenderSystem.setShaderColor(1, 1, 1, 1);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.enableDepthTest();
-		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();

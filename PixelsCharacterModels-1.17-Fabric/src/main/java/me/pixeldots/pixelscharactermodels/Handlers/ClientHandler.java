@@ -5,6 +5,7 @@ import java.io.File;
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
+import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
 import me.pixeldots.pixelscharactermodels.utils.data.AnimationData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -17,9 +18,11 @@ public class ClientHandler {
 	
 	public boolean isConnectedToWorld = false;
 	public PCMAnimation currentStoredAnimation = null;
+	public PCMFrames currentStoredFrames = null;
 	
 	public int currentPreset = -1;
 	public int playingAnimation = -1;
+	public boolean isPlayingFrames = false;
 	
 	public void onDisconnect() {
 		PixelsCharacterModels.saveData.Save();
