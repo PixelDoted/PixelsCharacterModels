@@ -101,6 +101,7 @@ public class AnimationsGui extends GuiHandler {
 		PixelsCharacterModels.AnimationsData.loadAnimation(name, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		if (returnValue == "addToFrames") {
 			PixelsCharacterModels.PCMClient.currentStoredFrames.frames.add(name);
+			PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		}
 		MinecraftClient.getInstance().openScreen(lastGui);
 	}

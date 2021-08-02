@@ -7,6 +7,7 @@ import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
 import me.pixeldots.pixelscharactermodels.utils.data.AnimationData;
+import me.pixeldots.pixelscharactermodels.utils.data.FramesData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +23,7 @@ public class ClientHandler {
 	
 	public int currentPreset = -1;
 	public int playingAnimation = -1;
+	public int framesAnimationID = -1;
 	public boolean isPlayingFrames = false;
 	
 	public void onDisconnect() {
@@ -68,6 +70,7 @@ public class ClientHandler {
 	public void LoadAnimation(int id, PlayerEntity entity, PlayerEntityModel<?> model) {
 		sendClientMessage("Loading Animation");
 		this.playingAnimation = id;
+		this.isPlayingFrames = false;
 		boolean success = PixelsCharacterModels.AnimationsData.loadAnimation(id, entity, model);
 		if (success == false) sendClientMessage("Failed to load Animation with file index: " + id);
 		else sendClientMessage("Success fully loaded Animation");
@@ -76,8 +79,6 @@ public class ClientHandler {
 	public void writeAnimation(String name, PlayerEntity entity, PlayerEntityModel<?> model) {
 		if (this.currentStoredAnimation == null) return;
 		AnimationData data = this.currentStoredAnimation.convertToData(model);
-		System.out.println(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbParts.size());
-		System.out.println(data.LimbIDs.size());
 		PixelsCharacterModels.AnimationsData.writeAnimationFile(data, name);
 	}
 	
@@ -89,7 +90,30 @@ public class ClientHandler {
 			sendClientMessage("Failed to Delete Animation");
 	}
 	//Animation
+	//Frames
+	public void LoadFrames(int id, PlayerEntity entity, PlayerEntityModel<?> model) {
+		sendClientMessage("Loading Frames");
+		this.playingAnimation = id;
+		this.isPlayingFrames = true;
+		boolean success = PixelsCharacterModels.FramesData.loadFrame(id, entity, model);
+		if (success == false) sendClientMessage("Failed to load Frames with file index: " + id);
+		else sendClientMessage("Success fully loaded Frames");
+	}
 	
+	public void writeFrames(String name, PlayerEntity entity, PlayerEntityModel<?> model) {
+		if (this.currentStoredFrames == null) return;
+		FramesData data = this.currentStoredFrames.convertToData();
+		PixelsCharacterModels.FramesData.writeFramesFile(data, name);
+	}
+	
+	public void DeleteFrames(int id) {
+		File file = PixelsCharacterModels.FramesData.getFrame(id);
+		if (file.delete()) 
+			sendClientMessage("Deleted Frames");
+		else
+			sendClientMessage("Failed to Delete Frames");
+	}
+	//Frames
 	public void sendClientMessage(String message) {
 		if (PixelsCharacterModels.localData.showUpdateMessage)
 			PixelsCharacterModels.client.player.sendMessage(new LiteralText(message), false);

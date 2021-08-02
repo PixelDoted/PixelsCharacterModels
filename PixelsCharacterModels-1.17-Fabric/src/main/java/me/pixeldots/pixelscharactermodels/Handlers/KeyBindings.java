@@ -8,7 +8,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class KeyBindings {
 	
@@ -48,60 +50,59 @@ public class KeyBindings {
             }
 		    
 		    while (Anim1.wasPressed()) {
-		    	if (PixelsCharacterModels.playingAnimation != PixelsCharacterModels.localData.AnimationIDOne) {
-		    		PixelsCharacterModels.AnimationsData.loadAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
-		    		PixelsCharacterModels.playingAnimation = PixelsCharacterModels.localData.AnimationIDOne;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
-		    	}
-		    	else {
-		    		PixelsCharacterModels.playingAnimation = "";
-		    		PixelsCharacterModels.playingAnimationData = null;
-		    	}
+		    	setAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.localData.AnimationOneisFrames);
 		    }
 		    while (Anim2.wasPressed()) {
-		    	if (PixelsCharacterModels.playingAnimation != PixelsCharacterModels.localData.AnimationIDTwo) {
-		    		PixelsCharacterModels.AnimationsData.loadAnimation(PixelsCharacterModels.localData.AnimationIDTwo, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
-		    		PixelsCharacterModels.playingAnimation = PixelsCharacterModels.localData.AnimationIDTwo;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
-		    	}
-		    	else {
-		    		PixelsCharacterModels.playingAnimation = "";
-		    		PixelsCharacterModels.playingAnimationData = null;
-		    	}
+		    	setAnimation(PixelsCharacterModels.localData.AnimationIDTwo, PixelsCharacterModels.localData.AnimationTwoisFrames);
 		    }
 		    while (Anim3.wasPressed()) {
-		    	if (PixelsCharacterModels.playingAnimation != PixelsCharacterModels.localData.AnimationIDThree) {
-		    		PixelsCharacterModels.AnimationsData.loadAnimation(PixelsCharacterModels.localData.AnimationIDThree, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
-		    		PixelsCharacterModels.playingAnimation = PixelsCharacterModels.localData.AnimationIDThree;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
-		    	}
-		    	else {
-		    		PixelsCharacterModels.playingAnimation = "";
-		    		PixelsCharacterModels.playingAnimationData = null;
-		    	}
+		    	setAnimation(PixelsCharacterModels.localData.AnimationIDThree, PixelsCharacterModels.localData.AnimationThreeisFrames);
 		    }
 		    while (Anim4.wasPressed()) {
-		    	if (PixelsCharacterModels.playingAnimation != PixelsCharacterModels.localData.AnimationIDFour) {
-		    		PixelsCharacterModels.AnimationsData.loadAnimation(PixelsCharacterModels.localData.AnimationIDFour, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
-		    		PixelsCharacterModels.playingAnimation = PixelsCharacterModels.localData.AnimationIDFour;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
-		    	}
-		    	else {
-		    		PixelsCharacterModels.playingAnimation = "";
-		    		PixelsCharacterModels.playingAnimationData = null;
-		    	}
+		    	setAnimation(PixelsCharacterModels.localData.AnimationIDFour, PixelsCharacterModels.localData.AnimationFourisFrames);
 		    }
 		    while (Anim5.wasPressed()) {
-		    	if (PixelsCharacterModels.playingAnimation != PixelsCharacterModels.localData.AnimationIDFive) {
-		    		PixelsCharacterModels.AnimationsData.loadAnimation(PixelsCharacterModels.localData.AnimationIDFive, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
-		    		PixelsCharacterModels.playingAnimation = PixelsCharacterModels.localData.AnimationIDFive;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
-		    	}
-		    	else {
-		    		PixelsCharacterModels.playingAnimation = "";
-		    		PixelsCharacterModels.playingAnimationData = null;
-		    	}
+		    	setAnimation(PixelsCharacterModels.localData.AnimationIDFive, PixelsCharacterModels.localData.AnimationFiveisFrames);
 		    }
 		});
 	}
+	
+	public static void setAnimation(String key, boolean isFrames) {
+		if (!isFrames) {
+			if (PixelsCharacterModels.playingAnimation != key) {
+				PixelsCharacterModels.isPlayingFrames = false;
+				PixelsCharacterModels.playingFramesData = null;
+	    		if (PixelsCharacterModels.AnimationsData.loadAnimation(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
+		    		PixelsCharacterModels.playingAnimation = key;
+		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
+	    		}
+	    	}
+	    	else {
+	    		PixelsCharacterModels.playingAnimation = "";
+	    		PixelsCharacterModels.playingAnimationData = null;
+	    	}
+		} else {
+			if (PixelsCharacterModels.playingFramesData == null || PixelsCharacterModels.playingFramesData.name != key) {
+	    		if (PixelsCharacterModels.FramesData.loadFrame(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
+	    			PixelsCharacterModels.isPlayingFrames = true;
+	    			PixelsCharacterModels.playingFramesData = PixelsCharacterModels.PCMClient.currentStoredFrames;
+	    			PixelsCharacterModels.PCMClient.framesAnimationID = 0;
+					//loadAnimationFrames(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer), PixelsCharacterModels.thisPlayer);
+				}
+	    	}
+	    	else if (PixelsCharacterModels.playingFramesData.name == key) {
+	    		PixelsCharacterModels.isPlayingFrames = false;
+	    		PixelsCharacterModels.playingFramesData = null;
+	    		PixelsCharacterModels.playingAnimation = "";
+	    		PixelsCharacterModels.playingAnimationData = null;
+	    	}
+		}
+	}
+	
+	/*public static void loadAnimationFrames(PlayerEntityModel<?> model, PlayerEntity entity) {
+		String s = PixelsCharacterModels.playingFramesData.frames.get(PixelsCharacterModels.PCMClient.framesAnimationID);
+		PixelsCharacterModels.AnimationsData.loadAnimation(s, entity, model);
+		PixelsCharacterModels.playingAnimation = s;
+		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
+	}*/
 }

@@ -18,4 +18,5 @@ public class TranslatedText {
 	public String ListSkins = "List All Skins";
 	//Chat Messages
 	public String setAnimName = "Please set the animation name before creating.";
+	public String setFramesName = "Please set the frames name before creating.";
 }

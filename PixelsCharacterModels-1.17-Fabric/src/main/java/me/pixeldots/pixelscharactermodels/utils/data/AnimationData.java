@@ -32,7 +32,6 @@ public class AnimationData {
 	}
 	
 	public ModelPart getPlayerLimb(String name, PlayerEntityModel<?> model) {
-		System.out.println(name.toLowerCase());
 		if (name.toLowerCase().startsWith("head")) return model.head;
 		else if (name.toLowerCase().startsWith("body")) return model.body;
 		else if (name.toLowerCase().startsWith("leftleg")) return model.leftLeg;

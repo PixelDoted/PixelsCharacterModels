@@ -25,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class ModelPartMesh {
@@ -59,14 +60,13 @@ public class ModelPartMesh {
 			this.sides[i] = new ModelMeshQuad(vertices, 0, 0);
 		}
 	}
-   
+	
 	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		for (int i = 0; i < sides.length; i++) {
-			if (sides[i].vertices.length == 4) buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-			else buffer.begin(DrawMode.TRIANGLES, VertexFormats.POSITION_TEXTURE_COLOR);
+			buffer.begin(DrawMode.TRIANGLES, VertexFormats.POSITION_TEXTURE_COLOR);
 			for (int j = 0; j < sides[i].vertices.length; j++) {
 				ModelMeshVertex vertex = sides[i].vertices[j];
 				buffer.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).texture(

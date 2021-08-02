@@ -38,6 +38,7 @@ public class RenderingHandler {
 	
 	public void playerRenderHead(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
 		if (!PixelsCharacterModels.EntityModelList.containsKey(entity)) PixelsCharacterModels.EntityModelList.put(entity, model);
+		FramesHandler.UpdateFrames(model, entity);
 	}
 	
 	public void playerRenderTail(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
@@ -68,9 +69,10 @@ public class RenderingHandler {
 					data.activeRotation = true;
 					data.rot = anim.LimbRotations.get(part);
 					if (data.rot != null) {
-						part.pitch = (float)Math.toRadians(data.rot.X);
-						part.yaw = (float)Math.toRadians(data.rot.Y);
-						part.roll = (float)Math.toRadians(data.rot.Z);
+						MapVec3 vector = FramesHandler.getLerpIfFrames(data.rot, part);
+						part.pitch = (float)Math.toRadians(vector.X);
+						part.yaw = (float)Math.toRadians(vector.Y);
+						part.roll = (float)Math.toRadians(vector.Z);
 					} else {
 						data.useRotation = false;
 						data.activeRotation = false;

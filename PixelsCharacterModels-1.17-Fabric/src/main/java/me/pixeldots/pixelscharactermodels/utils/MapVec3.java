@@ -49,6 +49,10 @@ public class MapVec3 {
 		return this;
 	}
 	
+	public float magnitude() {
+		return this.X+this.Y+this.Z;
+	}
+	
 	public Vec3f toVec() {
 		return new Vec3f(X, Y, Z);
 	}

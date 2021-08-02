@@ -63,7 +63,9 @@ public class FramesAnimationGUI extends GuiHandler {
 				String store = PixelsCharacterModels.PCMClient.currentStoredFrames.frames.get(i);
 				PixelsCharacterModels.PCMClient.currentStoredFrames.frames.set(i, PixelsCharacterModels.PCMClient.currentStoredFrames.frames.get(i-1));
 				PixelsCharacterModels.PCMClient.currentStoredFrames.frames.set(i-1, store);
+				PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 			}
+			PixelsCharacterModels.client.openScreen(new FramesAnimationGUI());
 		}));
 		MoveDown = addButton(new ButtonWidget(5, 85, 50, 20, Text.of("Move DOWN"), (button) -> {
 			int i = PixelsCharacterModels.PCMClient.currentStoredFrames.frames.indexOf(PixelsCharacterModels.GuiData.SelectedAnimation);
@@ -71,20 +73,23 @@ public class FramesAnimationGUI extends GuiHandler {
 				String store = PixelsCharacterModels.PCMClient.currentStoredFrames.frames.get(i);
 				PixelsCharacterModels.PCMClient.currentStoredFrames.frames.set(i, PixelsCharacterModels.PCMClient.currentStoredFrames.frames.get(i+1));
 				PixelsCharacterModels.PCMClient.currentStoredFrames.frames.set(i+1, store);
+				PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 			}
+			PixelsCharacterModels.client.openScreen(new FramesAnimationGUI());
 		}));
 		
-		Add = addButton(new ButtonWidget(5, 5, 110, 20, Text.of("Add"), (button) -> {
+		Add = addButton(new ButtonWidget(5, 110, 50, 20, Text.of("Add"), (button) -> {
 			PixelsCharacterModels.client.openScreen(new AnimationsGui(this, "addToFrames"));
 		}));
 		Remove = addButton(new ButtonWidget(5, 135, 50, 20, Text.of("Remove"), (button) -> {
 			PixelsCharacterModels.PCMClient.currentStoredFrames.frames.remove(PixelsCharacterModels.GuiData.SelectedAnimation);
+			PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+			PixelsCharacterModels.client.openScreen(new FramesAnimationGUI());
 		}));
 		
-		if (PixelsCharacterModels.PCMClient.currentStoredFrames.frames.contains(PixelsCharacterModels.GuiData.SelectedAnimation)) {
+		if (!PixelsCharacterModels.PCMClient.currentStoredFrames.frames.contains(PixelsCharacterModels.GuiData.SelectedAnimation)) {
 			MoveUp.active = false;
 			MoveDown.active = false;
-			Add.active = false;
 			Remove.active = false;
 		}
 		
@@ -112,7 +117,7 @@ public class FramesAnimationGUI extends GuiHandler {
 	
 	public void SelectAnimation(String name) {
 		PixelsCharacterModels.GuiData.SelectedAnimation = name;
-		MinecraftClient.getInstance().openScreen(lastGui);
+		MinecraftClient.getInstance().openScreen(new FramesAnimationGUI());
 	}
 	
 	@Override

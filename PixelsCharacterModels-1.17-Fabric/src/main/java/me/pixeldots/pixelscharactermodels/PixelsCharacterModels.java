@@ -60,16 +60,13 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	@Override
 	public void onInitializeClient() {
-		if (FabricLoader.getInstance().isModLoaded("pehkui") || FabricLoader.getInstance().isModLoaded("offlineskins")) {
-			String pehkui = FabricLoader.getInstance().isModLoaded("pehkui") ? "Please remove Pehkui from the mods folder" : "";
-			String offlineskin = FabricLoader.getInstance().isModLoaded("offlineskins") ? "Please remove OfflineSkins from the mods folder" : "";
-			MinecraftClient.printCrashReport(new CrashReport(pehkui + (pehkui != "" && offlineskin != "" ? ", " : "") + offlineskin, null));
-		}
 		System.out.println("(Pixel's Character Models) Initializing Client");
+		
 		client = MinecraftClient.getInstance();
 		saveData.Initialize();
 		PresetsData.Initialize();
 		AnimationsData.Initialize();
+		FramesData.Initialize();
 		
 		KeyBindings.registerKeyBindings();
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {

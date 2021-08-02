@@ -47,6 +47,7 @@ public class AnimationsSaveData {
 	}
 	
 	public boolean loadAnimation(int id, PlayerEntity player, PlayerEntityModel<?> model) {
+		if (model == null) return false;
 		File file = getAnimation(id);
 		if (file == null) return false;
 		if (!file.exists()) return false;

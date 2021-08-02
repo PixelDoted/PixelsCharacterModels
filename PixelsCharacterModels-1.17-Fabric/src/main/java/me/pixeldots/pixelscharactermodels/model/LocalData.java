@@ -12,10 +12,10 @@ public class LocalData {
 	public boolean showNameTags = true;
 	public boolean showArmor = true;
 	
-	/*public boolean Anim1isFrames = false;
-	public boolean Anim2isFrames = false;
-	public boolean Anim3isFrames = false;
-	public boolean Anim4isFrames = false;
-	public boolean Anim5isFrames = false;*/
+	public boolean AnimationOneisFrames = false;
+	public boolean AnimationTwoisFrames = false;
+	public boolean AnimationThreeisFrames = false;
+	public boolean AnimationFourisFrames = false;
+	public boolean AnimationFiveisFrames = false;
 	
 }

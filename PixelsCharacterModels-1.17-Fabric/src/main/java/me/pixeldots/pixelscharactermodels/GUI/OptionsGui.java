@@ -23,6 +23,12 @@ public class OptionsGui extends GuiHandler {
 	public TextFieldWidget AnimFourID;
 	public TextFieldWidget AnimFiveID;
 	
+	public ButtonWidget AnimOneFrames;
+	public ButtonWidget AnimTwoFrames;
+	public ButtonWidget AnimThreeFrames;
+	public ButtonWidget AnimFourFrames;
+	public ButtonWidget AnimFiveFrames;
+	
 	public ButtonWidget showNameTags;
 	public ButtonWidget sendUpdateMessages;
 	public ButtonWidget showArmor;
@@ -53,6 +59,32 @@ public class OptionsGui extends GuiHandler {
 		AnimFourID = addTextField(new TextFieldWidget(textRendererGUI, 35,140,50,20, Text.of("AnimFourID")));
 		AnimFiveID = addTextField(new TextFieldWidget(textRendererGUI, 35,160,50,20, Text.of("AnimFiveID")));
 		
+		AnimOneFrames = addButton(new ButtonWidget(90,80,50,20, Text.of("Animation"), (button) -> {
+			if (button.getMessage().asString() == "Animation") { button.setMessage(Text.of("Frames")); }
+			else { button.setMessage(Text.of("Animation")); }
+			PixelsCharacterModels.localData.AnimationOneisFrames = (button.getMessage().asString() == "Animation" ? false : true);
+		}));
+		AnimTwoFrames = addButton(new ButtonWidget(90,100,50,20, Text.of("Animation"), (button) -> {
+			if (button.getMessage().asString() == "Animation") { button.setMessage(Text.of("Frames")); }
+			else { button.setMessage(Text.of("Animation")); }
+			PixelsCharacterModels.localData.AnimationTwoisFrames = (button.getMessage().asString() == "Animation" ? false : true);
+		}));
+		AnimThreeFrames = addButton(new ButtonWidget(90,120,50,20, Text.of("Animation"), (button) -> {
+			if (button.getMessage().asString() == "Animation") { button.setMessage(Text.of("Frames")); }
+			else { button.setMessage(Text.of("Animation")); }
+			PixelsCharacterModels.localData.AnimationThreeisFrames = (button.getMessage().asString() == "Animation" ? false : true);
+		}));
+		AnimFourFrames = addButton(new ButtonWidget(90,140,50,20, Text.of("Animation"), (button) -> {
+			if (button.getMessage().asString() == "Animation") { button.setMessage(Text.of("Frames")); }
+			else { button.setMessage(Text.of("Animation")); }
+			PixelsCharacterModels.localData.AnimationFourisFrames = (button.getMessage().asString() == "Animation" ? false : true);
+		}));
+		AnimFiveFrames = addButton(new ButtonWidget(90,160,50,20, Text.of("Animation"), (button) -> {
+			if (button.getMessage().asString() == "Animation") { button.setMessage(Text.of("Frames")); }
+			else { button.setMessage(Text.of("Animation")); }
+			PixelsCharacterModels.localData.AnimationFiveisFrames = (button.getMessage().asString() == "Animation" ? false : true);
+		}));
+		
 		showNameTags = addButton(new ButtonWidget(85, 185, 50, 20, Text.of(PixelsCharacterModels.localData.showNameTags ? "true" : "false"), (button) -> {
 			PixelsCharacterModels.localData.showNameTags = !PixelsCharacterModels.localData.showNameTags;
 			button.setMessage(Text.of(PixelsCharacterModels.localData.showNameTags ? "true" : "false"));
@@ -71,6 +103,12 @@ public class OptionsGui extends GuiHandler {
 		AnimThreeID.setText(PixelsCharacterModels.localData.AnimationIDThree);
 		AnimFourID.setText(PixelsCharacterModels.localData.AnimationIDFour);
 		AnimFiveID.setText(PixelsCharacterModels.localData.AnimationIDFive);
+		
+		AnimOneFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationOneisFrames ? "Frames" : "Animation"));
+		AnimTwoFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationTwoisFrames ? "Frames" : "Animation"));
+		AnimThreeFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationThreeisFrames ? "Frames" : "Animation"));
+		AnimFourFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationFourisFrames ? "Frames" : "Animation"));
+		AnimFiveFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationFiveisFrames ? "Frames" : "Animation"));
 	}
 	
 	@Override
