@@ -15,17 +15,20 @@ import java.nio.file.Paths;
 import com.google.gson.Gson;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PresetsSaveData {
 	
-	public String PresetsPath = "{mcdir}\\PCM\\Presets";
+	public String PresetsPath = "{mcdir}/PCM/Presets";
 	
 	public void Initialize() {
 		System.out.println("Checking Presets Folder");
+		PresetsPath.replace("/", File.separator);
 		PresetsPath = PresetsPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
+		
 		File folder = new File(PresetsPath);
 		if (!folder.exists()) {
 			try {
@@ -46,7 +49,9 @@ public class PresetsSaveData {
 			reader = new BufferedReader(new FileReader(file));
 			Gson gson = new Gson();
 			PresetData data = gson.fromJson(reader, PresetData.class);
-			data.convertToModel(player, model);
+			
+			data.convertToModel(player, model, false);
+			PixelsCharacterModelsMain.clientHandler.sendModelData(gson.toJson(data));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {

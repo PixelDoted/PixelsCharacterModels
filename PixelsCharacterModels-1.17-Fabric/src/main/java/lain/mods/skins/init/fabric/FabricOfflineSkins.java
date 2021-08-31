@@ -1,36 +1,47 @@
 package lain.mods.skins.init.fabric;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mojang.authlib.GameProfile;
-import lain.mods.skins.api.SkinProviderAPI;
-import lain.mods.skins.api.interfaces.ISkin;
-import lain.mods.skins.impl.ConfigOptions;
-import lain.mods.skins.impl.PlayerProfile;
-import lain.mods.skins.impl.fabric.CustomSkinTexture;
-import lain.mods.skins.impl.fabric.ImageUtils;
-import lain.mods.skins.providers.*;
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.offlinereload.SuffixCommand;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
-
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mojang.authlib.GameProfile;
+
+import lain.mods.skins.api.SkinProviderAPI;
+import lain.mods.skins.api.interfaces.ISkin;
+import lain.mods.skins.impl.ConfigOptions;
+import lain.mods.skins.impl.PlayerProfile;
+import lain.mods.skins.impl.fabric.CustomSkinTexture;
+import lain.mods.skins.impl.fabric.ImageUtils;
+import lain.mods.skins.providers.CrafatarCapeProvider;
+import lain.mods.skins.providers.CrafatarSkinProvider;
+import lain.mods.skins.providers.CustomServerCapeProvider;
+import lain.mods.skins.providers.CustomServerCapeProvider2;
+import lain.mods.skins.providers.CustomServerSkinProvider;
+import lain.mods.skins.providers.CustomServerSkinProvider2;
+import lain.mods.skins.providers.MojangCapeProvider;
+import lain.mods.skins.providers.MojangSkinProvider;
+import lain.mods.skins.providers.UserManagedCapeProvider;
+import lain.mods.skins.providers.UserManagedSkinProvider;
+import me.pixeldots.offlinereload.SuffixCommand;
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 
 public class FabricOfflineSkins implements ClientModInitializer {
 
@@ -42,7 +53,7 @@ public class FabricOfflineSkins implements ClientModInitializer {
     private static final boolean skinPass = false;
     private static final boolean capePass = false;
     private static final boolean overwrite = true;
-    public static String skinSuffix = "";
+    public static Map<UUID, String> skinSuffix = new HashMap<UUID, String>();
 
     private static Identifier generateRandomLocation() {
         return new Identifier("offlineskins", String.format("textures/generated/%s", UUID.randomUUID().toString()));

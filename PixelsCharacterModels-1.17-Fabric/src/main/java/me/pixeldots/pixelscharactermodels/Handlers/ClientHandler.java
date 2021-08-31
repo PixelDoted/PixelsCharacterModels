@@ -51,7 +51,7 @@ public class ClientHandler {
 		ScaleData scale = ScaleType.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		PresetData data = new PresetData();
 		
-		data.skinSuffix = FabricOfflineSkins.skinSuffix;
+		data.skinSuffix = FabricOfflineSkins.skinSuffix.get(entity.getGameProfile().getId());
 		data.GlobalScale = scale.getTargetScale();
 		data.convertModelData(model);
 		

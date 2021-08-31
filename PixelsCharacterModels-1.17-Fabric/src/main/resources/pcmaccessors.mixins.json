@@ -7,7 +7,9 @@
   ],
   "client": [
   	"PlayerModelAccessor",
-	"WorldRendererAccessor"
+    "WorldRendererAccessor",
+    "CameraAccessor",
+    "MinecraftClientAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

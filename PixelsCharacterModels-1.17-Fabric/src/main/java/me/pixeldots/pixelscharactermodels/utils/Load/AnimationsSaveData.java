@@ -21,11 +21,13 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class AnimationsSaveData {
 
-	public String AnimationsPath = "{mcdir}\\PCM\\Animations";
+	public String AnimationsPath = "{mcdir}/PCM/Animations";
 	
 	public void Initialize() {
 		System.out.println("Checking Animations Folder");
+		AnimationsPath.replace("/", File.separator);
 		AnimationsPath = AnimationsPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
+		
 		File folder = new File(AnimationsPath);
 		if (!folder.exists()) {
 			try {

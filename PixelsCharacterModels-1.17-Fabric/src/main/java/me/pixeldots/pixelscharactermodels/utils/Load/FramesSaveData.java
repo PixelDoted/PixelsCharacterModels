@@ -21,10 +21,11 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class FramesSaveData {
 
-	public String FramesPath = "{mcdir}\\PCM\\Frames";
+	public String FramesPath = "{mcdir}/PCM/Frames";
 	
 	public void Initialize() {
 		System.out.println("Checking Frames Folder");
+		FramesPath.replace("/", File.separator);
 		FramesPath = FramesPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
 		File folder = new File(FramesPath);
 		if (!folder.exists()) {

@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -15,28 +16,28 @@ import net.minecraft.entity.player.PlayerEntity;
 public class KeyBindings {
 	
 	private static KeyBinding openGUI = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-		"key.pfu.openGui", // The translation key of the keybinding's name
+		"key.pixelscharactermodels.openGui", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_R, // The keycode of the key
 		"category.PixelsCharacterModels" // The translation key of the keybinding's category.
 	));
 	private static KeyBinding reloadKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-		"key.OfflineSkin.Reload", // The translation key of the keybinding's name
+		"key.pixelscharactermodels.Reload", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_KP_1, // The keycode of the key
-		"category.OfflineSkin.Keybindings" // The translation key of the keybinding's category.
+		"category.PixelsCharacterModels" // The translation key of the keybinding's category.
 	));
 	
 	private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pfu.anim1", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_1, "category.PixelsCharacterModels"));
+			new KeyBinding("key.pixelscharactermodels.anim1", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_1, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim2 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pfu.anim2", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_2, "category.PixelsCharacterModels"));
+			new KeyBinding("key.pixelscharactermodels.anim2", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_2, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim3 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pfu.anim3", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_3, "category.PixelsCharacterModels"));
+			new KeyBinding("key.pixelscharactermodels.anim3", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_3, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim4 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pfu.anim4", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_4, "category.PixelsCharacterModels"));
+			new KeyBinding("key.pixelscharactermodels.anim4", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_4, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim5 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pfu.anim5", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_5, "category.PixelsCharacterModels"));
+			new KeyBinding("key.pixelscharactermodels.anim5", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_5, "category.PixelsCharacterModels"));
 	
 	public static void registerKeyBindings() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -47,6 +48,7 @@ public class KeyBindings {
 		    }
 		    while (KeyBindings.reloadKey.wasPressed()) {
             	FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
+            	PixelsCharacterModelsMain.clientHandler.requestModelData();
             }
 		    
 		    while (Anim1.wasPressed()) {
@@ -82,7 +84,7 @@ public class KeyBindings {
 	    		PixelsCharacterModels.playingAnimationData = null;
 	    	}
 		} else {
-			if (PixelsCharacterModels.playingFramesData == null || PixelsCharacterModels.playingFramesData.name != key) {
+			if (PixelsCharacterModels.playingFramesData == null || !PixelsCharacterModels.playingFramesData.name.equalsIgnoreCase(key)) {
 	    		if (PixelsCharacterModels.FramesData.loadFrame(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
 	    			PixelsCharacterModels.isPlayingFrames = true;
 	    			PixelsCharacterModels.playingFramesData = PixelsCharacterModels.PCMClient.currentStoredFrames;
@@ -90,7 +92,7 @@ public class KeyBindings {
 					//loadAnimationFrames(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer), PixelsCharacterModels.thisPlayer);
 				}
 	    	}
-	    	else if (PixelsCharacterModels.playingFramesData.name == key) {
+	    	else if (PixelsCharacterModels.playingFramesData.name.equalsIgnoreCase(key)) {
 	    		PixelsCharacterModels.isPlayingFrames = false;
 	    		PixelsCharacterModels.playingFramesData = null;
 	    		PixelsCharacterModels.playingAnimation = "";

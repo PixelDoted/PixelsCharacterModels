@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pixelscharactermodels",
-  "version": "4B Fabric",
+  "version": "1R Fabric",
 
   "name": "Pixel's Character Models",
   "description": "a way to customize you're player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
@@ -20,19 +20,20 @@
   "entrypoints": {
 	"main":
 	[
-		"virtuoel.pehkui.Pehkui"
+      "me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain",
+	    "virtuoel.pehkui.Pehkui"
 	],
     "client": [
       "me.pixeldots.pixelscharactermodels.PixelsCharacterModels",
       "lain.mods.skins.init.fabric.FabricOfflineSkins",
-	  "virtuoel.pehkui.PehkuiClient"
+	    "virtuoel.pehkui.PehkuiClient"
     ]
   },
   "mixins": [
-	"pcm.mixins.json",
-	"pcmaccessors.mixins.json",
-	"OfflineSkins-mixins.json",
-	"pehkui.mixins.json"
+	  "pcm.mixins.json",
+	  "pcmaccessors.mixins.json",
+	  "OfflineSkins-mixins.json",
+	  "pehkui.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3",

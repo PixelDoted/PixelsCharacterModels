@@ -5,6 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -16,12 +17,12 @@ public class SuffixCommand {
 	public static void Register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		if (dispatcher == null) return;
 		dispatcher.register(CommandManager.literal("skinsuffix").executes(context -> {
-			FabricOfflineSkins.skinSuffix = "";
+			FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.thisPlayer.getGameProfile().getId(), "");
 			FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
 			
 		    return 1;
 		}).then(CommandManager.argument("suffix", StringArgumentType.string()).executes(context -> { 
-			FabricOfflineSkins.skinSuffix = StringArgumentType.getString(context, "suffix");
+			FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.thisPlayer.getGameProfile().getId(), StringArgumentType.getString(context, "suffix"));
 			FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
 			
 		    return 1;

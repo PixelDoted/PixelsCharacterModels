@@ -9,7 +9,8 @@
   	"ModelPartMixin",
   	"HeldItemLayerMixin",
   	"LivingEntityRendererMixin",
-  	"ArmorFeatureRendererMixin"
+  	"ArmorFeatureRendererMixin",
+  	"CameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1

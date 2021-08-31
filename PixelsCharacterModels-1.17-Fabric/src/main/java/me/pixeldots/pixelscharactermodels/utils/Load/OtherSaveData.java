@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -18,16 +19,18 @@ import com.google.gson.Gson;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.model.LocalData;
 import me.pixeldots.pixelscharactermodels.utils.MapModelVectors;
-import net.minecraft.client.MinecraftClient;
 
 public class OtherSaveData {
 	
-	public String path = MinecraftClient.getInstance().runDirectory + "\\PCM";
+	public String SavePath = "{mcdir}/PCM";
 	
 	public void Initialize() {
+		SavePath.replace("/", File.separator);
+		SavePath = SavePath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
 		Load();
 		System.out.println("Checking Models Folder");
-		File meshFolder = new File(path + "\\Models");
+		
+		File meshFolder = new File(SavePath+File.separator+"Models");
 		if (!meshFolder.exists()) {
 			try {
 				Files.createDirectories(Paths.get(meshFolder.getAbsolutePath()));
@@ -38,9 +41,9 @@ public class OtherSaveData {
 	}
 	
 	public void Save() {
-		File folder = new File(path);
-		String file = path + "/Data.json";
-		Path Directories = Paths.get(path);
+		File folder = new File(SavePath+File.separator+"Models");
+		String file = SavePath + File.separator + "Data.json";
+		Path Directories = Paths.get(SavePath);
 			
 		if (!folder.exists()) {
 			try {
@@ -62,22 +65,17 @@ public class OtherSaveData {
 	}
 	
 	public void Load() {
-		System.out.println("Loading Data");
-		File folder = new File(path);
-		if (!(folder.exists())) return;
-		File[] files = folder.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			BufferedReader reader = null;
-			if (files[i].getName().matches("Data.json")) {
-				try {
-					reader = new BufferedReader(new FileReader(files[i]));
-					formatData(reader);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} finally {
-					try { reader.close(); } catch (IOException e) { }
-				}
-			}
+		File file = new File(SavePath + File.separator + "Data.json");
+		if (!(file.exists())) return;
+
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			formatData(reader);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try { reader.close(); } catch (IOException e) {}
 		}
 	}
 	
@@ -90,15 +88,16 @@ public class OtherSaveData {
 		if (reader == null) return;
 		Gson gson = new Gson();
 		PixelsCharacterModels.localData = gson.fromJson(reader, LocalData.class);
+		System.out.println("Loaded Data");
 	}
 	//Mesh
 	public File[] getMeshes() {
-		File folder = new File(path + "\\Models");
+		File folder = new File(SavePath+File.separator+"Models");
 		return folder.listFiles();
 	}
 	
 	public String ReadMesh(int id) {
-		File folder = new File(path + "\\Models");
+		File folder = new File(SavePath+File.separator+"Models");
 		File file = folder.listFiles()[id];
 		String s = "";
 		
@@ -142,7 +141,7 @@ public class OtherSaveData {
 	
 	public MapModelVectors getMeshData(String name) {
 		if (name == "" || name == "cube") return null;
-		File folder = new File(path + "\\Models");
+		File folder = new File(SavePath+File.separator+"Models");
 		File[] files = folder.listFiles();
 		BufferedReader reader = null;
 		for (int i = 0; i < files.length; i++) {

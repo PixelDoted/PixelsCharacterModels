@@ -82,9 +82,11 @@ public class AnimationGui extends GuiHandler {
 				}));
 				
 				if (PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-					RotXField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).X));
-					RotYField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Y));
-					RotZField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Z));
+					if (PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel) != null) {
+						RotXField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).X));
+						RotYField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Y));
+						RotZField.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredAnimation.LimbRotations.get(PixelsCharacterModels.GuiData.SelectedPartModel).Z));
+					}
 				} else {
 					RotXField.setText("0.0");
 					RotYField.setText("0.0");
@@ -160,6 +162,8 @@ public class AnimationGui extends GuiHandler {
 		drawString(matrices, "X/Pitch", 185, 103);
 		drawString(matrices, "Y/Yaw", 190, 133);
 		drawString(matrices, "Z/Roll", 190, 163);
+		
+		drawEntity(100, this.height/2+100, 75, (float)(100) - mouseX, (float)(this.height/2+100-125) - mouseY, PixelsCharacterModels.GuiData.entity);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

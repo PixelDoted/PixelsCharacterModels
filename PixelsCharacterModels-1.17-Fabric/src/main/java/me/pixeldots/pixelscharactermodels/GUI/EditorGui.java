@@ -14,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
@@ -75,7 +76,7 @@ public class EditorGui extends GuiHandler {
 		GlobalScaleField.setText(String.valueOf(getPlayerScale()));
 		
 		GlobalSkinField = addTextField(new TextFieldWidget(textRendererGUI, 70, 90, 100, 25, Text.of("Skin")));
-		GlobalSkinField.setText(FabricOfflineSkins.skinSuffix);
+		GlobalSkinField.setText(FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()));
 		ShowSkinList = addButton(new ButtonWidget(70, 120, 100, 20, Text.of(PixelsCharacterModels.TranslatedText.ListSkins), (button) -> {
 			ListSkins();
 		}));
@@ -121,6 +122,8 @@ public class EditorGui extends GuiHandler {
 		drawString(matrices, "Y", this.width-118, 160, 16777215);
 		drawString(matrices, "Z", this.width-118, 185, 16777215);
 		drawString(matrices, "Preset: " + PixelsCharacterModels.GuiData.SelectedPresetName, 120, 5);
+		
+		drawEntity(this.width/2, this.height/2, 75, (float)(this.width/2) - mouseX, (float)(this.height/2-125) - mouseY, PixelsCharacterModels.GuiData.entity);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	
@@ -165,8 +168,8 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerSkin() {
-		if (GlobalSkinField.getText() == FabricOfflineSkins.skinSuffix) return;
-		FabricOfflineSkins.skinSuffix = GlobalSkinField.getText();
+		if (FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.GuiData.entity.getGameProfile().getId()) == GlobalSkinField.getText()) return;
+		FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.GuiData.entity.getGameProfile().getId(), GlobalSkinField.getText());
 		FabricOfflineSkins.ReloadSkins(client);
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
 			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));

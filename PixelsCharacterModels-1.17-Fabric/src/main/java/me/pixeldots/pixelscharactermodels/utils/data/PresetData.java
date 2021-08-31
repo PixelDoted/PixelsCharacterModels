@@ -36,14 +36,18 @@ public class PresetData {
 		partData.put("rightarm", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.rightArm)));
 	}
 	
-	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model) {
-		if (PixelsCharacterModels.client.isInSingleplayer()) {
+	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model, boolean isPacket) {
+		if (PixelsCharacterModels.client.isInSingleplayer() && isPacket == false) {
 			PixelsCharacterModels.client.getServer().getCommandManager().execute(
 					PixelsCharacterModels.client.getServer().getCommandSource(), 
 					"/scale set " + GlobalScale + " " + player.getDisplayName().asString());
 		}
 		
-		FabricOfflineSkins.skinSuffix = skinSuffix;
+		if (FabricOfflineSkins.skinSuffix.containsKey(player.getGameProfile().getId())) {
+			FabricOfflineSkins.skinSuffix.remove(player.getGameProfile().getId());
+			FabricOfflineSkins.skinSuffix.put(player.getGameProfile().getId(), skinSuffix);
+		}
+		else FabricOfflineSkins.skinSuffix.put(player.getGameProfile().getId(), skinSuffix);
 		FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client);
 		
 		PixelsCharacterModels.dataPackets.get(model.head).copyData(partData.get("head"), model.head);

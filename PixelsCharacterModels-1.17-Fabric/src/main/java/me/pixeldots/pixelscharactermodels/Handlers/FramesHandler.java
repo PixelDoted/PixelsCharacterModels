@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.accessors.MinecraftClientAccessor;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -26,6 +25,7 @@ public class FramesHandler {
 				for (int i = 0; i < PixelsCharacterModels.playingAnimationData.LimbParts.size(); i++) {
 					ModelPart part = PixelsCharacterModels.playingAnimationData.LimbParts.get(i);
 					MapVec3 rot = PixelsCharacterModels.playingAnimationData.LimbRotations.get(part);
+					if (rot == null || part == null) continue;
 					if (sameInRange((float)Math.toDegrees(part.pitch), rot.X, 0.02f) 
 							&& sameInRange((float)Math.toDegrees(part.yaw), rot.Y, 0.02f) 
 							&& sameInRange((float)Math.toDegrees(part.roll), rot.Z, 0.02f)) {
@@ -49,11 +49,13 @@ public class FramesHandler {
 					}
 				}
 			}
-			CurrentTick -= (1-PixelsCharacterModels.playingFramesData.TimePerFrame);
+			float AddTick = (1-PixelsCharacterModels.playingFramesData.TimePerFrame)/(PixelsCharacterModels.getCurrentFPS()/60);
+			if (PixelsCharacterModels.getCurrentFPS() <= 60) AddTick = 1-PixelsCharacterModels.playingFramesData.TimePerFrame;
+			CurrentTick -= AddTick;
 			if (CurrentTick < 0) CurrentTick = 0;
 		} else { CurrentTick = 1; lastLimbRotations.clear(); }
 	}
-	
+
 	public static void loadAnimationFrames(PlayerEntityModel<?> model, PlayerEntity entity) {
 		String s = PixelsCharacterModels.playingFramesData.frames.get(PixelsCharacterModels.PCMClient.framesAnimationID);
 		PixelsCharacterModels.AnimationsData.loadAnimation(s, entity, model);
@@ -80,7 +82,6 @@ public class FramesHandler {
 		float end = b;
 		float delta = CurrentTick;
 		float v = (float) MathHelper.lerp(delta, a, end);
-		//float v = (1-t) * a + t * b;
 		
 		if (v > b && v > a) { v = b; }
 		else if (v < b && v < a) { v = b; }

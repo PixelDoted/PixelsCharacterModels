@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.gson.Gson;
+
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
@@ -35,7 +37,6 @@ public class PresetsGui extends GuiHandler {
 	@Override
 	public void init() {
 		super.init();
-		if (PixelsCharacterModels.GuiData.model == null) MinecraftClient.getInstance().openScreen(new ErrorGui("The player model wasn't found, this could be caused because the player is not being rendered"));
 			
 		File[] presets = PixelsCharacterModels.PresetsData.getPresets();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
@@ -113,6 +114,10 @@ public class PresetsGui extends GuiHandler {
 		if (update != "") {
 			drawString(matrices, "an update is available, Version: " + update, 5, this.height-30);
 		}
+		drawEntity(50, this.height/2+150, 75, (float)(50) - mouseX, (float)(this.height/2+150-125) - mouseY, PixelsCharacterModels.GuiData.entity);
+		if (PixelsCharacterModels.GuiData.model == null) 
+			PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.GuiData.entity);
+		
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	

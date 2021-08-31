@@ -34,7 +34,11 @@ public class UserManagedSkinProvider implements ISkinProvider {
             skin.setSkinFilter(_filter);
         SharedPool.execute(() -> {
             byte[] data = null;
-            String suffix = FabricOfflineSkins.skinSuffix;
+            
+            String suffix = "";
+            if (FabricOfflineSkins.skinSuffix.containsKey(profile.getPlayerID())) 
+            	suffix = FabricOfflineSkins.skinSuffix.get(profile.getPlayerID());
+            
             if (!Shared.isOfflinePlayer(profile.getPlayerID(), profile.getPlayerName()))
                 data = readFile(_dirU, "%s"+suffix+".png", profile.getPlayerID().toString().replaceAll("-", ""));
             if (data == null && !Shared.isBlank(profile.getPlayerName()))
