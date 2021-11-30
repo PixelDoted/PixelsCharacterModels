@@ -32,7 +32,7 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class PixelsCharacterModels implements ClientModInitializer {
 	
-	public static String modVersion = "1R";
+	public static String modVersion = "2R";
 	
 	public static TranslatedText TranslatedText = new TranslatedText();
 	public static PlayerEntity thisPlayer = null;

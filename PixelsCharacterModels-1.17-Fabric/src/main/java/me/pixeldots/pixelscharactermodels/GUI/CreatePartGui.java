@@ -38,6 +38,8 @@ public class CreatePartGui extends GuiHandler {
 	public TextFieldWidget TextureOffsetY;
 	public TextFieldWidget TextureSizeX;
 	public TextFieldWidget TextureSizeY;
+
+	public TextFieldWidget TextureID;
 	
 	public ButtonWidget CreatePart;
 	
@@ -77,15 +79,20 @@ public class CreatePartGui extends GuiHandler {
 		SizeY = addTextField(new TextFieldWidget(textRendererGUI, 222, 135, 35, 20, Text.of("Size Y")));
 		SizeZ = addTextField(new TextFieldWidget(textRendererGUI, 259, 135, 35, 20, Text.of("Size Z")));
 		
-		TextureOffsetX = addTextField(new TextFieldWidget(textRendererGUI, 185, 160, 54, 20, Text.of("Texture Width")));
-		TextureOffsetY = addTextField(new TextFieldWidget(textRendererGUI, 241, 160, 53, 20, Text.of("Texture Height")));
+		TextureOffsetX = addTextField(new TextFieldWidget(textRendererGUI, 185, 160, 54, 20, Text.of("Texture X")));
+		TextureOffsetY = addTextField(new TextFieldWidget(textRendererGUI, 241, 160, 54, 20, Text.of("Texture Y")));
 		
-		CreatePart = addButton(new ButtonWidget(200, 185, 75, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
+		TextureSizeX = addTextField(new TextFieldWidget(textRendererGUI, 185, 185, 54, 20, Text.of("Texture Width")));
+		TextureSizeY = addTextField(new TextFieldWidget(textRendererGUI, 241, 185, 54, 20, Text.of("Texture Height")));
+
+		TextureID = addTextField(new TextFieldWidget(textRendererGUI, 185, 210, 100, 20, Text.of("Texture ID")));
+
+		CreatePart = addButton(new ButtonWidget(185, 235, 100, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
 			GuiData data = PixelsCharacterModels.GuiData;
 			if (data.createPartData.mesh != "Cube") {
-				createPartHelper.createMesh(data.createPartData.mesh, data.createPartData.Position, data.createPartData.Size, data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText());
+				createPartHelper.createMesh(data.createPartData.mesh, data.createPartData.Position, data.createPartData.Size, data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			} else {
-				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText());
+				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			}
 			if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
 				PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));

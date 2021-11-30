@@ -25,21 +25,21 @@ public abstract class LivingEntityMixin extends EntityMixin
 		return ScaleUtils.modifyLimbDistance(value, (Entity) (Object) this);
 	}
 	
-	@Unique Vec3d initialClimbingPos = null;
+	@Unique Vec3d pehkui$initialClimbingPos = null;
 	
 	@Inject(method = "isClimbing()Z", at = @At(value = "RETURN"), cancellable = true)
 	private void onIsClimbing(CallbackInfoReturnable<Boolean> info)
 	{
 		final LivingEntity self = (LivingEntity) (Object) this;
 		
-		if (initialClimbingPos != null || info.getReturnValueZ() || self.isSpectator())
+		if (pehkui$initialClimbingPos != null || info.getReturnValueZ() || self.isSpectator())
 		{
 			return;
 		}
 		
-		final float width = ScaleUtils.getWidthScale(self);
+		final float width = ScaleUtils.getBoundingBoxWidthScale(self);
 		
-		if (width > 1.0F && !ScaleUtils.isAboveCollisionThreshold(self))
+		if (width > 1.0F)
 		{
 			final Box bounds = self.getBoundingBox();
 			
@@ -53,7 +53,7 @@ public abstract class LivingEntityMixin extends EntityMixin
 			final int minZ = MathHelper.floor(bounds.minZ + halfUnscaledZLength);
 			final int maxZ = MathHelper.floor(bounds.maxZ - halfUnscaledZLength);
 			
-			initialClimbingPos = method_5812();
+			pehkui$initialClimbingPos = method_5812();
 			
 			for (final BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, minY, maxZ))
 			{
@@ -65,8 +65,8 @@ public abstract class LivingEntityMixin extends EntityMixin
 				}
 			}
 			
-			setPosDirectly(initialClimbingPos.getX(), initialClimbingPos.getY(), initialClimbingPos.getZ());
-			initialClimbingPos = null;
+			setPosDirectly(pehkui$initialClimbingPos.getX(), pehkui$initialClimbingPos.getY(), pehkui$initialClimbingPos.getZ());
+			pehkui$initialClimbingPos = null;
 		}
 	}
 }

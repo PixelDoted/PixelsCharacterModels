@@ -1,13 +1,15 @@
 package virtuoel.pehkui.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
+import it.unimi.dsi.fastutil.objects.ObjectAVLTreeSet;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
@@ -19,6 +21,12 @@ import net.minecraft.util.math.MathHelper;
 
 public class ScaleData
 {
+	/**
+	 * @see {@link ScaleData#isReset()}
+	 * @see {@link ScaleData#resetScale()}
+	 */
+	@Deprecated
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0")
 	public static final ScaleData IDENTITY = Builder.create().buildImmutable(1.0F);
 	
 	private float baseScale;
@@ -27,6 +35,7 @@ public class ScaleData
 	private float targetScale;
 	private int scaleTicks;
 	private int totalScaleTicks;
+	private Boolean persistent = null;
 	
 	private boolean shouldSync = false;
 	
@@ -35,7 +44,7 @@ public class ScaleData
 	@Nullable
 	private final Entity entity;
 	
-	private final SortedSet<ScaleModifier> baseValueModifiers = new ObjectRBTreeSet<>();
+	private final SortedSet<ScaleModifier> baseValueModifiers = new ObjectAVLTreeSet<>();
 	
 	/**
 	 * @see {@link ScaleType#getScaleData(Entity)}
@@ -67,11 +76,11 @@ public class ScaleData
 	{
 		final float currScale = getBaseScale();
 		final float targetScale = getTargetScale();
-		final int scaleTickDelay = getScaleTickDelay();
 		
 		if (currScale != targetScale)
 		{
-			this.prevBaseScale = currScale;
+			final int scaleTickDelay = getScaleTickDelay();
+			
 			if (this.scaleTicks >= scaleTickDelay)
 			{
 				this.initialScale = targetScale;
@@ -85,9 +94,17 @@ public class ScaleData
 				setBaseScale(nextScale);
 			}
 		}
-		else if (this.prevBaseScale != currScale)
+		else
 		{
-			this.prevBaseScale = currScale;
+			if (this.prevBaseScale != currScale)
+			{
+				this.prevBaseScale = currScale;
+			}
+			
+			if (this.initialScale != targetScale)
+			{
+				this.initialScale = targetScale;
+			}
 		}
 	}
 	
@@ -120,6 +137,7 @@ public class ScaleData
 	 * @return Scale with modifiers applied
 	 */
 	@Deprecated
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0")
 	protected float computeScale(float value, Collection<ScaleModifier> modifiers, float delta)
 	{
 		for (final ScaleModifier m : modifiers)
@@ -223,9 +241,13 @@ public class ScaleData
 	{
 		targetScale = (float) getScaleType().clampTargetScale(this, targetScale);
 		
-		this.initialScale = getBaseScale();
+		final float lastTarget = getTargetScale();
+		final int remaining = Math.round(getScaleTickDelay() * ((lastTarget - getBaseScale()) / (lastTarget - getInitialScale())));
+		
+		this.initialScale = lastTarget;
 		this.targetScale = targetScale;
-		this.scaleTicks = 0;
+		this.scaleTicks = remaining;
+		
 		markForSync(true);
 	}
 	
@@ -277,6 +299,22 @@ public class ScaleData
 		return this.prevBaseScale;
 	}
 	
+	public void setPersistence(@Nullable Boolean persistent)
+	{
+		this.persistent = persistent;
+	}
+	
+	public @Nullable Boolean getPersistence()
+	{
+		return persistent;
+	}
+	
+	public boolean shouldPersist()
+	{
+		final Boolean persist = getPersistence();
+		return persist == null ? getScaleType().getDefaultPersistence() : persist;
+	}
+	
 	public void markForSync(boolean sync)
 	{
 		final Entity e = getEntity();
@@ -292,15 +330,21 @@ public class ScaleData
 		return this.shouldSync;
 	}
 	
+	/**
+	 * Marks this to be synced to clients and also invokes scale change events.
+	 * <p>Gets called by methods that modify the scale. Doesn't typically need to be called from outside.
+	 */
 	public void onUpdate()
 	{
 		markForSync(true);
 		getScaleType().getScaleChangedEvent().invoker().onEvent(this);
 	}
 	
+	private final List<ScaleModifier> syncedModifiers = new ArrayList<>();
+	
 	public PacketByteBuf toPacket(PacketByteBuf buffer)
 	{
-		final SortedSet<ScaleModifier> syncedModifiers = new ObjectRBTreeSet<>();
+		syncedModifiers.clear();
 		
 		syncedModifiers.addAll(getBaseValueModifiers());
 		syncedModifiers.removeAll(getScaleType().getDefaultBaseValueModifiers());
@@ -318,6 +362,8 @@ public class ScaleData
 			buffer.writeIdentifier(ScaleRegistries.getId(ScaleRegistries.SCALE_MODIFIERS, modifier));
 		}
 		
+		syncedModifiers.clear();
+		
 		return buffer;
 	}
 	
@@ -331,6 +377,7 @@ public class ScaleData
 		this.targetScale = tag.contains("target") ? tag.getFloat("target") : this.baseScale;
 		this.scaleTicks = tag.contains("ticks") ? tag.getInt("ticks") : 0;
 		this.totalScaleTicks = tag.contains("total_ticks") ? tag.getInt("total_ticks") : type.getDefaultTickDelay();
+		this.persistent = tag.contains("persistent") ? tag.getBoolean("persistent") : null;
 		
 		final SortedSet<ScaleModifier> baseValueModifiers = getBaseValueModifiers();
 		
@@ -392,7 +439,13 @@ public class ScaleData
 			tag.putInt("total_ticks", this.totalScaleTicks);
 		}
 		
-		final SortedSet<ScaleModifier> savedModifiers = new ObjectRBTreeSet<>();
+		final Boolean persistent = getPersistence();
+		if (persistent != null)
+		{
+			tag.putBoolean("persistent", persistent);
+		}
+		
+		final List<ScaleModifier> savedModifiers = new ArrayList<>();;
 		
 		savedModifiers.addAll(getBaseValueModifiers());
 		savedModifiers.removeAll(getScaleType().getDefaultBaseValueModifiers());
@@ -428,6 +481,7 @@ public class ScaleData
 		this.targetScale = defaultBaseScale;
 		this.scaleTicks = 0;
 		this.totalScaleTicks = type.getDefaultTickDelay();
+		this.persistent = null;
 		
 		final SortedSet<ScaleModifier> baseValueModifiers = getBaseValueModifiers();
 		
@@ -482,6 +536,11 @@ public class ScaleData
 			return false;
 		}
 		
+		if (getPersistence() != null)
+		{
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -492,12 +551,16 @@ public class ScaleData
 	
 	public ScaleData fromScale(ScaleData scaleData, boolean notifyListener)
 	{
-		this.baseScale = scaleData.getBaseScale();
-		this.prevBaseScale = scaleData.getPrevBaseScale();
-		this.initialScale = scaleData.getInitialScale();
-		this.targetScale = scaleData.getTargetScale();
-		this.scaleTicks = scaleData.scaleTicks;
-		this.totalScaleTicks = scaleData.totalScaleTicks;
+		if (scaleData != this)
+		{
+			this.baseScale = scaleData.getBaseScale();
+			this.prevBaseScale = scaleData.getPrevBaseScale();
+			this.initialScale = scaleData.getInitialScale();
+			this.targetScale = scaleData.getTargetScale();
+			this.scaleTicks = scaleData.scaleTicks;
+			this.totalScaleTicks = scaleData.totalScaleTicks;
+			this.persistent = scaleData.getPersistence();
+		}
 		
 		if (notifyListener)
 		{
@@ -588,7 +651,7 @@ public class ScaleData
 	public static class Builder
 	{
 		private Entity entity = null;
-		private ScaleType type = ScaleType.INVALID;
+		private ScaleType type = ScaleTypes.INVALID;
 		
 		public static Builder create()
 		{
@@ -602,7 +665,7 @@ public class ScaleData
 		
 		public Builder type(ScaleType type)
 		{
-			this.type = type == null ? ScaleType.INVALID : type;
+			this.type = type == null ? ScaleTypes.INVALID : type;
 			return this;
 		}
 		
@@ -612,6 +675,8 @@ public class ScaleData
 			return this;
 		}
 		
+		@Deprecated
+		@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0")
 		public ImmutableScaleData buildImmutable(float value)
 		{
 			return new ImmutableScaleData(value, type, entity);
@@ -619,10 +684,14 @@ public class ScaleData
 		
 		public ScaleData build()
 		{
-			return new ScaleData(type, entity);
+			final ScaleData existing = entity == null ? null : type.getScaleData(entity);
+			
+			return existing != null ? existing : new ScaleData(type, entity);
 		}
 	}
 	
+	@Deprecated
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0")
 	public static class ImmutableScaleData extends ScaleData
 	{
 		protected ImmutableScaleData(float scale, ScaleType scaleType, @Nullable Entity entity)
@@ -688,6 +757,12 @@ public class ScaleData
 		public ScaleData resetScale(boolean notifyListener)
 		{
 			return this;
+		}
+		
+		@Override
+		public void setPersistence(Boolean persistent)
+		{
+			
 		}
 		
 		@Override

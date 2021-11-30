@@ -21,7 +21,7 @@ public class ClientPlayerInteractionManagerMixin
 	{
 		if (client.player != null)
 		{
-			final float scale = ScaleUtils.getReachScale(client.player);
+			final float scale = ScaleUtils.getEntityReachScale(client.player);
 			
 			if (scale != 1.0F)
 			{

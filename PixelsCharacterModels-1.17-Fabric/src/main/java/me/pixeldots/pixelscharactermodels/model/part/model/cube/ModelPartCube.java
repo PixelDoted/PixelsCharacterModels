@@ -1,9 +1,12 @@
 package me.pixeldots.pixelscharactermodels.model.part.model.cube;
 
+import java.io.BufferedReader;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.accessors.WorldRendererAccessor;
+import me.pixeldots.pixelscharactermodels.accessors.MinecraftClientAccessor;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;
@@ -18,10 +21,12 @@ import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
 public class ModelPartCube {
@@ -37,6 +42,8 @@ public class ModelPartCube {
 	public MapVec3 pos;
 	public MapVec3 size;
 	public MapVec2 uv;
+	public Identifier texture = null;
+	public String textureFile = "";
 
 	public ModelPartCube(int u, int v, float x, float y, float z, float sizeX, float sizeY, float sizeZ, float textureWidth, float textureHeight, String name) {
 		this.pos = new MapVec3(x, y, z);
@@ -85,18 +92,33 @@ public class ModelPartCube {
 	}
    
 	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
+		if (texture != null) {
+			RenderSystem.setShaderTexture(0, texture);
+			RenderSystem.setShaderColor(1, 1, 1, 1);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.enableDepthTest();
+		}
+		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
+		int myLight = 15;//getLighting();
+
 		for (int i = 0; i < sides.length; i++) {
-			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
+			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
 			for (int j = 0; j < sides[i].vertices.length; j++) {
 				buffer.vertex(m, sides[i].vertices[j].pos.getX()/16, sides[i].vertices[j].pos.getY()/16, sides[i].vertices[j].pos.getZ()/16).texture(
-						sides[i].vertices[j].u, sides[i].vertices[j].v).color(red, green, blue, alpha).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
+						sides[i].vertices[j].u, sides[i].vertices[j].v).color(red, green, blue, alpha).light(myLight).next();//.normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
 			}
 			buffer.end();
 			BufferRenderer.draw(buffer);
 		}
     }
+
+	public int getLighting() {
+		MinecraftClientAccessor client = ((MinecraftClientAccessor)(Object)MinecraftClient.getInstance());
+		return MinecraftClient.getInstance().getEntityRenderDispatcher().getLight(
+			MinecraftClient.getInstance().player, client.getPaused() ? client.getPausedTickDelta() : client.getRenderTickCounter().tickDelta);
+	}
 }

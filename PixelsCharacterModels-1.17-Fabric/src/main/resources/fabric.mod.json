@@ -1,47 +1,45 @@
 {
-  "schemaVersion": 1,
-  "id": "pixelscharactermodels",
-  "version": "1R Fabric",
+    "schemaVersion": 1,
+    "id": "pixelscharactermodels",
+    "version": "2R Fabric",
 
-  "name": "Pixel's Character Models",
-  "description": "a way to customize you're player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
-  "authors": [
-    "PixelDots"
-  ],
-  "contact": {
-    "homepage": "https://modrinth.com/mod/pixels-character-models",
-    "sources": "https://github.com/PixelDoted/PixelsCharacterModels"
-  },
+    "name": "Pixel's Character Models",
+    "description": "a way to customize you're player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
+    "authors": [
+        "PixelDots"
+    ],
+    "contact": {
+        "homepage": "https://modrinth.com/mod/pixels-character-models",
+        "sources": "https://github.com/PixelDoted/PixelsCharacterModels"
+    },
 
-  "license": "LGPL-3",
-  "icon": "assets/pcm/icon.png",
+    "license": "LGPL-3",
+    "icon": "assets/pcm/icon.png",
 
-  "environment": "*",
-  "entrypoints": {
-	"main":
-	[
-      "me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain",
-	    "virtuoel.pehkui.Pehkui"
-	],
-    "client": [
-      "me.pixeldots.pixelscharactermodels.PixelsCharacterModels",
-      "lain.mods.skins.init.fabric.FabricOfflineSkins",
-	    "virtuoel.pehkui.PehkuiClient"
-    ]
-  },
-  "mixins": [
-	  "pcm.mixins.json",
-	  "pcmaccessors.mixins.json",
-	  "OfflineSkins-mixins.json",
-	  "pehkui.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=0.11.3",
-    "fabric": "*",
-    "minecraft": "1.17.x",
-    "java": ">=16"
-  },
-  "suggests": {
-    "modmenu": "*"
-  }
+    "environment": "*",
+    "entrypoints": {
+        "main":
+        [
+            "me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain",
+            "virtuoel.pehkui.Pehkui"
+        ],
+        "client": [
+        "me.pixeldots.pixelscharactermodels.PixelsCharacterModels",
+        "lain.mods.skins.init.fabric.FabricOfflineSkins",
+            "virtuoel.pehkui.PehkuiClient"
+        ]
+    },
+    "mixins": [
+        "pcm.mixins.json",
+        "pcmaccessors.mixins.json",
+        "OfflineSkins-mixins.json",
+        "pehkui.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.11.6",
+        "fabric": "*"
+    },
+    "suggests": {
+        "modmenu": "*"
+    }
 }

@@ -162,18 +162,13 @@ public class EditorGui extends GuiHandler {
 			setModelPartPos(data);
 			setModelPartVisible(data);
 		}
-		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
-		}
 	}
 	
 	public void setPlayerSkin() {
 		if (FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.GuiData.entity.getGameProfile().getId()) == GlobalSkinField.getText()) return;
 		FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.GuiData.entity.getGameProfile().getId(), GlobalSkinField.getText());
 		FabricOfflineSkins.ReloadSkins(client);
-		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
-		}
+		savePreset();
 	}
 	
 	public void ListSkins() {
@@ -204,6 +199,7 @@ public class EditorGui extends GuiHandler {
 			if (data.scale.Z != Float.parseFloat(ScaleZField.getText()))
 				data.scale.Z = Float.parseFloat(ScaleZField.getText()); updated = true;
 		}
+		if (updated) savePreset();
 		return updated;
 	}
 	
@@ -221,13 +217,22 @@ public class EditorGui extends GuiHandler {
 			if (data.pos.Z != Float.parseFloat(PosZField.getText()))
 				data.pos.Z = Float.parseFloat(PosZField.getText()); updated = true;
 		}
+		if (updated) savePreset();
 		return updated;
 	}
 	
 	public boolean setModelPartVisible(ModelPartData data) {
 		if (data.Show == (ShowButton.getMessage().asString() == "Showing" ? true : false)) return false;
 		data.Show = ShowButton.getMessage().asString() == "Showing" ? true : false;
+		savePreset();
 		return true;
+	}
+
+	public void savePreset() {
+		System.out.println("saving");
+		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
+			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		}
 	}
 	
 }

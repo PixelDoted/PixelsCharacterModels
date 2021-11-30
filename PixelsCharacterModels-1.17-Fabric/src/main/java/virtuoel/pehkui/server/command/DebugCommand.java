@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import org.spongepowered.asm.mixin.MixinEnvironment;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,13 +28,13 @@ import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import virtuoel.pehkui.Pehkui;
 import virtuoel.pehkui.api.PehkuiConfig;
+import virtuoel.pehkui.util.I18nUtils;
 import virtuoel.pehkui.util.MixinTargetClasses;
 import virtuoel.pehkui.util.NbtCompoundExtensions;
 
@@ -65,7 +67,7 @@ public class DebugCommand
 								}
 								catch (IllegalArgumentException e)
 								{
-									context.getSource().sendError(new LiteralText("Invalid UUID \"" + uuidString + "\"."));
+									context.getSource().sendError(I18nUtils.translate("commands.pehkui.debug.delete.uuid.invalid", "Invalid UUID \"%s\".", uuidString));
 									return 0;
 								}
 								
@@ -83,6 +85,21 @@ public class DebugCommand
 							})
 						)
 					)
+				)
+				.then(CommandManager.literal("garbage_collect")
+					.executes(context ->
+					{
+						context.getSource().getPlayer().networkHandler.sendPacket(
+							new CustomPayloadS2CPacket(Pehkui.DEBUG_PACKET,
+								new PacketByteBuf(Unpooled.buffer())
+								.writeEnumConstant(DebugPacketType.GARBAGE_COLLECT)
+							)
+						);
+						
+						System.gc();
+						
+						return 1;
+					})
 				)
 			)
 		);
@@ -148,7 +165,7 @@ public class DebugCommand
 		
 		BlockPos.Mutable mut = start.mutableCopy();
 		
-		ServerWorld w = player.getServerWorld();
+		World w = player.getEntityWorld();
 		
 		for (EntityType<?> t : TYPES)
 		{
@@ -168,14 +185,18 @@ public class DebugCommand
 		
 		// TODO set command block w/ entity to void and block destroy under player pos
 		
-		context.getSource().sendFeedback(new LiteralText("Tests succeeded."), false);
+		int successes = -1;
+		int total = -1;
+		
+		context.getSource().sendFeedback(I18nUtils.translate("commands.pehkui.debug.test.success", "Tests succeeded: %d/%d", successes, total), false);
 		
 		return 1;
 	}
 	
 	public static enum DebugPacketType
 	{
-		MIXIN_CLASSLOAD_TESTS,
+		MIXIN_AUDIT,
+		GARBAGE_COLLECT
 		;
 	}
 	
@@ -200,9 +221,13 @@ public class DebugCommand
 		context.getSource().getPlayer().networkHandler.sendPacket(
 			new CustomPayloadS2CPacket(Pehkui.DEBUG_PACKET,
 				new PacketByteBuf(Unpooled.buffer())
-				.writeEnumConstant(DebugPacketType.MIXIN_CLASSLOAD_TESTS)
+				.writeEnumConstant(DebugPacketType.MIXIN_AUDIT)
 			)
 		);
+		
+		context.getSource().sendFeedback(I18nUtils.translate("commands.pehkui.debug.audit.start", "Starting Mixin environment audit (client)..."), false);
+		MixinEnvironment.getCurrentEnvironment().audit();
+		context.getSource().sendFeedback(I18nUtils.translate("commands.pehkui.debug.audit.end", "Mixin environment audit complete!"), false);
 		
 		return 1;
 	}
@@ -223,10 +248,12 @@ public class DebugCommand
 		
 		if (fails > 0)
 		{
-			response.accept(new LiteralText("Failed classes: \"" + String.join("\", \"", failed) + "\""));
+			response.accept(I18nUtils.translate("commands.pehkui.debug.test.mixin.failed", "Failed classes: %s", "\"" + String.join("\", \"", failed) + "\""));
 		}
 		
-		response.accept(new LiteralText(String.format("%d successes and %d fails out of %d mixined %s%s classes", successes, fails, total, resolveMappings ? "intermediary " : "", client ? "client" : "server")));
+		final String lang = "commands.pehkui.debug.test.mixin.results." + (resolveMappings ? "intermediary" : "named") + (client ? ".client" : ".server");
+		final String defaultStr = "%d successes and %d fails out of %d mixined " + (resolveMappings ? "intermediary " : "") + (client ? "client" : "server") + " classes";
+		response.accept(I18nUtils.translate(lang, defaultStr, successes, fails, total));
 	}
 	
 	public static void classloadMixinTargets(final String[] classes, final boolean resolveMappings, final Collection<String> succeeded, final Collection<String> failed)

@@ -50,32 +50,41 @@ public class RenderingHandler {
 	public void renderPartHead(MatrixStack matrices, VertexConsumer vertices, ModelPart part, int light, int overlay, CallbackInfo info) {
 		if (part == null) return;
 		if (PixelsCharacterModels.dataPackets.containsKey(part)) {
+			boolean ignoreRotation = false;
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
 			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) {
 				part.pitch = data.copyFromPart.pitch;
 				part.yaw = data.copyFromPart.yaw;
 				part.roll = data.copyFromPart.roll;
 				data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
+				ignoreRotation = true;
 			}
 			
 			if (!isPartFromPlayer(part, data)) return;
 			if (data.Show == false) { info.cancel(); return; }
 			
-			if (!data.useRotation && data.activeRotation) { data.useRotation = true; data.activeRotation = false; }
-			if (PixelsCharacterModels.playingAnimationData != null) {
-				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
-				if (anim.LimbRotations.containsKey(part)) {
-					data.useRotation = true;
-					data.activeRotation = true;
-					data.rot = anim.LimbRotations.get(part);
-					if (data.rot != null) {
-						MapVec3 vector = FramesHandler.getLerpIfFrames(data.rot, part);
-						part.pitch = (float)Math.toRadians(vector.X);
-						part.yaw = (float)Math.toRadians(vector.Y);
-						part.roll = (float)Math.toRadians(vector.Z);
-					} else {
+			if (!ignoreRotation) {
+				if (!data.useRotation && data.activeRotation) { data.useRotation = true; data.activeRotation = false; }
+				if (PixelsCharacterModels.playingAnimationData != null) {
+					PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
+					if (anim.LimbRotations.containsKey(part)) {
+						data.useRotation = true;
+						data.activeRotation = true;
+						data.rot = anim.LimbRotations.get(part);
+						if (data.rot != null) {
+							MapVec3 vector = FramesHandler.getLerpIfFrames(data.rot, part);
+							part.pitch = (float)Math.toRadians(vector.X);
+							part.yaw = (float)Math.toRadians(vector.Y);
+							part.roll = (float)Math.toRadians(vector.Z);
+						} else {
+							data.useRotation = false;
+							data.activeRotation = false;
+						}
+					} else if (data.useRotation) {
+						part.pitch = 0;
+						part.yaw = 0;
+						part.roll = 0;
 						data.useRotation = false;
-						data.activeRotation = false;
 					}
 				} else if (data.useRotation) {
 					part.pitch = 0;
@@ -83,11 +92,6 @@ public class RenderingHandler {
 					part.roll = 0;
 					data.useRotation = false;
 				}
-			} else if (data.useRotation) {
-				part.pitch = 0;
-				part.yaw = 0;
-				part.roll = 0;
-				data.useRotation = false;
 			}
 			
 			MapVec3 animOffset = new MapVec3(0,0,0);
@@ -123,7 +127,7 @@ public class RenderingHandler {
 		if (part == null) return;
 		if (PixelsCharacterModels.dataPackets.containsKey(part)) {
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
-			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
+			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) return;
 			if (!isPartFromPlayer(part, data)) return;
 			
 			if (data.cubes.size()+data.meshes.size() >= 1) {
@@ -131,19 +135,20 @@ public class RenderingHandler {
 				RenderSystem.setShaderColor(1, 1, 1, 1);
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.enableDepthTest();
-			}
-			for (int i = 0; i < data.cubes.size(); i++) {
-				data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
-			}
-			if (data.meshes.size() >= 1) {
-				RenderSystem.disableCull();
-				matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
-			    matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
-			    matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
-			    matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
-			}
-			for (int i = 0; i < data.meshes.size(); i++) {
-				data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+
+				for (int i = 0; i < data.cubes.size(); i++) {
+					data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+				}
+				if (data.meshes.size() >= 1) {
+					RenderSystem.disableCull();
+					matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+					matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+					matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+					matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+				}
+				for (int i = 0; i < data.meshes.size(); i++) {
+					data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+				}
 			}
 		}
 	}

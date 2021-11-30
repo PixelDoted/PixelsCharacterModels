@@ -77,6 +77,10 @@ public class PresetData {
 				cube.pos = data.cubes.get(i).pos;
 				cube.size = data.cubes.get(i).size;
 				cube.uvOffset = data.cubes.get(i).uv;
+
+				if (data.cubes.get(i).textureFile != null && !data.cubes.get(i).textureFile.equals(""))
+					cube.textureID = data.cubes.get(i).textureFile;
+
 				cubes.add(cube);
 			}
 			for (int i = 0; i < data.meshes.size(); i++) {
@@ -86,6 +90,10 @@ public class PresetData {
 				mesh.size = data.meshes.get(i).size;
 				mesh.uvOffset = data.meshes.get(i).uv;
 				mesh.meshID = data.meshes.get(i).meshID;
+
+				if (data.meshes.get(i).textureFile != null && !data.meshes.get(i).textureFile.equals(""))
+					mesh.textureID = data.meshes.get(i).textureFile;
+
 				meshes.add(mesh);
 			}
 		}
@@ -96,6 +104,7 @@ public class PresetData {
 		public MapVec3 pos = new MapVec3();
 		public MapVec3 size = new MapVec3();
 		public MapVec2 uvOffset = new MapVec2();
+		public String textureID;
 	}
 	
 	public class PresetMeshData {
@@ -104,6 +113,7 @@ public class PresetData {
 		public MapVec3 size = new MapVec3();
 		public MapVec2 uvOffset = new MapVec2();
 		public String meshID;
+		public String textureID;
 	}
 	
 }

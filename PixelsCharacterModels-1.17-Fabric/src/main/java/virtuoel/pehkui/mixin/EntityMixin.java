@@ -9,10 +9,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -54,10 +56,17 @@ public abstract class EntityMixin implements PehkuiEntityExtensions
 		
 		if (!pehkui_scaleTypes.containsKey(type))
 		{
+			pehkui_scaleTypes.put(type, null);
 			pehkui_scaleTypes.put(type, scaleData = pehkui_constructScaleData(type));
 		}
 		
 		return scaleData;
+	}
+	
+	@Override
+	public Map<ScaleType, ScaleData> pehkui_getScales()
+	{
+		return pehkui_scaleTypes;
 	}
 	
 	@Inject(at = @At("HEAD"), method = "readNbt")
@@ -124,8 +133,8 @@ public abstract class EntityMixin implements PehkuiEntityExtensions
 	@Inject(at = @At("RETURN"), method = "getDimensions", cancellable = true)
 	private void onGetDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> info)
 	{
-		final float widthScale = ScaleUtils.getWidthScale((Entity) (Object) this);
-		final float heightScale = ScaleUtils.getHeightScale((Entity) (Object) this);
+		final float widthScale = ScaleUtils.getBoundingBoxWidthScale((Entity) (Object) this);
+		final float heightScale = ScaleUtils.getBoundingBoxHeightScale((Entity) (Object) this);
 		
 		if (widthScale != 1.0F || heightScale != 1.0F)
 		{
@@ -157,6 +166,30 @@ public abstract class EntityMixin implements PehkuiEntityExtensions
 		}
 		
 		return movement;
+	}
+	
+	@ModifyArgs(method = "pushAwayFrom", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/entity/Entity;addVelocity(DDD)V"))
+	private void modifyPushSelfAwayFromOther(Args args, Entity other)
+	{
+		final float otherScale = ScaleUtils.getMotionScale(other);
+		
+		if (otherScale != 1.0F)
+		{
+			args.set(0, args.<Double>get(0) * otherScale);
+			args.set(2, args.<Double>get(2) * otherScale);
+		}
+	}
+	
+	@ModifyArgs(method = "pushAwayFrom", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/entity/Entity;addVelocity(DDD)V"))
+	private void modifyPushOtherAwayFromSelf(Args args, Entity other)
+	{
+		final float ownScale = ScaleUtils.getMotionScale((Entity) (Object) this);
+		
+		if (ownScale != 1.0F)
+		{
+			args.set(0, args.<Double>get(0) * ownScale);
+			args.set(2, args.<Double>get(2) * ownScale);
+		}
 	}
 	
 	@Inject(at = @At("HEAD"), method = "spawnSprintingParticles", cancellable = true)

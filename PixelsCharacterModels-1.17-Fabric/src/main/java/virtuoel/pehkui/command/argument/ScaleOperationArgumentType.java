@@ -15,15 +15,18 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.TranslatableText;
+import virtuoel.pehkui.util.I18nUtils;
 
 public class ScaleOperationArgumentType implements ArgumentType<ScaleOperationArgumentType.Operation>
 {
-	private static final Collection<String> EXAMPLES = Arrays.asList("set", "add", "subtract", "multiply", "divide");
+	private static final String[] SUGGESTIONS = new String[] { "set", "add", "subtract", "multiply", "divide", "power" };
+	
+	private static final Collection<String> EXAMPLES = Arrays.asList(SUGGESTIONS);
 	private static final SimpleCommandExceptionType INVALID_OPERATION = new SimpleCommandExceptionType(
-		new TranslatableText("arguments.operation.invalid", new Object[0])
+		new TranslatableText("arguments.operation.invalid", I18nUtils.EMPTY_VARARGS)
 	);
 	private static final SimpleCommandExceptionType DIVISION_ZERO_EXCEPTION = new SimpleCommandExceptionType(
-		new TranslatableText("arguments.operation.div0", new Object[0])
+		new TranslatableText("arguments.operation.div0", I18nUtils.EMPTY_VARARGS)
 	);
 	
 	public static ScaleOperationArgumentType operation()
@@ -59,7 +62,7 @@ public class ScaleOperationArgumentType implements ArgumentType<ScaleOperationAr
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder)
 	{
-		return CommandSource.suggestMatching(new String[] { "set", "add", "subtract", "multiply", "divide" }, builder);
+		return CommandSource.suggestMatching(SUGGESTIONS, builder);
 	}
 	
 	@Override
@@ -68,7 +71,7 @@ public class ScaleOperationArgumentType implements ArgumentType<ScaleOperationAr
 		return EXAMPLES;
 	}
 	
-	public static Operation getOperator(String string) throws CommandSyntaxException
+	private static Operation getOperator(String string) throws CommandSyntaxException
 	{
 		switch (string)
 		{
@@ -103,6 +106,11 @@ public class ScaleOperationArgumentType implements ArgumentType<ScaleOperationAr
 					{
 						return i / j;
 					}
+				};
+			case "power":
+				return (i, j) ->
+				{
+					return (float) Math.pow(i, j);
 				};
 			default:
 				throw INVALID_OPERATION.create();

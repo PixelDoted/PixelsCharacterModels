@@ -27,6 +27,7 @@ public class MixinTargetClasses
 			"net.minecraft.class_2680", // BlockState
 			"net.minecraft.class_1690", // BoatEntity
 			"net.minecraft.class_2589", // BrewingStandBlockEntity
+			"net.minecraft.class_1764", // CrossbowItem
 			"net.minecraft.class_1670", // DragonFireballEntity
 			"net.minecraft.class_1681", // EggEntity
 			"net.minecraft.class_1511", // EndCrystalEntity
@@ -54,6 +55,7 @@ public class MixinTargetClasses
 			"net.minecraft.class_1309", // LivingEntity
 			"net.minecraft.class_1501", // LlamaEntity
 			"net.minecraft.class_1673", // LlamaSpitEntity
+			"net.minecraft.class_1308", // MobEntity
 			"net.minecraft.class_2621", // LootableContainerBlockEntity
 			"net.minecraft.class_2487", // NbtCompound
 			"net.minecraft.class_2423", // NetherPortalBlock
@@ -107,6 +109,8 @@ public class MixinTargetClasses
 			"net.minecraft.class_490", // InventoryScreen
 			"net.minecraft.class_915", // ItemFrameEntityRenderer
 			"net.minecraft.class_693", // ItemPickupParticle
+			"net.minecraft.class_918", // ItemRenderer
+			"net.minecraft.class_927", // MobEntityRenderer
 			"net.minecraft.class_1007", // PlayerEntityRenderer
 		};
 	}
