@@ -24,3 +24,8 @@ jobs:
         cache: gradle
     - name: Build with Gradle
       run: cd PixelsCharacterModels-1.17-Fabric && ./gradlew build
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: pixelscharactermodels-artifacts-${{ steps.ref.outputs.branch }}
+        path: build/libs/*-[0-9]R-*.jar
