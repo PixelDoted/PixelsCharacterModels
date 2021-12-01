@@ -25,6 +25,6 @@ jobs:
     - name: cd in to Fabric 1.17
       run: cd PixelsCharacterModels-1.17-Fabric
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
     - name: Build with Gradle
       run: ./gradlew build
