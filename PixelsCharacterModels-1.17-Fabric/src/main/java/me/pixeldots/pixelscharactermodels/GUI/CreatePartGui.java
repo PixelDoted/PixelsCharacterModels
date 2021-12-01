@@ -149,6 +149,8 @@ public class CreatePartGui extends GuiHandler {
 		drawString(matrices, "Position", 145, 110);
 		drawString(matrices, "Size", 163, 135);
 		drawString(matrices, "Texture Offset", 109, 160);
+		drawString(matrices, "Texture Size", 119, 185);
+		drawString(matrices, "Texture Name", 119, 210);
 		
 		drawEntity(this.width/2+100, this.height/2, 75, (float)(this.width/2+100) - mouseX, (float)(this.height/2-125) - mouseY, PixelsCharacterModels.GuiData.entity);
 		super.render(matrices, mouseX, mouseY, delta);
