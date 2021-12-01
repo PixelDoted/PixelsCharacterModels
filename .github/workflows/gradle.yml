@@ -22,7 +22,5 @@ jobs:
         java-version: '16'
         distribution: 'adopt'
         cache: gradle
-    - name: cd in to Fabric 1.17
-      run: cd PixelsCharacterModels-1.17-Fabric
     - name: Build with Gradle
-      run: ./gradlew build
+      run: cd PixelsCharacterModels-1.17-Fabric && ./gradlew build
