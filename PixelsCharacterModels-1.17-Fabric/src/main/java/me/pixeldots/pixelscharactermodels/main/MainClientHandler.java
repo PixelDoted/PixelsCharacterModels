@@ -22,14 +22,14 @@ public class MainClientHandler {
 		    PresetData data = gson.fromJson(buf.readString(), PresetData.class);
 		    data.convertToModel((PlayerEntity)client.targetedEntity, PixelsCharacterModels.EntityModelList.get((PlayerEntity)client.targetedEntity), true);
 		});
-		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ModelData, (client, handler, buf, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.requestModelData, (client, handler, buf, responseSender) -> {
 			PresetData data = new PresetData();
 			
 			data.skinSuffix = FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId());
 			data.convertModelData(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
 			
 			Gson gson = new Gson();
-			sendModelData(gson.toJson(data));
+			sendModelData(gson.toJson(data), ((PlayerEntity)client.targetedEntity).getUuidAsString());
 		});
 		
 		isRegistered = true;
@@ -39,9 +39,10 @@ public class MainClientHandler {
 		ClientPlayNetworking.send(PixelsCharacterModelsMain.NetworkConstants.ServerRequestModelData, PacketByteBufs.empty());
 	}
 	
-	public void sendModelData(String json) {
+	public void sendModelData(String json, String reciverID) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeString(json);
+		buf.writeString(reciverID);
 		ClientPlayNetworking.send(PixelsCharacterModelsMain.NetworkConstants.ServerModelData, buf);
 	}
 	

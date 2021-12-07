@@ -94,7 +94,7 @@ public class ModelPartCube {
 	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
 		if (texture != null) {
 			RenderSystem.setShaderTexture(0, texture);
-			RenderSystem.setShaderColor(1, 1, 1, 1);
+			RenderSystem.setShaderColor(red, green, blue, alpha);
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.enableDepthTest();
 		}
@@ -103,7 +103,7 @@ public class ModelPartCube {
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
-		int myLight = 15;//getLighting();
+		int myLight = getLighting();
 
 		for (int i = 0; i < sides.length; i++) {
 			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);

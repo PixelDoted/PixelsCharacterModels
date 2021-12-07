@@ -19,6 +19,7 @@ import me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 
 public class PresetsSaveData {
 	
@@ -52,8 +53,10 @@ public class PresetsSaveData {
 			
 			data.convertToModel(player, model, false);
 			PixelsCharacterModelsMain.clientHandler.sendModelData(gson.toJson(data));
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			PixelsCharacterModels.PCMClient.sendClientMessage("An error occurred while loading that preset");
+			PixelsCharacterModels.PCMClient.sendClientMessage("This could be caused by the .json file being corrupted or invalid");
 		} finally {
 			try { reader.close(); } catch (IOException e) { }
 		}
