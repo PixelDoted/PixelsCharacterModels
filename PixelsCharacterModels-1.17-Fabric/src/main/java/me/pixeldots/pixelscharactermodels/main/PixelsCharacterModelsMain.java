@@ -23,6 +23,7 @@ public class PixelsCharacterModelsMain implements ModInitializer {
 	public static class NetworkConstants {
 		public static Identifier ModelData = new Identifier("pixelscharactermodels", "clientmodeldata");
 		public static Identifier ServerModelData = new Identifier("pixelscharactermodels", "servermodeldata");
+		public static Identifier ServerModelDataAll = new Identifier("pixelscharactermodels", "servermodeldataall");
 		
 		public static Identifier requestModelData = new Identifier("pixelscharactermodels", "clientrequestmodeldata");
 		public static Identifier ServerRequestModelData = new Identifier("pixelscharactermodels", "serverrequestmodeldata");

@@ -45,5 +45,11 @@ public class MainClientHandler {
 		buf.writeString(reciverID);
 		ClientPlayNetworking.send(PixelsCharacterModelsMain.NetworkConstants.ServerModelData, buf);
 	}
+
+	public void sendModelData(String json) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeString(json);
+		ClientPlayNetworking.send(PixelsCharacterModelsMain.NetworkConstants.ServerModelDataAll, buf);
+	}
 	
 }

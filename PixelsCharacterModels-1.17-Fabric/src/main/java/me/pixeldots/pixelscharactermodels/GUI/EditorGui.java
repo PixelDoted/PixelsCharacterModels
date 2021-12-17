@@ -20,7 +20,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleType;
+import virtuoel.pehkui.api.ScaleTypes;
 import virtuoel.pehkui.command.argument.ScaleOperationArgumentType;
 import virtuoel.pehkui.command.argument.ScaleTypeArgumentType;
 
@@ -151,7 +151,7 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public float getPlayerScale() {
-		ScaleData data = ScaleType.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
+		ScaleData data = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		return data.getBaseScale();
 	}
 	

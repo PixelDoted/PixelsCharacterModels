@@ -4,7 +4,7 @@
     "version": "2R Fabric",
 
     "name": "Pixel's Character Models",
-    "description": "a way to customize you're player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
+    "description": "a way to customize your player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
     "authors": [
         "PixelDots"
     ],
@@ -20,20 +20,17 @@
     "entrypoints": {
         "main":
         [
-            "me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain",
-            "virtuoel.pehkui.Pehkui"
+            "me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain"
         ],
         "client": [
-        "me.pixeldots.pixelscharactermodels.PixelsCharacterModels",
-        "lain.mods.skins.init.fabric.FabricOfflineSkins",
-            "virtuoel.pehkui.PehkuiClient"
+            "me.pixeldots.pixelscharactermodels.PixelsCharacterModels",
+            "lain.mods.skins.init.fabric.FabricOfflineSkins"
         ]
     },
     "mixins": [
         "pcm.mixins.json",
         "pcmaccessors.mixins.json",
-        "OfflineSkins-mixins.json",
-        "pehkui.mixins.json"
+        "OfflineSkins-mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.11.6",

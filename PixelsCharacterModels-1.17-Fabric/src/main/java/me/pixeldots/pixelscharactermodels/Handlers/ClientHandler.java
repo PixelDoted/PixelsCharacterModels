@@ -13,7 +13,7 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleType;
+import virtuoel.pehkui.api.ScaleTypes;
 
 public class ClientHandler {
 	
@@ -48,7 +48,7 @@ public class ClientHandler {
 	}
 	
 	public void writePreset(String name, PlayerEntity entity, PlayerEntityModel<?> model) {
-		ScaleData scale = ScaleType.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
+		ScaleData scale = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		PresetData data = new PresetData();
 		
 		data.skinSuffix = FabricOfflineSkins.skinSuffix.get(entity.getGameProfile().getId());
