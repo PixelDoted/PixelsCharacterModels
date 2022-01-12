@@ -3,7 +3,6 @@ package me.pixeldots.pixelscharactermodels.utils.Load;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 
 public class PresetsSaveData {
 	

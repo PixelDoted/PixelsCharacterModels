@@ -14,13 +14,8 @@ import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -129,8 +124,10 @@ public class RenderingHandler {
 			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
 			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) return;
 			if (!isPartFromPlayer(part, data)) return;
-			
-			if (data.cubes.size()+data.meshes.size() >= 1) {
+			boolean hasPreview = false;
+			if (PixelsCharacterModels.previewModelPart != null && PixelsCharacterModels.previewModelPart.owner == data) hasPreview = true;
+
+			if (data.cubes.size()+data.meshes.size() >= 1 || hasPreview) {
 				RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)data.entity).getSkinTexture());
 				RenderSystem.setShaderColor(1, 1, 1, 1);
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -139,7 +136,10 @@ public class RenderingHandler {
 				for (int i = 0; i < data.cubes.size(); i++) {
 					data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 				}
-				if (data.meshes.size() >= 1) {
+				if (hasPreview && PixelsCharacterModels.previewModelPart.cube != null)
+					PixelsCharacterModels.previewModelPart.cube.render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+
+				if (data.meshes.size() >= 1 || hasPreview) {
 					RenderSystem.disableCull();
 					matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
 					matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
@@ -149,6 +149,8 @@ public class RenderingHandler {
 				for (int i = 0; i < data.meshes.size(); i++) {
 					data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 				}
+				if (hasPreview && PixelsCharacterModels.previewModelPart.mesh != null)
+					PixelsCharacterModels.previewModelPart.mesh.render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
 			}
 		}
 	}

@@ -4,25 +4,19 @@ import java.io.File;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.mojang.brigadier.arguments.FloatArgumentType;
-
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
-import virtuoel.pehkui.command.argument.ScaleOperationArgumentType;
-import virtuoel.pehkui.command.argument.ScaleTypeArgumentType;
 
 public class EditorGui extends GuiHandler {
 	
@@ -139,12 +133,15 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerScale() {
-		if (PixelsCharacterModels.client.isInSingleplayer()) {
-			PixelsCharacterModels.client.getServer().getCommandManager().execute(
-					PixelsCharacterModels.client.getServer().getCommandSource(), 
-					"/scale set " + GlobalScaleField.getText() + " " + PixelsCharacterModels.thisPlayer.getDisplayName().asString());
-		}
-		
+		try {
+			float scale = Float.parseFloat(GlobalScaleField.getText());
+			MainClientHandler.changePlayerScale(scale);
+		} catch (Exception e) {}
+
+		/*PixelsCharacterModels.client.getServer().getCommandManager().execute(
+				PixelsCharacterModels.client.getServer().getCommandSource(), 
+				"/scale set " + GlobalScaleField.getText() + " " + PixelsCharacterModels.thisPlayer.getDisplayName().asString());
+		*/
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
 			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		}

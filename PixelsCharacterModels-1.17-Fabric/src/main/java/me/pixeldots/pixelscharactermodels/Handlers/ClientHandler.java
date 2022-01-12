@@ -2,6 +2,8 @@ package me.pixeldots.pixelscharactermodels.Handlers;
 
 import java.io.File;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
+
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;

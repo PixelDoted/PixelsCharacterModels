@@ -1,16 +1,11 @@
 package me.pixeldots.pixelscharactermodels.model.part;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.google.common.hash.Hashing;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import lain.mods.skins.impl.Shared;
 import lain.mods.skins.impl.fabric.ImageUtils;
@@ -24,16 +19,14 @@ import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.texture.AbstractTexture;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class createPartHelper {
 
-	public static void createMesh(String meshName, MapVec3 Pos, MapVec3 Size, MapVec2 textureOffset, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name, String textureID) {
+	public static ModelPartMesh createMeshReturn(String meshName, MapVec3 Pos, MapVec3 Size, MapVec2 textureOffset, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name, String textureID) {
 		MapModelVectors meshData = PixelsCharacterModels.saveData.getMeshData(meshName);
-		if (meshData == null) return;
+		if (meshData == null) return null;
 		meshData.meshID = meshName;
 		
 		for (int i = 0; i < meshData.Faces.size(); i++) {
@@ -51,16 +44,22 @@ public class createPartHelper {
 		ModelPartMesh mesh = new ModelPartMesh(meshData, Pos, Size, textureOffset, name);
 		mesh.texture = loadTexture(textureID);
 		mesh.textureFile = textureID;
-		
+		return mesh;
+	}
+	public static void createMesh(String meshName, MapVec3 Pos, MapVec3 Size, MapVec2 textureOffset, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name, String textureID) {
+		ModelPartMesh mesh = createMeshReturn(meshName, Pos, Size, textureOffset, model, entity, parent, name, textureID);
+		if (mesh == null) return;
 		PixelsCharacterModels.dataPackets.get(parent).meshes.add(mesh);
 	}
 	
-	public static void createCuboid(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name, String textureID) {
+	public static ModelPartCube createCuboidReturn(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name, String textureID) {
 		ModelPartCube cube = new ModelPartCube(Math.round(textureOffset.X), Math.round(textureOffset.Y), Pos.X, Pos.Y, Pos.Z, Size.X, Size.Y, Size.Z, textureSize.X, textureSize.Y, name);
 		cube.texture = loadTexture(textureID);
 		cube.textureFile = textureID;
-
-		PixelsCharacterModels.dataPackets.get(parent).cubes.add(cube);
+		return cube;
+	}
+	public static void createCuboid(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name, String textureID) {
+		PixelsCharacterModels.dataPackets.get(parent).cubes.add(createCuboidReturn(Pos, Size, Pivot, textureSize, textureOffset, parent, name, textureID));
 	}
 
 	public static Identifier loadTexture(String filename) {

@@ -1,0 +1,8 @@
+# - not finished
+# -/ not finished (less important)
+# + finished
+# * not tested
+
++ add Custom Part Previewing
+
+* add Multiplayer Support

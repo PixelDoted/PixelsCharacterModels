@@ -16,6 +16,7 @@ import me.pixeldots.pixelscharactermodels.Handlers.RenderingHandler;
 import me.pixeldots.pixelscharactermodels.model.LocalData;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
+import me.pixeldots.pixelscharactermodels.utils.PreviewModelPart;
 import me.pixeldots.pixelscharactermodels.utils.TranslatedText;
 import me.pixeldots.pixelscharactermodels.utils.Load.AnimationsSaveData;
 import me.pixeldots.pixelscharactermodels.utils.Load.FramesSaveData;
@@ -52,6 +53,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static boolean isPlayingFrames = false;
 	
 	public static LocalData localData = new LocalData();
+	public static PreviewModelPart previewModelPart = null;
 	public static Map<ModelPart, ModelPartData> dataPackets = new HashMap<ModelPart, ModelPartData>();
 	public static Map<PlayerEntity, PlayerEntityModel<?>> EntityModelList = new HashMap<PlayerEntity, PlayerEntityModel<?>>();
 	

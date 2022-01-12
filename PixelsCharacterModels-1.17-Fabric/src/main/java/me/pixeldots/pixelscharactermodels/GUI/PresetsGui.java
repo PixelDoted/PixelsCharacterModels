@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.google.gson.Gson;
-
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;

@@ -7,15 +7,20 @@ import net.minecraft.util.Identifier;
 
 public class PixelsCharacterModelsMain implements ModInitializer {
 
-	public static MainClientHandler clientHandler = new MainClientHandler();
+	public static MainClientHandler clientHandler = null;
 	public static MainServerHandler serverHandler = new MainServerHandler();
 	
 	@Override
 	public void onInitialize() {
 		System.out.println("(Pixel's Character Models) Initializing Main");
 		
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) clientHandler.Register();
-		else serverHandler.Register();
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			clientHandler = new MainClientHandler();
+			clientHandler.Register();
+		}
+		else {
+			serverHandler.Register();
+		}
 		
 		System.out.println("(Pixel's Character Models) Initialized Main");
 	}
@@ -27,5 +32,7 @@ public class PixelsCharacterModelsMain implements ModInitializer {
 		
 		public static Identifier requestModelData = new Identifier("pixelscharactermodels", "clientrequestmodeldata");
 		public static Identifier ServerRequestModelData = new Identifier("pixelscharactermodels", "serverrequestmodeldata");
+	
+		public static Identifier ServerChangePlayerScale = new Identifier("pixelscharactermodels", "serverchangeplayerscale");
 	}
 }

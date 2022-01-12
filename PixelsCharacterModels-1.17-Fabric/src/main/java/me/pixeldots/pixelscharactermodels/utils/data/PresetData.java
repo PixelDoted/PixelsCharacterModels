@@ -5,21 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mojang.brigadier.arguments.FloatArgumentType;
-
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleModifier;
-import virtuoel.pehkui.api.ScaleType;
-import virtuoel.pehkui.command.argument.ScaleOperationArgumentType;
 
 public class PresetData {
 
@@ -37,10 +30,12 @@ public class PresetData {
 	}
 	
 	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model, boolean isPacket) {
-		if (PixelsCharacterModels.client.isInSingleplayer() && isPacket == false) {
-			PixelsCharacterModels.client.getServer().getCommandManager().execute(
+		if (player == null) return;
+		if (isPacket == false) {
+			MainClientHandler.changePlayerScale(GlobalScale);
+			/*PixelsCharacterModels.client.getServer().getCommandManager().execute(
 					PixelsCharacterModels.client.getServer().getCommandSource(), 
-					"/scale set " + GlobalScale + " " + player.getDisplayName().asString());
+					"/scale set " + GlobalScale + " " + player.getDisplayName().asString());*/
 		}
 		
 		if (FabricOfflineSkins.skinSuffix.containsKey(player.getGameProfile().getId())) {
