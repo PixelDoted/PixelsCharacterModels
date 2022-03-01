@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -56,7 +55,7 @@ public class OtherSaveData {
 		Writer writer = null;
 		try {
 		    writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
-		    writer.write(formatString());
+		    writer.write(new Gson().toJson(PixelsCharacterModels.localData));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -71,7 +70,8 @@ public class OtherSaveData {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
-			formatData(reader);
+			PixelsCharacterModels.localData = new Gson().fromJson(reader, LocalData.class);
+			System.out.println("Loaded Data");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
@@ -79,17 +79,6 @@ public class OtherSaveData {
 		}
 	}
 	
-	public String formatString() {
-		Gson gson = new Gson();
-		return gson.toJson(PixelsCharacterModels.localData);
-	}
-	
-	public void formatData(BufferedReader reader) {
-		if (reader == null) return;
-		Gson gson = new Gson();
-		PixelsCharacterModels.localData = gson.fromJson(reader, LocalData.class);
-		System.out.println("Loaded Data");
-	}
 	//Mesh
 	public File[] getMeshes() {
 		File folder = new File(SavePath+File.separator+"Models");

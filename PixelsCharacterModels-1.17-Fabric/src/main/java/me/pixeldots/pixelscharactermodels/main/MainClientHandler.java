@@ -21,6 +21,9 @@ public class MainClientHandler {
 	public void Register() {
 		System.out.println("Registering Main Client Handler");
 		
+		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ping, (client, handler, buf, responseSender) -> {
+			PixelsCharacterModels.PCMClient.doesServerUsePCM = true;
+		});
 		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ModelData, (client, handler, buf, responseSender) -> {
 		    reciveModelData(buf.readString(), client.world.getPlayerByUuid(UUID.fromString(buf.readString())));
 		});
@@ -35,6 +38,10 @@ public class MainClientHandler {
 		});
 		
 		isRegistered = true;
+	}
+
+	public void ping() {
+		ClientPlayNetworking.send(PixelsCharacterModelsMain.NetworkConstants.ping, PacketByteBufs.empty());
 	}
 
 	public void reciveModelData(String json, PlayerEntity player) {

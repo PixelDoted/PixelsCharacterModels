@@ -18,6 +18,9 @@ public class MainServerHandler {
 	public void Register() {
 		System.out.println("Registering Main Server Handler");
 		
+		ServerPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ping, (server, senderplayer, network, buf, sender) -> {
+			ServerPlayNetworking.send(senderplayer, PixelsCharacterModelsMain.NetworkConstants.ping, buf);
+		});
 		ServerPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ServerModelDataAll, (server, senderplayer, network, buf, sender) -> {
 			for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) senderplayer.world, senderplayer.getBlockPos())) {
 				if (player.getUuid() != senderplayer.getUuid())

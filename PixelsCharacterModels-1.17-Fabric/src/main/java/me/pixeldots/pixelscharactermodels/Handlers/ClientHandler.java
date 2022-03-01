@@ -8,6 +8,7 @@ import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
+import me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain;
 import me.pixeldots.pixelscharactermodels.utils.data.AnimationData;
 import me.pixeldots.pixelscharactermodels.utils.data.FramesData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
@@ -20,6 +21,7 @@ import virtuoel.pehkui.api.ScaleTypes;
 public class ClientHandler {
 	
 	public boolean isConnectedToWorld = false;
+	public boolean doesServerUsePCM = false;
 	public PCMAnimation currentStoredAnimation = null;
 	public PCMFrames currentStoredFrames = null;
 	
@@ -34,11 +36,13 @@ public class ClientHandler {
 		PixelsCharacterModels.EntityModelList.clear();
 		PixelsCharacterModels.thisPlayer = null;
 		isConnectedToWorld = false;
+		doesServerUsePCM = false;
 	}
 	
 	public void onConnect() {
 		isConnectedToWorld = true;
 		PixelsCharacterModels.thisPlayer = PixelsCharacterModels.client.player;
+		PixelsCharacterModelsMain.clientHandler.ping();
 	}
 	
 	public void LoadPreset(int id, PlayerEntity entity, PlayerEntityModel<?> model) {

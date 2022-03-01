@@ -41,29 +41,29 @@ public class KeyBindings {
 	
 	public static void registerKeyBindings() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-		    while (openGUI.wasPressed()) {
+		    if (openGUI.wasPressed()) {
 		    	PixelsCharacterModels.GuiData.entity = client.player;
 		    	PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer);
 		    	PixelsCharacterModels.OpenGUI();
 		    }
-		    while (KeyBindings.reloadKey.wasPressed()) {
+		    if (KeyBindings.reloadKey.wasPressed()) {
             	FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
             	PixelsCharacterModelsMain.clientHandler.requestModelData();
             }
 		    
-		    while (Anim1.wasPressed()) {
+		    if (Anim1.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.localData.AnimationOneisFrames);
 		    }
-		    while (Anim2.wasPressed()) {
+		    if (Anim2.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDTwo, PixelsCharacterModels.localData.AnimationTwoisFrames);
 		    }
-		    while (Anim3.wasPressed()) {
+		    if (Anim3.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDThree, PixelsCharacterModels.localData.AnimationThreeisFrames);
 		    }
-		    while (Anim4.wasPressed()) {
+		    if (Anim4.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDFour, PixelsCharacterModels.localData.AnimationFourisFrames);
 		    }
-		    while (Anim5.wasPressed()) {
+		    if (Anim5.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDFive, PixelsCharacterModels.localData.AnimationFiveisFrames);
 		    }
 		});

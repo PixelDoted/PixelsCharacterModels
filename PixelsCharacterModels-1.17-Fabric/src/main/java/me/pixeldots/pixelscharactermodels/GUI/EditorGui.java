@@ -133,6 +133,7 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerScale() {
+		if (!PixelsCharacterModels.PCMClient.doesServerUsePCM) return;
 		try {
 			float scale = Float.parseFloat(GlobalScaleField.getText());
 			MainClientHandler.changePlayerScale(scale);
@@ -148,6 +149,7 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public float getPlayerScale() {
+		if (!PixelsCharacterModels.PCMClient.doesServerUsePCM) return 1;
 		ScaleData data = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		return data.getBaseScale();
 	}

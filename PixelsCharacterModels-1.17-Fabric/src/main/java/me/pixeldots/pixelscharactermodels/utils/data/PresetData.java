@@ -31,12 +31,7 @@ public class PresetData {
 	
 	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model, boolean isPacket) {
 		if (player == null) return;
-		if (isPacket == false) {
-			MainClientHandler.changePlayerScale(GlobalScale);
-			/*PixelsCharacterModels.client.getServer().getCommandManager().execute(
-					PixelsCharacterModels.client.getServer().getCommandSource(), 
-					"/scale set " + GlobalScale + " " + player.getDisplayName().asString());*/
-		}
+		if (isPacket == false) MainClientHandler.changePlayerScale(GlobalScale);
 		
 		if (FabricOfflineSkins.skinSuffix.containsKey(player.getGameProfile().getId())) {
 			FabricOfflineSkins.skinSuffix.remove(player.getGameProfile().getId());

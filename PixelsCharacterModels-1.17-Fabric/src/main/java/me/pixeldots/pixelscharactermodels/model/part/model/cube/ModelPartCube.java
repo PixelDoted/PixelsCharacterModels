@@ -1,32 +1,33 @@
 package me.pixeldots.pixelscharactermodels.model.part.model.cube;
 
-import java.io.BufferedReader;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.accessors.WorldRendererAccessor;
+import org.lwjgl.opengl.GL11;
+
 import me.pixeldots.pixelscharactermodels.accessors.MinecraftClientAccessor;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 
 @Environment(EnvType.CLIENT)
 public class ModelPartCube {
@@ -90,12 +91,12 @@ public class ModelPartCube {
         this.sides[0] = new ModelCubeQuad(new ModelCubeVertex[]{vertex6, vertex2, vertex3, vertex7}, l, q, n, r, textureWidth, textureHeight, false, Direction.EAST);
         this.sides[5] = new ModelCubeQuad(new ModelCubeVertex[]{vertex5, vertex6, vertex7, vertex8}, n, q, o, r, textureWidth, textureHeight, false, Direction.SOUTH);
 	}
-   
-	public void render(MatrixStack.Entry entry, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
+
+	public void render(MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
 		if (texture != null) {
 			RenderSystem.setShaderTexture(0, texture);
 			RenderSystem.setShaderColor(red, green, blue, alpha);
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
 			RenderSystem.enableDepthTest();
 		}
 		
@@ -103,22 +104,18 @@ public class ModelPartCube {
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
-		int myLight = getLighting();
-
+		int lightUV = LightmapTextureManager.getBlockLightCoordinates(light);
+		
 		for (int i = 0; i < sides.length; i++) {
-			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
+			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
 			for (int j = 0; j < sides[i].vertices.length; j++) {
-				buffer.vertex(m, sides[i].vertices[j].pos.getX()/16, sides[i].vertices[j].pos.getY()/16, sides[i].vertices[j].pos.getZ()/16).texture(
-						sides[i].vertices[j].u, sides[i].vertices[j].v).color(red, green, blue, alpha).light(myLight).next();//.normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
+				buffer.vertex(m, sides[i].vertices[j].pos.getX()/16, sides[i].vertices[j].pos.getY()/16, sides[i].vertices[j].pos.getZ()/16)
+					.color(red, green, blue, alpha).texture(sides[i].vertices[j].u, sides[i].vertices[j].v)
+					.light(light).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
 			}
 			buffer.end();
 			BufferRenderer.draw(buffer);
 		}
     }
 
-	public int getLighting() {
-		MinecraftClientAccessor client = ((MinecraftClientAccessor)(Object)MinecraftClient.getInstance());
-		return MinecraftClient.getInstance().getEntityRenderDispatcher().getLight(
-			MinecraftClient.getInstance().player, client.getPaused() ? client.getPausedTickDelta() : client.getRenderTickCounter().tickDelta);
-	}
 }

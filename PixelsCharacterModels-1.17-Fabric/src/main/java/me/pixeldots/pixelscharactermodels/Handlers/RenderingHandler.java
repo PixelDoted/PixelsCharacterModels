@@ -15,7 +15,9 @@ import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -30,7 +32,7 @@ import net.minecraft.util.math.Vec3f;
 public class RenderingHandler {
 	
 	public GameProfile currentPlayerRendering = null;
-	
+
 	public void playerRenderHead(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
 		if (!PixelsCharacterModels.EntityModelList.containsKey(entity)) PixelsCharacterModels.EntityModelList.put(entity, model);
 		FramesHandler.UpdateFrames(model, entity);
@@ -119,39 +121,39 @@ public class RenderingHandler {
 	}
 	
 	public void renderPartCubioudsTail(MatrixStack.Entry matrices, ModelPart part, VertexConsumer vertex, int light, int overlay, CallbackInfo info) {
-		if (part == null) return;
-		if (PixelsCharacterModels.dataPackets.containsKey(part)) {
-			ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
-			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) return;
-			if (!isPartFromPlayer(part, data)) return;
-			boolean hasPreview = false;
-			if (PixelsCharacterModels.previewModelPart != null && PixelsCharacterModels.previewModelPart.owner == data) hasPreview = true;
+		if (part == null || !PixelsCharacterModels.dataPackets.containsKey(part)) return;
 
-			if (data.cubes.size()+data.meshes.size() >= 1 || hasPreview) {
-				RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)data.entity).getSkinTexture());
-				RenderSystem.setShaderColor(1, 1, 1, 1);
-				RenderSystem.setShader(GameRenderer::getPositionTexShader);
-				RenderSystem.enableDepthTest();
+		ModelPartData data = PixelsCharacterModels.dataPackets.get(part);
+		if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) return;
+		if (!isPartFromPlayer(part, data)) return;
 
-				for (int i = 0; i < data.cubes.size(); i++) {
-					data.cubes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
-				}
-				if (hasPreview && PixelsCharacterModels.previewModelPart.cube != null)
-					PixelsCharacterModels.previewModelPart.cube.render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+		boolean hasPreview = false;
+		if (PixelsCharacterModels.previewModelPart != null && PixelsCharacterModels.previewModelPart.owner == data) hasPreview = true;
 
-				if (data.meshes.size() >= 1 || hasPreview) {
-					RenderSystem.disableCull();
-					matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
-					matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
-					matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
-					matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
-				}
-				for (int i = 0; i < data.meshes.size(); i++) {
-					data.meshes.get(i).render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
-				}
-				if (hasPreview && PixelsCharacterModels.previewModelPart.mesh != null)
-					PixelsCharacterModels.previewModelPart.mesh.render(matrices, light, overlay, 1, 1, 1, 1, data.entity);
+		if (data.cubes.size()+data.meshes.size() >= 1 || hasPreview) {
+			RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)data.entity).getSkinTexture()); // sets the shaders texture to the players skin
+			RenderSystem.setShaderColor(1, 1, 1, 1); // sets the shader color to white
+			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader); // sets the Shader
+			RenderSystem.enableDepthTest(); // enable Depth Test
+
+			for (int i = 0; i < data.cubes.size(); i++) { // renders all cubes on limb
+				data.cubes.get(i).render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
 			}
+			if (hasPreview && PixelsCharacterModels.previewModelPart.cube != null) // renders the preview if it's a cube
+				PixelsCharacterModels.previewModelPart.cube.render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+
+			if (data.meshes.size() >= 1 || hasPreview) { // flips the rotation and disables culling
+				RenderSystem.disableCull();
+				matrices.getModel().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+				matrices.getNormal().multiply(Vec3f.POSITIVE_X.getRadialQuaternion((float) Math.toRadians(90)));
+				matrices.getModel().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+				matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
+			}
+			for (int i = 0; i < data.meshes.size(); i++) { // renders all meshes on limb
+				data.meshes.get(i).render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+			}
+			if (hasPreview && PixelsCharacterModels.previewModelPart.mesh != null) // renders the preview if it's a mesh
+				PixelsCharacterModels.previewModelPart.mesh.render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
 		}
 	}
 	

@@ -5,4 +5,12 @@
 
 + add Custom Part Previewing
 
+- Preset renaming
+- fix lighting on custom parts
+- improve performance
++ don't modify player scale without PCM installed on server
+- load last used preset on world join
++ fix model loading and rendering
+- fix frames animation using framerate to update
+
 * add Multiplayer Support

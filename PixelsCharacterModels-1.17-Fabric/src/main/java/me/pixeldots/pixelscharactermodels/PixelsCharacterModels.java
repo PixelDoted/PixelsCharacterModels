@@ -35,17 +35,17 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	public static String modVersion = "3R";
 	
-	public static TranslatedText TranslatedText = new TranslatedText();
+	public static TranslatedText TranslatedText = null;
 	public static PlayerEntity thisPlayer = null;
 	
-	public static AnimationsSaveData AnimationsData = new AnimationsSaveData();
-	public static FramesSaveData FramesData = new FramesSaveData();
-	public static PresetsSaveData PresetsData = new PresetsSaveData();
-	public static OtherSaveData saveData = new OtherSaveData();
+	public static AnimationsSaveData AnimationsData = null;
+	public static FramesSaveData FramesData = null;
+	public static PresetsSaveData PresetsData = null;
+	public static OtherSaveData saveData = null;
 	
-	public static GuiData GuiData = new GuiData();
-	public static RenderingHandler Rendering = new RenderingHandler();
-	public static ClientHandler PCMClient = new ClientHandler();
+	public static GuiData GuiData = null;
+	public static RenderingHandler Rendering = null;
+	public static ClientHandler PCMClient = null;
 	
 	public static PCMAnimation playingAnimationData = null;
 	public static PCMFrames playingFramesData = null;
@@ -64,6 +64,15 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		System.out.println("(Pixel's Character Models) Initializing Client");
 		
 		client = MinecraftClient.getInstance();
+		TranslatedText = new TranslatedText();
+		AnimationsData = new AnimationsSaveData();
+		FramesData = new FramesSaveData();
+		PresetsData = new PresetsSaveData();
+		saveData = new OtherSaveData();
+		GuiData = new GuiData();
+		Rendering = new RenderingHandler();
+		PCMClient = new ClientHandler();
+
 		saveData.Initialize();
 		PresetsData.Initialize();
 		AnimationsData.Initialize();

@@ -34,5 +34,7 @@ public class PixelsCharacterModelsMain implements ModInitializer {
 		public static Identifier ServerRequestModelData = new Identifier("pixelscharactermodels", "serverrequestmodeldata");
 	
 		public static Identifier ServerChangePlayerScale = new Identifier("pixelscharactermodels", "serverchangeplayerscale");
+	
+		public static Identifier ping = new Identifier("pixelscharactermodels", "ping");
 	}
 }
