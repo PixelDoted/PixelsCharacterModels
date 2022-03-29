@@ -26,14 +26,13 @@ import me.pixeldots.pixelscharactermodels.accessors.MinecraftClientAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PixelsCharacterModels implements ClientModInitializer {
 	
-	public static String modVersion = "3R";
+	public static String modVersion = "4R";
 	
 	public static TranslatedText TranslatedText = null;
 	public static PlayerEntity thisPlayer = null;
@@ -94,7 +93,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	}
 
 	public static int getCurrentFPS() {
-		return ((MinecraftClientAccessor)client).getCurrentFPS();
+		return ((MinecraftClientAccessor)client.minecraft).getCurrentFPS();
 	}
 	
 	public static String checkForUpdate() {

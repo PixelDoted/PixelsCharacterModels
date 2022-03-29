@@ -8,7 +8,6 @@ import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
 
 public class FramesHandler {
 	
@@ -49,9 +48,7 @@ public class FramesHandler {
 					}
 				}
 			}
-			float AddTick = (1-PixelsCharacterModels.playingFramesData.TimePerFrame)/(PixelsCharacterModels.getCurrentFPS()/60);
-			if (PixelsCharacterModels.getCurrentFPS() <= 60) AddTick = 1-PixelsCharacterModels.playingFramesData.TimePerFrame;
-			CurrentTick -= AddTick;
+			CurrentTick -= divide(1.0F, divide(PixelsCharacterModels.getCurrentFPS(), PixelsCharacterModels.client.currentStoredFrames.TimePerFrame));
 			if (CurrentTick < 0) CurrentTick = 0;
 		} else { CurrentTick = 1; lastLimbRotations.clear(); }
 	}
@@ -78,14 +75,12 @@ public class FramesHandler {
 	}
 	
 	/*Lerp*/
-	public static float Lerp(float a, float b, float t) {
-		float end = b;
-		float delta = CurrentTick;
-		float v = (float) MathHelper.lerp(delta, a, end);
+	public static float Lerp(float value, float end, float t) {
+		float v = value + CurrentTick * (end - value);
 		
-		if (v > b && v > a) { v = b; }
-		else if (v < b && v < a) { v = b; }
-		if (a == b) v = b;
+		if (v > end && v > value) { v = end; }
+		else if (v < end && v < value) { v = end; }
+		if (value == end) v = end;
 		if (sameInRange(v, end, 0.02f)) v = end;
 		return v;
 	}
@@ -95,6 +90,12 @@ public class FramesHandler {
 			return true;
 		}
 		return false;
+	}
+
+	public static float divide(float a, float b) {
+		if (a == 0) return b;
+		if (b == 0) return a;
+		return a/b;
 	}
 	
 }

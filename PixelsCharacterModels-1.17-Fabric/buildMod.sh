@@ -1,2 +1,2 @@
 ./gradlew build
-cp build/libs/pixelscharactermodels-3R-Fabric.jar ~/.minecraft/mods
+cp build/libs/pixelscharactermodels-4R-Fabric.jar ~/.minecraft/mods
