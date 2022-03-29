@@ -39,9 +39,7 @@ public class RenderingHandler {
 	}
 	
 	public void playerRenderTail(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
-		if (PixelsCharacterModels.dataPackets != null) {
-			setPlayerModelPartsData(model, entity);
-		}
+		if (PixelsCharacterModels.dataPackets != null) setPlayerModelPartsData(model, entity);
 	}
 	
 	public void renderPartHead(MatrixStack matrices, VertexConsumer vertices, ModelPart part, int light, int overlay, CallbackInfo info) {

@@ -1,6 +1,7 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
 import java.io.File;
+import java.time.Instant;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -9,7 +10,6 @@ import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -30,17 +30,23 @@ public class PresetsGui extends GuiHandler {
 	public ButtonWidget DeletePreset;
 	
 	public String update;
+	public String path = "";
 	
 	public PresetsGui() {
 		super("Presets");
 		update = PixelsCharacterModels.checkForUpdate();
 	}
+
+	public PresetsGui(String _path) {
+		this();
+		this.path = _path;
+	}
 	
 	@Override
 	public void init() {
 		super.init();
-			
-		File[] presets = PixelsCharacterModels.PresetsData.getPresets();
+		
+		File[] presets = PixelsCharacterModels.PresetsData.getPresets(path);
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
 			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
@@ -74,10 +80,16 @@ public class PresetsGui extends GuiHandler {
 		int col = 0;
 		for (int i = 0; i < presets.length; i++) { //6 per col, max 24
 			int num = i;
+			String filePath = presets[i].getPath().replace(PixelsCharacterModels.PresetsData.PresetsPath + File.separator, "");
 			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(presets[i].getName().replace(".json", "")), (value) -> {
-				SelectPreset(num, value.getMessage().asString());
+				if (presets[num].isDirectory()) {
+					PixelsCharacterModels.client.openScreen(new PresetsGui(filePath));
+					return;
+				}
+
+				SelectPreset(filePath, value.getMessage().asString());
 			}));
-			if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) if (i == PixelsCharacterModels.GuiData.SelectedPresetID) b.active = false;
+			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) if (filePath.equals(PixelsCharacterModels.GuiData.SelectedPresetPath)) b.active = false;
 			row++;
 			if (row >= 11) {
 				row = 0;
@@ -86,27 +98,27 @@ public class PresetsGui extends GuiHandler {
 		}
 	}
 	
-	public void SelectPreset(int id, String name) {
-		PixelsCharacterModels.client.LoadPreset(id, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
-		PixelsCharacterModels.GuiData.SelectedPresetID = id;
+	public void SelectPreset(String path, String name) {
+		PixelsCharacterModels.client.LoadPreset(path, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.GuiData.SelectedPresetPath = path;
 		PixelsCharacterModels.GuiData.SelectedPresetName = name;
 		client.openScreen(new PresetsGui());
 	}
 	
 	public void createPreset(String s) {
-		PixelsCharacterModels.client.writePreset(s, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.client.writePreset(path+File.separator+s, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		client.openScreen(new PresetsGui());
 	}
 	
 	public void renamePreset(String s) {
-		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1 && !s.replace(" ", "").equalsIgnoreCase(""))
-			PixelsCharacterModels.client.RenamePreset(PixelsCharacterModels.GuiData.SelectedPresetID, s);
+		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json") && !s.replace(" ", "").equalsIgnoreCase(""))
+			PixelsCharacterModels.client.RenamePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, s);
 		client.openScreen(new PresetsGui());
 	}
 
 	public void deletePreset() {
-		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1)
-			PixelsCharacterModels.client.DeletePreset(PixelsCharacterModels.GuiData.SelectedPresetID);
+		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
+			PixelsCharacterModels.client.DeletePreset(PixelsCharacterModels.GuiData.SelectedPresetPath);
 		client.openScreen(new PresetsGui());
 	}
 	

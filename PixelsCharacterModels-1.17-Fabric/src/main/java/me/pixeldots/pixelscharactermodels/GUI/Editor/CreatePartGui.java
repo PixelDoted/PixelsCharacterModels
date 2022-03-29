@@ -105,9 +105,9 @@ public class CreatePartGui extends GuiHandler {
 			} else {
 				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			}
-			if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
-			}
+			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
+				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			
 			PixelsCharacterModels.client.openScreen(new PartsGui());
 		}));
 		

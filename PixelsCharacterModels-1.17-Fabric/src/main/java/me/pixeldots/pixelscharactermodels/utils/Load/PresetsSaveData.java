@@ -38,8 +38,8 @@ public class PresetsSaveData {
 		}
 	}
 	
-	public boolean loadPreset(int id, PlayerEntity player, PlayerEntityModel<?> model) {
-		File file = getPreset(id);
+	public boolean loadPreset(String path, PlayerEntity player, PlayerEntityModel<?> model) {
+		File file = getPreset(path);
 		if (file == null) return false;
 		if (!file.exists()) return false;
 		
@@ -61,20 +61,22 @@ public class PresetsSaveData {
 		return true;
 	}
 	
-	public File[] getPresets() {
+	public File[] getPresets(String path) {
 		File folder = new File(PresetsPath);
+		if (path != null && !path.equals("")) folder = new File(PresetsPath + File.separator + path);
 		if (!folder.exists()) return new File[0];
 		return folder.listFiles();
 	}
 	
-	public File getPreset(int id) {
-		File[] files = getPresets();
+	public File getPreset(String path) {
+		return new File(PresetsPath + File.separator + path);
+		/*File[] files = getPresets();
 		if (files.length <= id) return null;
-		return files[id];
+		return files[id];*/
 	}
 	
-	public void writePresetFile(PresetData data, String name) {
-		String file = PresetsPath + "/" + name + ".json";
+	public void writePresetFile(PresetData data, String path) {
+		String file = PresetsPath + File.separator + path;
 		Writer writer = null;
 		try {
 		    writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));

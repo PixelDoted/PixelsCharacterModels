@@ -7,7 +7,6 @@ import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;

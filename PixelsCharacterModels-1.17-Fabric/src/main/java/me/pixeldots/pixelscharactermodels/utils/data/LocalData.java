@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.model;
+package me.pixeldots.pixelscharactermodels.utils.data;
 
 public class LocalData {
 
@@ -17,5 +17,7 @@ public class LocalData {
 	public boolean AnimationThreeisFrames = false;
 	public boolean AnimationFourisFrames = false;
 	public boolean AnimationFiveisFrames = false;
+
+	public String lastUsedPreset = "";
 	
 }

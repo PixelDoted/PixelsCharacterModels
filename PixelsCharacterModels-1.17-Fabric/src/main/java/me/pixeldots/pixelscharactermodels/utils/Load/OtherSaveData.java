@@ -16,8 +16,8 @@ import java.nio.file.Paths;
 import com.google.gson.Gson;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.model.LocalData;
 import me.pixeldots.pixelscharactermodels.utils.MapModelVectors;
+import me.pixeldots.pixelscharactermodels.utils.data.LocalData;
 
 public class OtherSaveData {
 	

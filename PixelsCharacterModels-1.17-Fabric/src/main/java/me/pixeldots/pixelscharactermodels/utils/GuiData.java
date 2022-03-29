@@ -10,7 +10,7 @@ public class GuiData {
 	public PlayerEntity entity = null;
 	public PlayerEntityModel<?> model = null;
 	
-	public int SelectedPresetID = -1;
+	public String SelectedPresetPath = "";
 	public String SelectedPresetName = "";
 	
 	public String SelectedPart = "";

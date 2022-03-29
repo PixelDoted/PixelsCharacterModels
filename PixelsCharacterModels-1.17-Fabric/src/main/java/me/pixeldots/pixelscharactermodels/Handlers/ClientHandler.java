@@ -12,7 +12,12 @@ import me.pixeldots.pixelscharactermodels.utils.data.FramesData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import virtuoel.pehkui.api.ScaleData;
@@ -25,7 +30,7 @@ public class ClientHandler {
 	public boolean doesServerUsePCM = false;
 
 	public PCMAnimation currentStoredAnimation = null;
-	public int currentPreset = -1;
+	public String currentPreset = "";
 	public int playingAnimation = -1;
 
 	public PCMFrames currentStoredFrames = null;
@@ -52,15 +57,26 @@ public class ClientHandler {
 		else PixelsCharacterModelsMain.clientHandler.ping();
 	}
 	
-	public void LoadPreset(int id, PlayerEntity entity, PlayerEntityModel<?> model) {
+	public void LoadPreset(String path, PlayerEntity entity, PlayerEntityModel<?> model) {
 		sendClientMessage("Loading Preset");
-		this.currentPreset = id;
-		boolean success = PixelsCharacterModels.PresetsData.loadPreset(id, entity, model);
-		if (success == false) sendClientMessage("Failed to load Preset with file index: " + id);
-		else sendClientMessage("Success fully loaded preset");
+		this.currentPreset = path;
+		boolean success = PixelsCharacterModels.PresetsData.loadPreset(path, entity, model);
+		if (success == false) {
+			sendClientMessage("Failed to load Preset with path: " + path); 
+			return;
+		}
+
+		sendClientMessage("Success fully loaded preset");
+		PixelsCharacterModels.localData.lastUsedPreset = path;
 	}
 	
-	public void writePreset(String name, PlayerEntity entity, PlayerEntityModel<?> model) {
+	public void writePreset(String path, PlayerEntity entity, PlayerEntityModel<?> model) {
+		if (path.endsWith("/")) {
+			sendClientMessage("Creating a preset requires a name");
+			return;
+		}
+		if (!path.endsWith(".json")) path = path + ".json";
+
 		ScaleData scale = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		PresetData data = new PresetData();
 		
@@ -68,16 +84,21 @@ public class ClientHandler {
 		data.GlobalScale = scale.getTargetScale();
 		data.convertModelData(model);
 		
-		PixelsCharacterModels.PresetsData.writePresetFile(data, name);
+		PixelsCharacterModels.PresetsData.writePresetFile(data, path);
 	}
 	
-	public void RenamePreset(int id, String name) {
-		File file = PixelsCharacterModels.PresetsData.getPreset(id);
-		file.renameTo(new File(file.getParent()+"/"+name+".json"));
+	public void RenamePreset(String path, String name) {
+		if (name == null || name.equals("")) {
+			sendClientMessage("Cannot rename preset to: \"" + name + "\"");
+			return;
+		}
+
+		File file = PixelsCharacterModels.PresetsData.getPreset(path);
+		file.renameTo(new File(file.getParent()+File.separator+name+".json"));
 	}
 
-	public void DeletePreset(int id) {
-		File file = PixelsCharacterModels.PresetsData.getPreset(id);
+	public void DeletePreset(String path) {
+		File file = PixelsCharacterModels.PresetsData.getPreset(path);
 		if (file.delete()) 
 			sendClientMessage("Deleted Preset");
 		else

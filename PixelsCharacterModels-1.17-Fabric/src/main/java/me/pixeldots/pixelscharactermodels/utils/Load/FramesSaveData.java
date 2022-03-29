@@ -79,7 +79,7 @@ public class FramesSaveData {
 	}
 	
 	public void writeFramesFile(FramesData data, String name) {
-		String file = FramesPath + "/" + name + ".json";
+		String file = FramesPath + File.separator + name + ".json";
 		Writer writer = null;
 		try {
 		    writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));

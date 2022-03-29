@@ -12,7 +12,6 @@ import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,7 +40,7 @@ public class EditorGui extends GuiHandler {
 	public TextFieldWidget ScaleYField;
 	public TextFieldWidget ScaleZField;
 	public ButtonWidget ShowButton;
-	
+
 	public EditorGui() {
 		super("Editor");
 	}
@@ -146,8 +145,8 @@ public class EditorGui extends GuiHandler {
 				PixelsCharacterModels.client.getServer().getCommandSource(), 
 				"/scale set " + GlobalScaleField.getText() + " " + PixelsCharacterModels.thisPlayer.getDisplayName().asString());
 		*/
-		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) {
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		}
 	}
 	
@@ -232,9 +231,8 @@ public class EditorGui extends GuiHandler {
 
 	public void savePreset() {
 		System.out.println("saving");
-		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
-		}
+		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 	}
 	
 }
