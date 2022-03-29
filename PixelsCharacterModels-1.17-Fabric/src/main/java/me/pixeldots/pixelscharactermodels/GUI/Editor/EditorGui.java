@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.GUI;
+package me.pixeldots.pixelscharactermodels.GUI.Editor;
 
 import java.io.File;
 
@@ -6,6 +6,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
@@ -47,16 +50,16 @@ public class EditorGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		Editor.active = false;
 		
@@ -133,7 +136,7 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerScale() {
-		if (!PixelsCharacterModels.PCMClient.doesServerUsePCM) return;
+		if (!PixelsCharacterModels.client.doesServerUsePCM) return;
 		try {
 			float scale = Float.parseFloat(GlobalScaleField.getText());
 			MainClientHandler.changePlayerScale(scale);
@@ -144,12 +147,12 @@ public class EditorGui extends GuiHandler {
 				"/scale set " + GlobalScaleField.getText() + " " + PixelsCharacterModels.thisPlayer.getDisplayName().asString());
 		*/
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		}
 	}
 	
 	public float getPlayerScale() {
-		if (!PixelsCharacterModels.PCMClient.doesServerUsePCM) return 1;
+		if (!PixelsCharacterModels.client.doesServerUsePCM) return 1;
 		ScaleData data = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		return data.getBaseScale();
 	}
@@ -171,13 +174,13 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void ListSkins() {
-		File[] files = new File(PixelsCharacterModels.client.runDirectory+"/cachedImages/skins").listFiles();
-		PixelsCharacterModels.client.player.sendMessage(new LiteralText("local skins >"), false);
+		File[] files = new File(PixelsCharacterModels.client.minecraft.runDirectory+"/cachedImages/skins").listFiles();
+		PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("local skins >"), false);
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory()) continue;
-			PixelsCharacterModels.client.player.sendMessage(new LiteralText(files[i].getName()), false);
+			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(files[i].getName()), false);
 		}
-		PixelsCharacterModels.client.player.sendMessage(new LiteralText("< local skins"), false);
+		PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("< local skins"), false);
 	}
 	
 	public boolean isNumeric(String s) {
@@ -230,7 +233,7 @@ public class EditorGui extends GuiHandler {
 	public void savePreset() {
 		System.out.println("saving");
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		}
 	}
 	

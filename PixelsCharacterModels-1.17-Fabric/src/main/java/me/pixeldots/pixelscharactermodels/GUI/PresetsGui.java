@@ -5,6 +5,9 @@ import java.io.File;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
+import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,6 +26,7 @@ public class PresetsGui extends GuiHandler {
 	
 	public TextFieldWidget CreatePresetName;
 	public ButtonWidget CreatePreset;
+	public ButtonWidget RenamePreset;
 	public ButtonWidget DeletePreset;
 	
 	public String update;
@@ -38,28 +42,31 @@ public class PresetsGui extends GuiHandler {
 			
 		File[] presets = PixelsCharacterModels.PresetsData.getPresets();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		Presets.active = false;
 		
 		Options = addButton(new ButtonWidget(5,55,50,20, Text.of(PixelsCharacterModels.TranslatedText.Options), (button) -> {
-			MinecraftClient.getInstance().openScreen(new OptionsGui());
+			PixelsCharacterModels.client.openScreen(new OptionsGui());
 		}));
 		
 		CreatePresetName = addTextField(new TextFieldWidget(textRendererGUI, 5, 90, 50, 20, Text.of("Preset Name")));
 		CreatePreset = addButton(new ButtonWidget(5, 115, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
 			createPreset(CreatePresetName.getText());
 		}));
-		DeletePreset = addButton(new ButtonWidget(5, 140, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
+		RenamePreset = addButton(new ButtonWidget(5, 140, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Rename), (button) -> {
+			renamePreset(CreatePresetName.getText());
+		}));
+		DeletePreset = addButton(new ButtonWidget(5, 165, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
 			deletePreset();
 		}));
 		
@@ -80,20 +87,26 @@ public class PresetsGui extends GuiHandler {
 	}
 	
 	public void SelectPreset(int id, String name) {
-		PixelsCharacterModels.PCMClient.LoadPreset(id, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.client.LoadPreset(id, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		PixelsCharacterModels.GuiData.SelectedPresetID = id;
 		PixelsCharacterModels.GuiData.SelectedPresetName = name;
 		client.openScreen(new PresetsGui());
 	}
 	
 	public void createPreset(String s) {
-		PixelsCharacterModels.PCMClient.writePreset(s, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.client.writePreset(s, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		client.openScreen(new PresetsGui());
 	}
 	
+	public void renamePreset(String s) {
+		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1 && !s.replace(" ", "").equalsIgnoreCase(""))
+			PixelsCharacterModels.client.RenamePreset(PixelsCharacterModels.GuiData.SelectedPresetID, s);
+		client.openScreen(new PresetsGui());
+	}
+
 	public void deletePreset() {
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1)
-			PixelsCharacterModels.PCMClient.DeletePreset(PixelsCharacterModels.GuiData.SelectedPresetID);
+			PixelsCharacterModels.client.DeletePreset(PixelsCharacterModels.GuiData.SelectedPresetID);
 		client.openScreen(new PresetsGui());
 	}
 	

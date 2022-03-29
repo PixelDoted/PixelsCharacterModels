@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.GUI;
+package me.pixeldots.pixelscharactermodels.GUI.Animation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
+import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -51,23 +53,23 @@ public class AnimationsGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		
 		CreateAnimation = addButton(new ButtonWidget(120,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
-			if (AnimationName.getText().replace(" ", "") == "") PixelsCharacterModels.client.player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setAnimName), false);
+			if (AnimationName.getText().replace(" ", "") == "") PixelsCharacterModels.client.minecraft.player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setAnimName), false);
 			else {
-				PixelsCharacterModels.PCMClient.currentStoredAnimation = new PCMAnimation(AnimationName.getText());
-				PixelsCharacterModels.PCMClient.writeAnimation(AnimationName.getText(), PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+				PixelsCharacterModels.client.currentStoredAnimation = new PCMAnimation(AnimationName.getText());
+				PixelsCharacterModels.client.writeAnimation(AnimationName.getText(), PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 				PixelsCharacterModels.GuiData.SelectedAnimation = AnimationName.getText();
 			}
 		}));
@@ -100,10 +102,10 @@ public class AnimationsGui extends GuiHandler {
 		PixelsCharacterModels.GuiData.SelectedAnimation = name;
 		PixelsCharacterModels.AnimationsData.loadAnimation(name, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		if (returnValue == "addToFrames") {
-			PixelsCharacterModels.PCMClient.currentStoredFrames.frames.add(name);
-			PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+			PixelsCharacterModels.client.currentStoredFrames.frames.add(name);
+			PixelsCharacterModels.client.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		}
-		MinecraftClient.getInstance().openScreen(lastGui);
+		PixelsCharacterModels.client.openScreen(lastGui);
 	}
 	
 	@Override

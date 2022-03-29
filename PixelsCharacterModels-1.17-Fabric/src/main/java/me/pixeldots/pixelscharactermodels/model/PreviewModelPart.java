@@ -1,8 +1,8 @@
-package me.pixeldots.pixelscharactermodels.utils;
+package me.pixeldots.pixelscharactermodels.model;
 
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
-import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
+import me.pixeldots.pixelscharactermodels.model.part.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.part.mesh.ModelPartMesh;
 
 public class PreviewModelPart {
 

@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.model.part.model.mesh;
+package me.pixeldots.pixelscharactermodels.model.part.mesh;
 
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;

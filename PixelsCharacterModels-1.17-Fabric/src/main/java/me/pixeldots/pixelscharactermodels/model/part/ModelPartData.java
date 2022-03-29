@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
+import me.pixeldots.pixelscharactermodels.model.part.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.part.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData.PresetPartData;
@@ -19,8 +19,8 @@ public class ModelPartData {
 	public String name = "";
 	
 	public MapVec3 scale = new MapVec3(1,1,1);
-	public MapVec3 pos = new MapVec3(0,0,0);
-	public MapVec3 rot = new MapVec3(0,0,0);
+	public MapVec3 pos = new MapVec3();
+	public MapVec3 rot = new MapVec3();
 	
 	public ModelPart Parent = null;
 	public boolean useRotation = false;
@@ -58,7 +58,7 @@ public class ModelPartData {
 		
 		if (data.cubes != null) {
 			for (int i = 0; i < data.cubes.size(); i++) {
-				createPartHelper.createCuboid(data.cubes.get(i).pos, data.cubes.get(i).size, new MapVec3(0,0,0), new MapVec2(64, 64), data.cubes.get(i).uvOffset, part, data.cubes.get(i).name, data.cubes.get(i).textureID);
+				createPartHelper.createCuboid(data.cubes.get(i).pos, data.cubes.get(i).size, new MapVec3(), new MapVec2(64, 64), data.cubes.get(i).uvOffset, part, data.cubes.get(i).name, data.cubes.get(i).textureID);
 			}
 		}
 		if (data.meshes != null) {

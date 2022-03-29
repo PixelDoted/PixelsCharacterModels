@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.utils;
+package me.pixeldots.pixelscharactermodels.model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

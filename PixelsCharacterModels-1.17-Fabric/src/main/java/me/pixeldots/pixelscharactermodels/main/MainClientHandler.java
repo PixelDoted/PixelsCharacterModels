@@ -22,7 +22,7 @@ public class MainClientHandler {
 		System.out.println("Registering Main Client Handler");
 		
 		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ping, (client, handler, buf, responseSender) -> {
-			PixelsCharacterModels.PCMClient.doesServerUsePCM = true;
+			PixelsCharacterModels.client.doesServerUsePCM = true;
 		});
 		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.ModelData, (client, handler, buf, responseSender) -> {
 		    reciveModelData(buf.readString(), client.world.getPlayerByUuid(UUID.fromString(buf.readString())));
@@ -51,14 +51,14 @@ public class MainClientHandler {
 	}
 	
 	public void requestModelData() {
-		if (PixelsCharacterModels.client.isInSingleplayer()) {
+		if (PixelsCharacterModels.client.minecraft.isInSingleplayer()) {
 			PresetData data = new PresetData();
 			
 			data.skinSuffix = FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId());
 			data.convertModelData(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
 			
 			Gson gson = new Gson();
-			reciveModelData(gson.toJson(data), PixelsCharacterModels.client.player);
+			reciveModelData(gson.toJson(data), PixelsCharacterModels.client.minecraft.player);
 		} else {
 			ClientPlayNetworking.send(PixelsCharacterModelsMain.NetworkConstants.ServerRequestModelData, PacketByteBufs.empty());
 		}
@@ -78,8 +78,8 @@ public class MainClientHandler {
 	}
 
 	public static void changePlayerScale(float scale) {
-		if (PixelsCharacterModels.client.isInSingleplayer()) {
-			ScaleData data = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.client.player);
+		if (PixelsCharacterModels.client.minecraft.isInSingleplayer()) {
+			ScaleData data = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.client.minecraft.player);
 			data.setScale(scale);
 		} else {
 			PacketByteBuf buf = PacketByteBufs.create();

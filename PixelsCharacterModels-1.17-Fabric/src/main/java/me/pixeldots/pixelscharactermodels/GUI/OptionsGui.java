@@ -3,6 +3,9 @@ package me.pixeldots.pixelscharactermodels.GUI;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
+import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -41,16 +44,16 @@ public class OptionsGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		
 		AnimOneID = addTextField(new TextFieldWidget(textRendererGUI, 35,80,50,20, Text.of("AnimOneID")));

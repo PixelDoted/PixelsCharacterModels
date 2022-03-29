@@ -38,7 +38,7 @@ public class PresetData {
 			FabricOfflineSkins.skinSuffix.put(player.getGameProfile().getId(), skinSuffix);
 		}
 		else FabricOfflineSkins.skinSuffix.put(player.getGameProfile().getId(), skinSuffix);
-		FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client);
+		FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client.minecraft);
 		
 		PixelsCharacterModels.dataPackets.get(model.head).copyData(partData.get("head"), model.head);
 		PixelsCharacterModels.dataPackets.get(model.body).copyData(partData.get("body"), model.body);
@@ -51,8 +51,8 @@ public class PresetData {
 	public class PresetPartData {
 		public boolean Show = true;
 		public MapVec3 scale = new MapVec3(1,1,1);
-		public MapVec3 pos = new MapVec3(0,0,0);
-		public MapVec3 rot = new MapVec3(0,0,0);
+		public MapVec3 pos = new MapVec3();
+		public MapVec3 rot = new MapVec3();
 		public List<PresetCubeData> cubes = new ArrayList<PresetCubeData>();
 		public List<PresetMeshData> meshes = new ArrayList<PresetMeshData>();
 		

@@ -14,17 +14,17 @@ public class CommandsHandler {
 	@SuppressWarnings("resource")
 	public static void Register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(CommandManager.literal("PCM").executes((value) -> {
-			PixelsCharacterModels.GuiData.entity = MinecraftClient.getInstance().player;
-	    	PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(MinecraftClient.getInstance().player);
+			PixelsCharacterModels.GuiData.entity = PixelsCharacterModels.client.minecraft.player;
+	    	PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.client.minecraft.player);
 	    	PixelsCharacterModels.OpenGUI();
 			return 1;
 		}).then(CommandManager.literal("Animation").then(CommandManager.argument("anim", StringArgumentType.string()).executes((value) -> {
 			String animName = StringArgumentType.getString(value, "anim");
-			MinecraftClient.getInstance().player.sendMessage(Text.of("Animation: " + animName), false);
+			PixelsCharacterModels.client.minecraft.player.sendMessage(Text.of("Animation: " + animName), false);
 			return 1;
 		}))).then(CommandManager.literal("Preset").then(CommandManager.argument("preset", StringArgumentType.string()).executes((value) -> {
 			String presetName = StringArgumentType.getString(value, "preset");
-			MinecraftClient.getInstance().player.sendMessage(Text.of("Preset: " + presetName), false);
+			PixelsCharacterModels.client.minecraft.player.sendMessage(Text.of("Preset: " + presetName), false);
 			return 1;
 		}))));
 	}

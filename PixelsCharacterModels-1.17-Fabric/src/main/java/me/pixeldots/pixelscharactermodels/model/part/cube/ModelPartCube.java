@@ -1,10 +1,7 @@
-package me.pixeldots.pixelscharactermodels.model.part.model.cube;
+package me.pixeldots.pixelscharactermodels.model.part.cube;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import org.lwjgl.opengl.GL11;
-
-import me.pixeldots.pixelscharactermodels.accessors.MinecraftClientAccessor;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;
@@ -13,10 +10,8 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
@@ -25,9 +20,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 
 @Environment(EnvType.CLIENT)
 public class ModelPartCube {

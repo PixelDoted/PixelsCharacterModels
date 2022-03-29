@@ -25,7 +25,7 @@ public class OtherSaveData {
 	
 	public void Initialize() {
 		SavePath.replace("/", File.separator);
-		SavePath = SavePath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
+		SavePath = SavePath.replace("{mcdir}", PixelsCharacterModels.client.minecraft.runDirectory.toString());
 		Load();
 		System.out.println("Checking Models Folder");
 		

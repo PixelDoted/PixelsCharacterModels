@@ -1,8 +1,7 @@
-package me.pixeldots.pixelscharactermodels.model.part.model.mesh;
+package me.pixeldots.pixelscharactermodels.model.part.mesh;
 
 import java.util.List;
 
-import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.math.Vec3f;

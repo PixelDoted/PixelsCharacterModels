@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.GUI;
+package me.pixeldots.pixelscharactermodels.GUI.Animation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
+import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -43,16 +45,16 @@ public class FramesGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		Frames.active = false;
 		
@@ -62,13 +64,13 @@ public class FramesGui extends GuiHandler {
 		LoopFrames = addButton(new ButtonWidget(175, 5, 50, 20, Text.of("true"), (button) -> {
 			if (button.getMessage().asString() == "true") { 
 				button.setMessage(Text.of("false"));
-				PixelsCharacterModels.PCMClient.currentStoredFrames.Loop = false;
+				PixelsCharacterModels.client.currentStoredFrames.Loop = false;
 			}
 			else {
 				button.setMessage(Text.of("true"));
-				PixelsCharacterModels.PCMClient.currentStoredFrames.Loop = true;
+				PixelsCharacterModels.client.currentStoredFrames.Loop = true;
 			}
-			PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+			PixelsCharacterModels.client.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		}));
 		
 		TimePerFrame = addTextField(new TextFieldWidget(textRendererGUI, 230, 5, 50, 20, Text.of("TimePerFrame")));
@@ -77,23 +79,23 @@ public class FramesGui extends GuiHandler {
 			LoopFrames.active = false;
 			TimePerFrame.active = false;
 		} else {
-			LoopFrames.setMessage(Text.of(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredFrames.Loop).toLowerCase()));
-			TimePerFrame.setText(String.valueOf(PixelsCharacterModels.PCMClient.currentStoredFrames.TimePerFrame));
+			LoopFrames.setMessage(Text.of(String.valueOf(PixelsCharacterModels.client.currentStoredFrames.Loop).toLowerCase()));
+			TimePerFrame.setText(String.valueOf(PixelsCharacterModels.client.currentStoredFrames.TimePerFrame));
 		}
 		
 		FramesName = addTextField(new TextFieldWidget(textRendererGUI, 5, 100, 50, 20, Text.of("FramesName")));
 		FramesCreate = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
-			if (FramesName.getText().replace(" ", "") == "") PixelsCharacterModels.client.player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setFramesName), false);
+			if (FramesName.getText().replace(" ", "") == "") PixelsCharacterModels.client.minecraft.player.sendMessage(Text.of(PixelsCharacterModels.TranslatedText.setFramesName), false);
 			else {
-				PixelsCharacterModels.PCMClient.currentStoredFrames = new PCMFrames(FramesName.getText());
-				PixelsCharacterModels.PCMClient.writeFrames(FramesName.getText(), PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+				PixelsCharacterModels.client.currentStoredFrames = new PCMFrames(FramesName.getText());
+				PixelsCharacterModels.client.writeFrames(FramesName.getText(), PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 				PixelsCharacterModels.GuiData.SelectedFrames = FramesName.getText();
 				PixelsCharacterModels.client.openScreen(new FramesGui());
 			}
 		}));
 		FramesRemove = addButton(new ButtonWidget(5, 150, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
 			if (PixelsCharacterModels.GuiData.SelectedFramesID != -1) {
-				PixelsCharacterModels.PCMClient.DeleteFrames(PixelsCharacterModels.GuiData.SelectedFramesID);
+				PixelsCharacterModels.client.DeleteFrames(PixelsCharacterModels.GuiData.SelectedFramesID);
 				PixelsCharacterModels.GuiData.SelectedFramesID = -1;
 				PixelsCharacterModels.GuiData.SelectedFrames = "";
 				PixelsCharacterModels.client.openScreen(new FramesGui());
@@ -127,15 +129,15 @@ public class FramesGui extends GuiHandler {
 	public void SelectFrames(String name, int id) {
 		PixelsCharacterModels.GuiData.SelectedFramesID = id;
 		PixelsCharacterModels.GuiData.SelectedFrames = name;
-		PixelsCharacterModels.PCMClient.LoadFrames(id, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+		PixelsCharacterModels.client.LoadFrames(id, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		PixelsCharacterModels.client.openScreen(new FramesGui());
 	}
 	
 	@Override
 	public void tick() {
 		if (isNumeric(TimePerFrame.getText())) {
-			PixelsCharacterModels.PCMClient.currentStoredFrames.TimePerFrame = Float.parseFloat(TimePerFrame.getText());
-			PixelsCharacterModels.PCMClient.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
+			PixelsCharacterModels.client.currentStoredFrames.TimePerFrame = Float.parseFloat(TimePerFrame.getText());
+			PixelsCharacterModels.client.writeFrames(PixelsCharacterModels.GuiData.SelectedFrames, PixelsCharacterModels.GuiData.entity, PixelsCharacterModels.GuiData.model);
 		}
 		super.tick();
 	}

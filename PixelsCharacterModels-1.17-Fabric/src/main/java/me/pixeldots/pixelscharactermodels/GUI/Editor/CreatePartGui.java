@@ -1,16 +1,19 @@
-package me.pixeldots.pixelscharactermodels.GUI;
+package me.pixeldots.pixelscharactermodels.GUI.Editor;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.model.CreatePartData;
+import me.pixeldots.pixelscharactermodels.model.PreviewModelPart;
 import me.pixeldots.pixelscharactermodels.model.part.createPartHelper;
-import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
-import me.pixeldots.pixelscharactermodels.utils.CreatePartData;
+import me.pixeldots.pixelscharactermodels.model.part.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.part.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
-import me.pixeldots.pixelscharactermodels.utils.PreviewModelPart;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -55,28 +58,28 @@ public class CreatePartGui extends GuiHandler {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
 			PixelsCharacterModels.previewModelPart = null;
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
 			PixelsCharacterModels.previewModelPart = null;
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
 			PixelsCharacterModels.previewModelPart = null;
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
 			PixelsCharacterModels.previewModelPart = null;
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		
 		PartName = addTextField(new TextFieldWidget(textRendererGUI, 200, 60, 75, 20, Text.of("Name")));
 		
 		Mesh = addButton(new ButtonWidget(188, 85, 50, 20, Text.of("Mesh"), (button) -> {
-			MinecraftClient.getInstance().openScreen(new MeshesGui(this));
+			PixelsCharacterModels.client.openScreen(new MeshesGui(this));
 		}));
 		Parent = addButton(new ButtonWidget(238, 85, 50, 20, Text.of("Parent"), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PartsGui(this));
+			PixelsCharacterModels.client.openScreen(new PartsGui(this));
 		}));
 		PositionX = addTextField(new TextFieldWidget(textRendererGUI, 185, 110, 35, 20, Text.of("Position X")));
 		PositionY = addTextField(new TextFieldWidget(textRendererGUI, 222, 110, 35, 20, Text.of("Position Y")));
@@ -103,9 +106,9 @@ public class CreatePartGui extends GuiHandler {
 				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			}
 			if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-				PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 			}
-			MinecraftClient.getInstance().openScreen(new PartsGui());
+			PixelsCharacterModels.client.openScreen(new PartsGui());
 		}));
 		
 		if (PixelsCharacterModels.GuiData.createPartData != null) {

@@ -91,7 +91,7 @@ public class RenderingHandler {
 				}
 			}
 			
-			MapVec3 animOffset = new MapVec3(0,0,0);
+			MapVec3 animOffset = new MapVec3();
 			if (PixelsCharacterModels.playingAnimationData != null) {
 				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
 				animOffset = anim.playerTransform;
@@ -169,7 +169,7 @@ public class RenderingHandler {
 			if (data.copyFromPart != null && PixelsCharacterModels.dataPackets.containsKey(data.copyFromPart)) data = PixelsCharacterModels.dataPackets.get(data.copyFromPart);
 			if (!isPartFromPlayer(part, data)) return;
 			
-			MapVec3 animOffset = new MapVec3(0,0,0);
+			MapVec3 animOffset = new MapVec3();
 			if (PixelsCharacterModels.playingAnimationData != null) {
 				PCMAnimation anim = PixelsCharacterModels.playingAnimationData;
 				animOffset = anim.playerTransform;

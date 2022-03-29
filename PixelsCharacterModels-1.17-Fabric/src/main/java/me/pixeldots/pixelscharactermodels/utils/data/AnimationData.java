@@ -13,7 +13,7 @@ public class AnimationData {
 
 	public String name = "";
 	
-	public MapVec3 playerTransform = new MapVec3(0,0,0);
+	public MapVec3 playerTransform = new MapVec3();
 	public List<MapVec3> LimbRotations = new ArrayList<MapVec3>();
 	public List<MapVec3> LimbPivots = new ArrayList<MapVec3>();
 	public List<String> LimbIDs = new ArrayList<String>();

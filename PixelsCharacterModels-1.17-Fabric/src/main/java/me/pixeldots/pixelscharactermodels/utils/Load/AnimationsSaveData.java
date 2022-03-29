@@ -26,7 +26,7 @@ public class AnimationsSaveData {
 	public void Initialize() {
 		System.out.println("Checking Animations Folder");
 		AnimationsPath.replace("/", File.separator);
-		AnimationsPath = AnimationsPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
+		AnimationsPath = AnimationsPath.replace("{mcdir}", PixelsCharacterModels.client.minecraft.runDirectory.toString());
 		
 		File folder = new File(AnimationsPath);
 		if (!folder.exists()) {
@@ -59,7 +59,7 @@ public class AnimationsSaveData {
 			reader = new BufferedReader(new FileReader(file));
 			Gson gson = new Gson();
 			AnimationData data = gson.fromJson(reader, AnimationData.class);
-			PixelsCharacterModels.PCMClient.currentStoredAnimation = data.convertToAnimation(player, model);
+			PixelsCharacterModels.client.currentStoredAnimation = data.convertToAnimation(player, model);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {

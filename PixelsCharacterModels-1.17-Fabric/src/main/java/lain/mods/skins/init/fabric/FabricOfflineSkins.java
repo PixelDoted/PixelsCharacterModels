@@ -135,14 +135,14 @@ public class FabricOfflineSkins implements ClientModInitializer {
     }
     
     public static void ReloadSkins(MinecraftClient mc) {
-    	PixelsCharacterModels.PCMClient.sendClientMessage("Reloading Skins");
+    	PixelsCharacterModels.client.sendClientMessage("Reloading Skins");
     	for (PlayerEntity player : mc.world.getPlayers()) {
             SkinProviderAPI.SKIN.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
             SkinProviderAPI.CAPE.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
-            PixelsCharacterModels.PCMClient.sendClientMessage("Reloaded skin for " + player.getDisplayName().asString());
+            PixelsCharacterModels.client.sendClientMessage("Reloaded skin for " + player.getDisplayName().asString());
         }
     	reloadConfig();
-    	PixelsCharacterModels.PCMClient.sendClientMessage("Reloaded Skins");
+    	PixelsCharacterModels.client.sendClientMessage("Reloaded Skins");
     }
 
     public static void reloadConfig() {

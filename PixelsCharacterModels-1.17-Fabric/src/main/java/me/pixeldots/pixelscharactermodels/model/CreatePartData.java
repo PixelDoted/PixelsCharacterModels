@@ -1,4 +1,7 @@
-package me.pixeldots.pixelscharactermodels.utils;
+package me.pixeldots.pixelscharactermodels.model;
+
+import me.pixeldots.pixelscharactermodels.utils.MapVec2;
+import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 
 public class CreatePartData {
 

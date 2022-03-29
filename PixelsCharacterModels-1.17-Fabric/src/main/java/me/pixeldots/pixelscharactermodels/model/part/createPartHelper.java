@@ -10,9 +10,9 @@ import java.util.UUID;
 import lain.mods.skins.impl.Shared;
 import lain.mods.skins.impl.fabric.ImageUtils;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.model.part.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.part.model.mesh.ModelPartMesh;
-import me.pixeldots.pixelscharactermodels.utils.CustomPartTexture;
+import me.pixeldots.pixelscharactermodels.model.CustomPartTexture;
+import me.pixeldots.pixelscharactermodels.model.part.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.part.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapModelVectors;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
@@ -66,7 +66,7 @@ public class createPartHelper {
 		if (filename == null || filename.equals("")) return null;
 		if (!filename.contains(".")) filename = filename + ".png";
 		try {
-			File file = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Textures" + File.separator + filename);
+			File file = new File(PixelsCharacterModels.client.minecraft.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Textures" + File.separator + filename);
 			if (!file.exists()) return null;
 
 			byte[] data = Shared.blockyReadFile(file, null, null);
@@ -77,7 +77,7 @@ public class createPartHelper {
 			buf.position(0);
 			CustomPartTexture texture = new CustomPartTexture(generateRandomLocation(), buf);
 			
-			MinecraftClient.getInstance().getTextureManager().registerTexture(texture.getLocation(), texture);
+			PixelsCharacterModels.client.minecraft.getTextureManager().registerTexture(texture.getLocation(), texture);
 			return texture.getLocation();
 		} catch (Exception e) {
 			e.printStackTrace();

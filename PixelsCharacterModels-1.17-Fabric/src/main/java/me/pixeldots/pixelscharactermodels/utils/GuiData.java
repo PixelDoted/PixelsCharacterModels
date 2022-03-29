@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels.utils;
 
+import me.pixeldots.pixelscharactermodels.model.CreatePartData;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;

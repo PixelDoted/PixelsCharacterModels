@@ -9,7 +9,6 @@ import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.DiffuseLighting;
@@ -29,7 +28,7 @@ public class GuiHandler extends Screen {
 	
 	public GuiHandler(String title) {
 		super(Text.of(title));
-		textRendererGUI = PixelsCharacterModels.client.textRenderer;
+		textRendererGUI = PixelsCharacterModels.client.minecraft.textRenderer;
 		buttons.clear();
 		TextFieldWidgets.clear();
 	}
@@ -139,11 +138,11 @@ public class GuiHandler extends Screen {
 	      entity.headYaw = entity.getYaw();
 	      entity.prevHeadYaw = entity.getYaw();
 	      DiffuseLighting.method_34742();
-	      EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
+	      EntityRenderDispatcher entityRenderDispatcher = PixelsCharacterModels.client.minecraft.getEntityRenderDispatcher();
 	      quaternion2.conjugate();
 	      entityRenderDispatcher.setRotation(quaternion2);
 	      entityRenderDispatcher.setRenderShadows(false);
-	      VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+	      VertexConsumerProvider.Immediate immediate = PixelsCharacterModels.client.minecraft.getBufferBuilders().getEntityVertexConsumers();
 	      RenderSystem.runAsFancy(() -> {
 	         entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 15728880);
 	      });

@@ -18,23 +18,23 @@ public class SuffixCommand {
 		if (dispatcher == null) return;
 		dispatcher.register(CommandManager.literal("skinsuffix").executes(context -> {
 			FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.thisPlayer.getGameProfile().getId(), "");
-			FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
+			FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client.minecraft);
 			
 		    return 1;
 		}).then(CommandManager.argument("suffix", StringArgumentType.string()).executes(context -> { 
 			FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.thisPlayer.getGameProfile().getId(), StringArgumentType.getString(context, "suffix"));
-			FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
+			FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client.minecraft);
 			
 		    return 1;
 		})));
 		dispatcher.register(CommandManager.literal("listskins").executes(context -> {
 			
-			File[] files = new File(MinecraftClient.getInstance().runDirectory+"/cachedImages/skins").listFiles();
-			MinecraftClient.getInstance().player.sendMessage(new LiteralText("local skins >"), false);
+			File[] files = new File(PixelsCharacterModels.client.minecraft.runDirectory+"/cachedImages/skins").listFiles();
+			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("local skins >"), false);
 			for (int i = 0; i < files.length; i++) {
-				MinecraftClient.getInstance().player.sendMessage(new LiteralText(files[i].getName()), false);
+				PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(files[i].getName()), false);
 			}
-			MinecraftClient.getInstance().player.sendMessage(new LiteralText("< local skins"), false);
+			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("< local skins"), false);
 			
 			
 			return 1;

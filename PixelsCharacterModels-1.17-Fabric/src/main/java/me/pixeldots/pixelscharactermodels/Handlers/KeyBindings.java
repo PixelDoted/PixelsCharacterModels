@@ -9,9 +9,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class KeyBindings {
 	
@@ -76,7 +74,7 @@ public class KeyBindings {
 				PixelsCharacterModels.playingFramesData = null;
 	    		if (PixelsCharacterModels.AnimationsData.loadAnimation(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
 		    		PixelsCharacterModels.playingAnimation = key;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
+		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.client.currentStoredAnimation;
 	    		}
 	    	}
 	    	else {
@@ -87,8 +85,8 @@ public class KeyBindings {
 			if (PixelsCharacterModels.playingFramesData == null || !PixelsCharacterModels.playingFramesData.name.equalsIgnoreCase(key)) {
 	    		if (PixelsCharacterModels.FramesData.loadFrame(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
 	    			PixelsCharacterModels.isPlayingFrames = true;
-	    			PixelsCharacterModels.playingFramesData = PixelsCharacterModels.PCMClient.currentStoredFrames;
-	    			PixelsCharacterModels.PCMClient.framesAnimationID = 0;
+	    			PixelsCharacterModels.playingFramesData = PixelsCharacterModels.client.currentStoredFrames;
+	    			PixelsCharacterModels.client.framesAnimationID = 0;
 					//loadAnimationFrames(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer), PixelsCharacterModels.thisPlayer);
 				}
 	    	}

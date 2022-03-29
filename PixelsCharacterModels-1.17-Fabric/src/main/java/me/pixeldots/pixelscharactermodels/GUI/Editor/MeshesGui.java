@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.GUI;
+package me.pixeldots.pixelscharactermodels.GUI.Editor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,6 +7,9 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -39,20 +42,20 @@ public class MeshesGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		if (lastGui != null) {
 			BackButton = addButton(new ButtonWidget(5, 55, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Back), (button) -> {
-				MinecraftClient.getInstance().openScreen(lastGui);
+				PixelsCharacterModels.client.openScreen(lastGui);
 			}));
 		}
 		
@@ -87,7 +90,7 @@ public class MeshesGui extends GuiHandler {
 	
 	public void SelectMesh(String name) {
 		PixelsCharacterModels.GuiData.createPartData.mesh = name;
-		MinecraftClient.getInstance().openScreen(lastGui);
+		PixelsCharacterModels.client.openScreen(lastGui);
 	}
 	public void RemovePart(ModelPart part) {
 		

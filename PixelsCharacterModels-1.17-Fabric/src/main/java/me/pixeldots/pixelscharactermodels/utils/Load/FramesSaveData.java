@@ -26,7 +26,7 @@ public class FramesSaveData {
 	public void Initialize() {
 		System.out.println("Checking Frames Folder");
 		FramesPath.replace("/", File.separator);
-		FramesPath = FramesPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
+		FramesPath = FramesPath.replace("{mcdir}", PixelsCharacterModels.client.minecraft.runDirectory.toString());
 		File folder = new File(FramesPath);
 		if (!folder.exists()) {
 			try {
@@ -57,7 +57,7 @@ public class FramesSaveData {
 			reader = new BufferedReader(new FileReader(file));
 			Gson gson = new Gson();
 			FramesData data = gson.fromJson(reader, FramesData.class);
-			PixelsCharacterModels.PCMClient.currentStoredFrames = data.convertToFrames(player, model);
+			PixelsCharacterModels.client.currentStoredFrames = data.convertToFrames(player, model);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {

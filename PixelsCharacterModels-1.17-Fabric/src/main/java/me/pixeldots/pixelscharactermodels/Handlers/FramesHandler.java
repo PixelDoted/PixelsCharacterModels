@@ -18,7 +18,7 @@ public class FramesHandler {
 	public static void UpdateFrames(PlayerEntityModel<?> model, PlayerEntity entity) {
 		if (PixelsCharacterModels.isPlayingFrames) {
 			if (PixelsCharacterModels.playingAnimationData == null) {
-				PixelsCharacterModels.PCMClient.framesAnimationID = 0;
+				PixelsCharacterModels.client.framesAnimationID = 0;
 				loadAnimationFrames(model, entity);
 			}
 			else {
@@ -30,19 +30,19 @@ public class FramesHandler {
 							&& sameInRange((float)Math.toDegrees(part.yaw), rot.Y, 0.02f) 
 							&& sameInRange((float)Math.toDegrees(part.roll), rot.Z, 0.02f)) {
 						lastLimbRotations = PixelsCharacterModels.playingAnimationData.LimbRotations;
-						if (PixelsCharacterModels.PCMClient.framesAnimationID+1 >= PixelsCharacterModels.playingFramesData.frames.size()) {
+						if (PixelsCharacterModels.client.framesAnimationID+1 >= PixelsCharacterModels.playingFramesData.frames.size()) {
 							if (PixelsCharacterModels.playingFramesData.Loop) {
-								PixelsCharacterModels.PCMClient.framesAnimationID = 0;
+								PixelsCharacterModels.client.framesAnimationID = 0;
 								loadAnimationFrames(model, entity);
 							} else {
-								PixelsCharacterModels.PCMClient.framesAnimationID = -1;
+								PixelsCharacterModels.client.framesAnimationID = -1;
 								PixelsCharacterModels.isPlayingFrames = false;
 								PixelsCharacterModels.playingAnimation = "";
 								PixelsCharacterModels.playingFramesData = null;
 								PixelsCharacterModels.playingAnimationData = null;
 							}
 						} else {
-							PixelsCharacterModels.PCMClient.framesAnimationID++;
+							PixelsCharacterModels.client.framesAnimationID++;
 							loadAnimationFrames(model, entity);
 						}
 						CurrentTick = 1;
@@ -57,10 +57,10 @@ public class FramesHandler {
 	}
 
 	public static void loadAnimationFrames(PlayerEntityModel<?> model, PlayerEntity entity) {
-		String s = PixelsCharacterModels.playingFramesData.frames.get(PixelsCharacterModels.PCMClient.framesAnimationID);
+		String s = PixelsCharacterModels.playingFramesData.frames.get(PixelsCharacterModels.client.framesAnimationID);
 		PixelsCharacterModels.AnimationsData.loadAnimation(s, entity, model);
 		PixelsCharacterModels.playingAnimation = s;
-		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
+		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.client.currentStoredAnimation;
 	}
 	
 	public static MapVec3 getLerpIfFrames(MapVec3 vector, ModelPart part) {

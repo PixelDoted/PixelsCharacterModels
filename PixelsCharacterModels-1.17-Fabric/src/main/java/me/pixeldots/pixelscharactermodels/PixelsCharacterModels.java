@@ -14,9 +14,9 @@ import me.pixeldots.pixelscharactermodels.Handlers.CommandsHandler;
 import me.pixeldots.pixelscharactermodels.Handlers.KeyBindings;
 import me.pixeldots.pixelscharactermodels.Handlers.RenderingHandler;
 import me.pixeldots.pixelscharactermodels.model.LocalData;
+import me.pixeldots.pixelscharactermodels.model.PreviewModelPart;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
-import me.pixeldots.pixelscharactermodels.utils.PreviewModelPart;
 import me.pixeldots.pixelscharactermodels.utils.TranslatedText;
 import me.pixeldots.pixelscharactermodels.utils.Load.AnimationsSaveData;
 import me.pixeldots.pixelscharactermodels.utils.Load.FramesSaveData;
@@ -45,7 +45,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	public static GuiData GuiData = null;
 	public static RenderingHandler Rendering = null;
-	public static ClientHandler PCMClient = null;
+	public static ClientHandler client = null;
 	
 	public static PCMAnimation playingAnimationData = null;
 	public static PCMFrames playingFramesData = null;
@@ -57,13 +57,10 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static Map<ModelPart, ModelPartData> dataPackets = new HashMap<ModelPart, ModelPartData>();
 	public static Map<PlayerEntity, PlayerEntityModel<?>> EntityModelList = new HashMap<PlayerEntity, PlayerEntityModel<?>>();
 	
-	public static MinecraftClient client;
-	
 	@Override
 	public void onInitializeClient() {
 		System.out.println("(Pixel's Character Models) Initializing Client");
 		
-		client = MinecraftClient.getInstance();
 		TranslatedText = new TranslatedText();
 		AnimationsData = new AnimationsSaveData();
 		FramesData = new FramesSaveData();
@@ -71,7 +68,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		saveData = new OtherSaveData();
 		GuiData = new GuiData();
 		Rendering = new RenderingHandler();
-		PCMClient = new ClientHandler();
+		client = new ClientHandler();
 
 		saveData.Initialize();
 		PresetsData.Initialize();
@@ -82,18 +79,18 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			CommandsHandler.Register(dispatcher);
 		});
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (client.player == null && PCMClient.isConnectedToWorld) {
-				PCMClient.onDisconnect();
-			} else if (client.player != null && !PCMClient.isConnectedToWorld) {
-				PCMClient.onConnect();
+		ClientTickEvents.END_CLIENT_TICK.register(c -> {
+			if (c.player == null && client.isConnectedToWorld) {
+				client.onDisconnect();
+			} else if (c.player != null && !client.isConnectedToWorld) {
+				client.onConnect();
 			}
 		});
 		System.out.println("(Pixel's Character Models) Initialized Client");
 	}
 	
 	public static void OpenGUI() {
-		MinecraftClient.getInstance().openScreen(new PresetsGui());
+		client.openScreen(new PresetsGui());
 	}
 
 	public static int getCurrentFPS() {

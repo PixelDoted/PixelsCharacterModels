@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.GUI;
+package me.pixeldots.pixelscharactermodels.GUI.Editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
+import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import net.minecraft.client.MinecraftClient;
@@ -44,20 +47,20 @@ public class PartsGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			MinecraftClient.getInstance().openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui());
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
-			MinecraftClient.getInstance().openScreen(new EditorGui());
+			PixelsCharacterModels.client.openScreen(new EditorGui());
 		}));
 		Animation = addButton(new ButtonWidget(5,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Animation), (button) -> {
-			MinecraftClient.getInstance().openScreen(new AnimationGui());
+			PixelsCharacterModels.client.openScreen(new AnimationGui());
 		}));
 		Frames = addButton(new ButtonWidget(60,30,50,20, Text.of(PixelsCharacterModels.TranslatedText.Frames), (button) -> {
-			MinecraftClient.getInstance().openScreen(new FramesGui());
+			PixelsCharacterModels.client.openScreen(new FramesGui());
 		}));
 		if (lastGui != null) {
 			BackButton = addButton(new ButtonWidget(5, 55, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Back), (button) -> {
-				MinecraftClient.getInstance().openScreen(lastGui);
+				PixelsCharacterModels.client.openScreen(lastGui);
 			}));
 		}
 		
@@ -87,7 +90,7 @@ public class PartsGui extends GuiHandler {
 		})));
 		
 		Create = addButton(new ButtonWidget(5, 100, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Create), (button) -> {
-			MinecraftClient.getInstance().openScreen(new CreatePartGui());
+			PixelsCharacterModels.client.openScreen(new CreatePartGui());
 		}));
 		Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
 			RemovePart();
@@ -131,7 +134,7 @@ public class PartsGui extends GuiHandler {
 		PixelsCharacterModels.GuiData.SelectedPart = name;
 		PixelsCharacterModels.GuiData.SelectedPartID = id;
 		PixelsCharacterModels.GuiData.SelectedPartModel = part;
-		MinecraftClient.getInstance().openScreen(lastGui);
+		PixelsCharacterModels.client.openScreen(lastGui);
 	}
 	
 	public void SelectPartModel(String name, int id, boolean isMesh) {
@@ -144,9 +147,9 @@ public class PartsGui extends GuiHandler {
 		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
 		
 		if (PixelsCharacterModels.GuiData.SelectedPresetID != -1) {
-			PixelsCharacterModels.PCMClient.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetName.replace(".json", ""), client.player, PixelsCharacterModels.EntityModelList.get(client.player));
 		}
-		MinecraftClient.getInstance().openScreen(new PartsGui(lastGui));
+		PixelsCharacterModels.client.openScreen(new PartsGui(lastGui));
 	}
 	
 	@Override

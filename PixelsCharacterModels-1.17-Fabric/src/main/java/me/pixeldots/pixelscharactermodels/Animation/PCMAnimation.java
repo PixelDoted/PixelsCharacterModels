@@ -14,7 +14,7 @@ public class PCMAnimation {
 	
 	public String name = "";
 	
-	public MapVec3 playerTransform = new MapVec3(0,0,0);
+	public MapVec3 playerTransform = new MapVec3();
 	public Map<ModelPart, MapVec3> LimbRotations = new HashMap<ModelPart, MapVec3>();
 	public Map<ModelPart, MapVec3> LimbPivots = new HashMap<ModelPart, MapVec3>();
 	public List<ModelPart> LimbParts = new ArrayList<ModelPart>();

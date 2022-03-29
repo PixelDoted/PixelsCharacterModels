@@ -26,7 +26,7 @@ public class PresetsSaveData {
 	public void Initialize() {
 		System.out.println("Checking Presets Folder");
 		PresetsPath.replace("/", File.separator);
-		PresetsPath = PresetsPath.replace("{mcdir}", PixelsCharacterModels.client.runDirectory.toString());
+		PresetsPath = PresetsPath.replace("{mcdir}", PixelsCharacterModels.client.minecraft.runDirectory.toString());
 		
 		File folder = new File(PresetsPath);
 		if (!folder.exists()) {
@@ -53,8 +53,8 @@ public class PresetsSaveData {
 			PixelsCharacterModelsMain.clientHandler.sendModelData(gson.toJson(data));
 		} catch (Exception e) {
 			e.printStackTrace();
-			PixelsCharacterModels.PCMClient.sendClientMessage("An error occurred while loading that preset");
-			PixelsCharacterModels.PCMClient.sendClientMessage("This could be caused by the .json file being corrupted or invalid");
+			PixelsCharacterModels.client.sendClientMessage("An error occurred while loading that preset");
+			PixelsCharacterModels.client.sendClientMessage("This could be caused by the .json file being corrupted or invalid");
 		} finally {
 			try { reader.close(); } catch (IOException e) { }
 		}
