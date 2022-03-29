@@ -3,13 +3,6 @@
 # + finished
 # * not tested
 
-+ fix only rendering some parts of a mesh
-+ don't modify player scale without PCM installed on server
-+ Preset renaming
-+ fix frames animation using framerate to update
-+ deny creating/renaming preset with empty name
-+ fix saving not working with folders
-
 * add Multiplayer Support
 
 - fix scaling not working on singleplayer
