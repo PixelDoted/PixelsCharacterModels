@@ -20,10 +20,12 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
@@ -129,16 +131,21 @@ public class RenderingHandler {
 		if (PixelsCharacterModels.previewModelPart != null && PixelsCharacterModels.previewModelPart.owner == data) hasPreview = true;
 
 		if (data.cubes.size()+data.meshes.size() >= 1 || hasPreview) {
-			RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)data.entity).getSkinTexture()); // sets the shaders texture to the players skin
+			/*RenderSystem.setShaderTexture(0, ((AbstractClientPlayerEntity)data.entity).getSkinTexture()); // sets the shaders texture to the players skin
 			RenderSystem.setShaderColor(1, 1, 1, 1); // sets the shader color to white
 			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader); // sets the Shader
-			RenderSystem.enableDepthTest(); // enable Depth Test
+			RenderSystem.enableDepthTest(); // enable Depth Test*/
+			TextureManager textureManager = PixelsCharacterModels.client.minecraft.getTextureManager();
+			Identifier playerSkin = ((AbstractClientPlayerEntity)data.entity).getSkinTexture();
+			//textureManager.bindTexture(playerSkin);
 
 			for (int i = 0; i < data.cubes.size(); i++) { // renders all cubes on limb
-				data.cubes.get(i).render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+				data.cubes.get(i).render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
 			}
-			if (hasPreview && PixelsCharacterModels.previewModelPart.cube != null) // renders the preview if it's a cube
-				PixelsCharacterModels.previewModelPart.cube.render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+			if (hasPreview && PixelsCharacterModels.previewModelPart.cube != null) { // renders the preview if it's a cube
+				PixelsCharacterModels.previewModelPart.cube.render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+				//textureManager.bindTexture(playerSkin);
+			}
 
 			if (data.meshes.size() >= 1 || hasPreview) { // flips the rotation and disables culling
 				RenderSystem.disableCull();
@@ -148,10 +155,11 @@ public class RenderingHandler {
 				matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
 			}
 			for (int i = 0; i < data.meshes.size(); i++) { // renders all meshes on limb
-				data.meshes.get(i).render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+				data.meshes.get(i).render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
 			}
-			if (hasPreview && PixelsCharacterModels.previewModelPart.mesh != null) // renders the preview if it's a mesh
-				PixelsCharacterModels.previewModelPart.mesh.render(matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+			if (hasPreview && PixelsCharacterModels.previewModelPart.mesh != null) { // renders the preview if it's a mesh
+				PixelsCharacterModels.previewModelPart.mesh.render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, data.entity);
+			}
 		}
 	}
 	

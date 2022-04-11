@@ -19,6 +19,7 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormat.DrawMode;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,31 +63,25 @@ public class ModelPartMesh {
 		}
 	}
 	
-	public void render(MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
+	public boolean render(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
+		boolean textured = false;
 		if (texture != null) {
-			RenderSystem.setShaderTexture(0, texture);
-			RenderSystem.setShaderColor(red, green, blue, alpha);
-			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
-			RenderSystem.enableDepthTest();
+			textured = true;
+			tm.bindTexture(texture);
 		}
-		// Set RenderSystem lighting
 
-		Tessellator tes = Tessellator.getInstance();
-		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
-		int lightUV = LightmapTextureManager.getBlockLightCoordinates(light);
 		
 		for (int i = 0; i < sides.length; i++) {
-			buffer.begin(DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
-			for (int j = 0; j < sides[i].vertices.length; j++) {
-				ModelMeshVertex vertex = sides[i].vertices[j];
-				buffer.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).color(red, green, blue, alpha)
-					.texture(vertex.u, vertex.v).light(light).normal(n, vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
+			int length = sides[i].vertices.length;
+			for (int j = 0; j < 4; j++) {
+				ModelMeshVertex vertex = j >= length ? sides[i].vertices[length-1] : sides[i].vertices[j];
+				vc.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).color(red, green, blue, alpha)
+					.texture(vertex.u, vertex.v).overlay(overlay).light(light).normal(n, vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
 			}
-			buffer.end();
-			BufferRenderer.draw(buffer);
 		}
+		return textured;
 	}
 	
 }

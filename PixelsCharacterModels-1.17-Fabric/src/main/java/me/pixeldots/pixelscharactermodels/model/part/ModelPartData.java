@@ -74,10 +74,8 @@ public class ModelPartData {
 		this.scale = data.scale;
 		this.Show = data.Show;
 	}
-	
 	public String toJsonString() {
-		String s = new Gson().toJson(this);
-		return s;
+		return new Gson().toJson(this);
 	}
 	
 	public ModelPartData() {}

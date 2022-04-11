@@ -13,6 +13,7 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormat.DrawMode;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -84,30 +85,24 @@ public class ModelPartCube {
         this.sides[5] = new ModelCubeQuad(new ModelCubeVertex[]{vertex5, vertex6, vertex7, vertex8}, n, q, o, r, textureWidth, textureHeight, false, Direction.SOUTH);
 	}
 
-	public void render(MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
+	public boolean render(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
+		boolean textured = false;
 		if (texture != null) {
-			RenderSystem.setShaderTexture(0, texture);
-			RenderSystem.setShaderColor(red, green, blue, alpha);
-			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
-			RenderSystem.enableDepthTest();
+			textured = true;
+			tm.bindTexture(texture);
 		}
 		
-		Tessellator tes = Tessellator.getInstance();
-		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
-		int lightUV = LightmapTextureManager.getBlockLightCoordinates(light);
 		
 		for (int i = 0; i < sides.length; i++) {
-			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
 			for (int j = 0; j < sides[i].vertices.length; j++) {
-				buffer.vertex(m, sides[i].vertices[j].pos.getX()/16, sides[i].vertices[j].pos.getY()/16, sides[i].vertices[j].pos.getZ()/16)
-					.color(red, green, blue, alpha).texture(sides[i].vertices[j].u, sides[i].vertices[j].v)
+				vc.vertex(m, sides[i].vertices[j].pos.getX()/16, sides[i].vertices[j].pos.getY()/16, sides[i].vertices[j].pos.getZ()/16)
+					.color(red, green, blue, alpha).texture(sides[i].vertices[j].u, sides[i].vertices[j].v).overlay(overlay)
 					.light(light).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
 			}
-			buffer.end();
-			BufferRenderer.draw(buffer);
 		}
+		return textured;
     }
 
 }
