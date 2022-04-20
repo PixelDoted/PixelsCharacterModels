@@ -99,14 +99,14 @@ public class PresetsGui extends GuiHandler {
 	}
 	
 	public void SelectPreset(String path, String name) {
-		PixelsCharacterModels.client.LoadPreset(path, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.client.LoadPreset(path, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 		PixelsCharacterModels.GuiData.SelectedPresetPath = path;
 		PixelsCharacterModels.GuiData.SelectedPresetName = name;
 		client.openScreen(new PresetsGui());
 	}
 	
 	public void createPreset(String s) {
-		PixelsCharacterModels.client.writePreset(path+File.separator+s, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.client.writePreset(path+File.separator+s, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 		client.openScreen(new PresetsGui());
 	}
 	
@@ -139,7 +139,7 @@ public class PresetsGui extends GuiHandler {
 		}
 		drawEntity(50, this.height/2+150, 75, (float)(50) - mouseX, (float)(this.height/2+150-125) - mouseY, PixelsCharacterModels.GuiData.entity);
 		if (PixelsCharacterModels.GuiData.model == null) 
-			PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.GuiData.entity);
+			PixelsCharacterModels.GuiData.model = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid()).model;
 		
 		super.render(matrices, mouseX, mouseY, delta);
 	}

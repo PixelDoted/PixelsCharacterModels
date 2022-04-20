@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.accessors.PlayerModelAccessor;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
@@ -36,7 +37,7 @@ public class RenderingHandler {
 	public GameProfile currentPlayerRendering = null;
 
 	public void playerRenderHead(PlayerEntityModel<?> model, PlayerEntity entity, LivingEntityRenderer<?,?> renderer) {
-		if (!PixelsCharacterModels.EntityModelList.containsKey(entity)) PixelsCharacterModels.EntityModelList.put(entity, model);
+		if (!PixelsCharacterModels.PlayerDataList.containsKey(entity.getUuid())) PixelsCharacterModels.PlayerDataList.put(entity.getUuid(), new PlayerData(entity, model));
 		FramesHandler.UpdateFrames(model, entity);
 	}
 	

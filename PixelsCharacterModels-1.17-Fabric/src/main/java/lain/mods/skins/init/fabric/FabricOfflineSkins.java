@@ -53,7 +53,6 @@ public class FabricOfflineSkins implements ClientModInitializer {
     private static final boolean skinPass = false;
     private static final boolean capePass = false;
     private static final boolean overwrite = true;
-    public static Map<UUID, String> skinSuffix = new HashMap<UUID, String>();
 
     private static Identifier generateRandomLocation() {
         return new Identifier("offlineskins", String.format("textures/generated/%s", UUID.randomUUID().toString()));
@@ -132,17 +131,6 @@ public class FabricOfflineSkins implements ClientModInitializer {
         });
 
         reloadConfig();
-    }
-    
-    public static void ReloadSkins(MinecraftClient mc) {
-    	PixelsCharacterModels.client.sendClientMessage("Reloading Skins");
-    	for (PlayerEntity player : mc.world.getPlayers()) {
-            SkinProviderAPI.SKIN.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
-            SkinProviderAPI.CAPE.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
-            PixelsCharacterModels.client.sendClientMessage("Reloaded skin for " + player.getDisplayName().asString());
-        }
-    	reloadConfig();
-    	PixelsCharacterModels.client.sendClientMessage("Reloaded Skins");
     }
 
     public static void reloadConfig() {

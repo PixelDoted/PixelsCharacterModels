@@ -147,7 +147,7 @@ public class PartsGui extends GuiHandler {
 		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
 		
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
-			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 		
 		PixelsCharacterModels.client.openScreen(new PartsGui(lastGui));
 	}

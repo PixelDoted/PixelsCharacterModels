@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
@@ -53,9 +54,9 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	public static LocalData localData = new LocalData();
 	public static PreviewModelPart previewModelPart = null;
-	public static Map<ModelPart, ModelPartData> dataPackets = new HashMap<ModelPart, ModelPartData>();
-	public static Map<PlayerEntity, PlayerEntityModel<?>> EntityModelList = new HashMap<PlayerEntity, PlayerEntityModel<?>>();
-	
+	public static Map<ModelPart, ModelPartData> dataPackets = new HashMap<>();
+	public static Map<UUID, PlayerData> PlayerDataList = new HashMap<>();
+
 	@Override
 	public void onInitializeClient() {
 		System.out.println("(Pixel's Character Models) Initializing Client");

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
@@ -72,7 +73,7 @@ public class EditorGui extends GuiHandler {
 		GlobalScaleField.setText(String.valueOf(getPlayerScale()));
 		
 		GlobalSkinField = addTextField(new TextFieldWidget(textRendererGUI, 70, 90, 100, 25, Text.of("Skin")));
-		GlobalSkinField.setText(FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()));
+		GlobalSkinField.setText(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix);
 		ShowSkinList = addButton(new ButtonWidget(70, 120, 100, 20, Text.of(PixelsCharacterModels.TranslatedText.ListSkins), (button) -> {
 			ListSkins();
 		}));
@@ -146,7 +147,7 @@ public class EditorGui extends GuiHandler {
 				"/scale set " + GlobalScaleField.getText() + " " + PixelsCharacterModels.thisPlayer.getDisplayName().asString());
 		*/
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) {
-			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 		}
 	}
 	
@@ -166,9 +167,9 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerSkin() {
-		if (FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.GuiData.entity.getGameProfile().getId()) == GlobalSkinField.getText()) return;
-		FabricOfflineSkins.skinSuffix.put(PixelsCharacterModels.GuiData.entity.getGameProfile().getId(), GlobalSkinField.getText());
-		FabricOfflineSkins.ReloadSkins(client);
+		if (PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getGameProfile().getId()).skinSuffix == GlobalSkinField.getText()) return;
+		PixelsCharacterModels.client.setSkinSuffix(PixelsCharacterModels.GuiData.entity.getGameProfile().getId(), GlobalSkinField.getText());
+		PixelsCharacterModels.client.ReloadSkins();
 		savePreset();
 	}
 	
@@ -232,7 +233,7 @@ public class EditorGui extends GuiHandler {
 	public void savePreset() {
 		System.out.println("saving");
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
-			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 	}
 	
 }

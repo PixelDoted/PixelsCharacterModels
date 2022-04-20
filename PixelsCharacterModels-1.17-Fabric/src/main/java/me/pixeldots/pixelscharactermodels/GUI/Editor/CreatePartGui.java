@@ -106,7 +106,7 @@ public class CreatePartGui extends GuiHandler {
 				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			}
 			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
-				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 			
 			PixelsCharacterModels.client.openScreen(new PartsGui());
 		}));

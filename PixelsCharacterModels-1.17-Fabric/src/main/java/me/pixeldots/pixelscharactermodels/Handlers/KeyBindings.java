@@ -41,11 +41,12 @@ public class KeyBindings {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 		    if (openGUI.wasPressed()) {
 		    	PixelsCharacterModels.GuiData.entity = client.player;
-		    	PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer);
+				if (PixelsCharacterModels.PlayerDataList.containsKey(PixelsCharacterModels.thisPlayer.getUuid()))
+		    		PixelsCharacterModels.GuiData.model = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model;
 		    	PixelsCharacterModels.OpenGUI();
 		    }
 		    if (KeyBindings.reloadKey.wasPressed()) {
-            	FabricOfflineSkins.ReloadSkins(MinecraftClient.getInstance());
+            	PixelsCharacterModels.client.ReloadSkins();
             	PixelsCharacterModelsMain.clientHandler.requestModelData();
             }
 		    
@@ -72,7 +73,7 @@ public class KeyBindings {
 			if (PixelsCharacterModels.playingAnimation != key) {
 				PixelsCharacterModels.isPlayingFrames = false;
 				PixelsCharacterModels.playingFramesData = null;
-	    		if (PixelsCharacterModels.AnimationsData.loadAnimation(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
+	    		if (PixelsCharacterModels.AnimationsData.loadAnimation(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model)) {
 		    		PixelsCharacterModels.playingAnimation = key;
 		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.client.currentStoredAnimation;
 	    		}
@@ -83,7 +84,7 @@ public class KeyBindings {
 	    	}
 		} else {
 			if (PixelsCharacterModels.playingFramesData == null || !PixelsCharacterModels.playingFramesData.name.equalsIgnoreCase(key)) {
-	    		if (PixelsCharacterModels.FramesData.loadFrame(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer))) {
+	    		if (PixelsCharacterModels.FramesData.loadFrame(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model)) {
 	    			PixelsCharacterModels.isPlayingFrames = true;
 	    			PixelsCharacterModels.playingFramesData = PixelsCharacterModels.client.currentStoredFrames;
 	    			PixelsCharacterModels.client.framesAnimationID = 0;

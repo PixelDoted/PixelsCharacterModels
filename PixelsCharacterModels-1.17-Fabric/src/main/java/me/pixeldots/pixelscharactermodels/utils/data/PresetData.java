@@ -7,6 +7,7 @@ import java.util.Map;
 
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
@@ -33,12 +34,8 @@ public class PresetData {
 		if (player == null) return;
 		if (isPacket == false) MainClientHandler.changePlayerScale(GlobalScale);
 		
-		if (FabricOfflineSkins.skinSuffix.containsKey(player.getGameProfile().getId())) {
-			FabricOfflineSkins.skinSuffix.remove(player.getGameProfile().getId());
-			FabricOfflineSkins.skinSuffix.put(player.getGameProfile().getId(), skinSuffix);
-		}
-		else FabricOfflineSkins.skinSuffix.put(player.getGameProfile().getId(), skinSuffix);
-		FabricOfflineSkins.ReloadSkins(PixelsCharacterModels.client.minecraft);
+		PixelsCharacterModels.client.setSkinSuffix(player.getGameProfile().getId(), skinSuffix);
+		PixelsCharacterModels.client.ReloadSkins();
 		
 		PixelsCharacterModels.dataPackets.get(model.head).copyData(partData.get("head"), model.head);
 		PixelsCharacterModels.dataPackets.get(model.body).copyData(partData.get("body"), model.body);
