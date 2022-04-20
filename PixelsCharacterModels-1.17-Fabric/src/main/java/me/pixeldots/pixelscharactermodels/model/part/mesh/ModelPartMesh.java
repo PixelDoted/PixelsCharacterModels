@@ -26,6 +26,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class ModelPartMesh {
@@ -76,7 +78,16 @@ public class ModelPartMesh {
 		for (int i = 0; i < sides.length; i++) {
 			int length = sides[i].vertices.length;
 			for (int j = 0; j < 4; j++) {
-				ModelMeshVertex vertex = j >= length ? sides[i].vertices[length-1] : sides[i].vertices[j];
+				ModelMeshVertex vertex = j >= length ? null : sides[i].vertices[j];
+				if (vertex == null) {
+					ModelMeshVertex a = sides[i].vertices[length-1];
+					ModelMeshVertex b = sides[i].vertices[0];
+					Vec3f pos = new Vec3f((a.pos.getX()+b.pos.getX())/2f,(a.pos.getY()+b.pos.getY())/2f,(a.pos.getZ()+b.pos.getZ())/2f);
+					Vec3f normal = new Vec3f((a.normal.getX()+b.normal.getX())/2f,(a.normal.getY()+b.normal.getY())/2f,(a.normal.getZ()+b.normal.getZ())/2f);
+					Vec2f uv = new Vec2f((a.u+b.u)/2f,(a.v+b.v)/2f);
+					vertex = new ModelMeshVertex(pos, normal, uv.x, uv.y);
+				}
+
 				vc.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).color(red, green, blue, alpha)
 					.texture(vertex.u, vertex.v).overlay(overlay).light(light).normal(n, vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
 			}

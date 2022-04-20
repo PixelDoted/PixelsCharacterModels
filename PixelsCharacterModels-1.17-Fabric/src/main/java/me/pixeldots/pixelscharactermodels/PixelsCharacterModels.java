@@ -80,11 +80,8 @@ public class PixelsCharacterModels implements ClientModInitializer {
 			CommandsHandler.Register(dispatcher);
 		});
 		ClientTickEvents.END_CLIENT_TICK.register(c -> {
-			if (c.player == null && client.isConnectedToWorld) {
-				client.onDisconnect();
-			} else if (c.player != null && !client.isConnectedToWorld) {
-				client.onConnect();
-			}
+			if (c.player == null && client.isConnectedToWorld) client.onDisconnect();
+			else if (c.player != null && !client.isConnectedToWorld) client.onConnect();
 		});
 		System.out.println("(Pixel's Character Models) Initialized Client");
 	}
@@ -97,30 +94,33 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		return ((MinecraftClientAccessor)client.minecraft).getCurrentFPS();
 	}
 	
-	public static String checkForUpdate() {
-		String s = "";
-		try {
-			URL tracker = new URL("https://raw.githubusercontent.com/PixelDoted/PixelsCharacterModels/main/PCM.Update");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(tracker.openStream()));
-			Object[] version = reader.lines().toArray();
-			for (int i = 0; i < version.length; i++) {
-				if (((String)version[i]).startsWith("Fabric: ")) {
-					s = ((String)version[i]).split(": ")[1];
-					break;
+	public static void checkForUpdate(UpdateCallback callback) {
+		new Thread(() -> {
+			String s = "";
+			try {
+				URL tracker = new URL("https://raw.githubusercontent.com/PixelDoted/PixelsCharacterModels/main/PCM.Update");
+				BufferedReader reader = new BufferedReader(new InputStreamReader(tracker.openStream()));
+				Object[] version = reader.lines().toArray();
+				for (int i = 0; i < version.length; i++) {
+					if (((String)version[i]).startsWith("Fabric: ")) {
+						s = ((String)version[i]).split(": ")[1];
+						break;
+					}
 				}
+			} catch (Exception e) {
+				System.out.println("(Pixel's Character Models) Failed to collect version checker data");
+				System.out.println(e);
+				System.out.println("(Pixel's Character Models) Failed to collect version checker data");
 			}
-		} catch (Exception e) {
-			System.out.println("(Pixel's Character Models) Failed to collect version checker data");
-			System.out.println(e);
-			System.out.println("(Pixel's Character Models) Failed to collect version checker data");
-		}
-		String versionType = s.contains("B") ? "B" : (s.contains("R") ? "R" : "N");
-		String userVersionType = modVersion.contains("B") ? "B" : (modVersion.contains("R") ? "R" : "N");
-		
-		if (VersionIDs.getVersionID(versionType) == VersionIDs.getVersionID(userVersionType)) {
-			if (Float.parseFloat(modVersion.replace(versionType, "")) >= Float.parseFloat(s.replace(versionType, ""))) return "";
-		} else if (VersionIDs.getVersionID(versionType) < VersionIDs.getVersionID(userVersionType)) return "";
-		return s;
+			String versionType = s.contains("B") ? "B" : (s.contains("R") ? "R" : "N");
+			String userVersionType = modVersion.contains("B") ? "B" : (modVersion.contains("R") ? "R" : "N");
+			
+			if (VersionIDs.getVersionID(versionType) == VersionIDs.getVersionID(userVersionType)) {
+				if (Float.parseFloat(modVersion.replace(versionType, "")) >= Float.parseFloat(s.replace(versionType, ""))) s = "";
+			} else if (VersionIDs.getVersionID(versionType) < VersionIDs.getVersionID(userVersionType)) s = "";
+			
+			if (callback != null) callback.run(s);
+		}).start();
 	}
 	
 	public static class VersionIDs {
@@ -134,5 +134,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 			return B;
 		}
 	}
+
+	public interface UpdateCallback { void run(String s); }
 
 }

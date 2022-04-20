@@ -73,6 +73,7 @@ public class ClientHandler {
     	PixelsCharacterModels.client.sendClientMessage("Reloaded Skins");
     }
 	
+	/* Presets */
 	public void LoadPreset(String path, PlayerEntity entity, PlayerEntityModel<?> model) {
 		sendClientMessage("Loading Preset");
 		this.currentPreset = path;

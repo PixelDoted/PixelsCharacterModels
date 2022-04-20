@@ -29,7 +29,7 @@ public abstract class UserManagedSkinProviderMixin {
     @Shadow public File _dirU;
     @Shadow public Function<ByteBuffer, ByteBuffer> _filter;
 
-    @Inject(method = "getSkin", at = @At("HEAD"))
+    @Inject(method = "getSkin", at = @At("RETURN"))
     public void getSkin(IPlayerProfile profile, CallbackInfoReturnable<ISkin> info) {
         SkinData skin = new SkinData();
         if (_filter != null)
@@ -41,6 +41,7 @@ public abstract class UserManagedSkinProviderMixin {
             if (PixelsCharacterModels.PlayerDataList.containsKey(profile.getPlayerID())) 
             	suffix = PixelsCharacterModels.PlayerDataList.get(profile.getPlayerID()).skinSuffix;
             
+            if (suffix.equals("")) return;
             if (!Shared.isOfflinePlayer(profile.getPlayerID(), profile.getPlayerName()))
                 data = readFile(_dirU, "%s"+suffix+".png", profile.getPlayerID().toString().replaceAll("-", ""));
             if (data == null && !Shared.isBlank(profile.getPlayerName()))
