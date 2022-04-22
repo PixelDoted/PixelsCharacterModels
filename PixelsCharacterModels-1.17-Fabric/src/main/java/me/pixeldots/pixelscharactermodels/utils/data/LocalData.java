@@ -19,5 +19,7 @@ public class LocalData {
 	public boolean AnimationFiveisFrames = false;
 
 	public String lastUsedPreset = "";
+	public long MaximumTrisPerPlayer = 0;
+	public long MaximumPartsPerPlayer = 0;
 	
 }

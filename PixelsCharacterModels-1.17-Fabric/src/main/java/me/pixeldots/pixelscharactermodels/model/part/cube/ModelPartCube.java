@@ -7,7 +7,13 @@ import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -79,11 +85,15 @@ public class ModelPartCube {
         this.sides[5] = new ModelCubeQuad(new ModelCubeVertex[]{vertex5, vertex6, vertex7, vertex8}, n, q, o, r, textureWidth, textureHeight, false, Direction.SOUTH);
 	}
 
-	public boolean render(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
-		boolean textured = false;
+	public void render(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {
 		if (texture != null) {
-			textured = true;
-			tm.getTexture(texture).bindTexture();
+			RenderSystem.setShaderTexture(0, texture);
+			RenderSystem.setShaderColor(red, green, blue, alpha);
+			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
+			RenderSystem.enableDepthTest();
+
+			renderTextured(tm,entry,vc,light,overlay,red,green,blue,alpha,entity);
+			return;
 		}
 		
 		Matrix4f m = entry.getModel();
@@ -96,7 +106,26 @@ public class ModelPartCube {
 					.light(light).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
 			}
 		}
-		return textured;
     }
+
+	public void renderTextured(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
+		Tessellator tes = Tessellator.getInstance();
+		BufferBuilder buffer = tes.getBuffer();
+		Matrix4f m = entry.getModel();
+		Matrix3f n = entry.getNormal();
+		
+		for (int i = 0; i < sides.length; i++) {
+			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
+			for (int j = 0; j < 4; j++) {
+				ModelCubeVertex vertex = sides[i].vertices[j];
+
+				buffer.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16)
+					.color(red, green, blue, alpha).texture(vertex.u, vertex.v)
+					.light(light).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
+			}
+			buffer.end();
+			BufferRenderer.draw(buffer);
+		}
+	}
 
 }

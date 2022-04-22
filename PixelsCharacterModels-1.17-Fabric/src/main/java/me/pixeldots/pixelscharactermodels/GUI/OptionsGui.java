@@ -34,6 +34,9 @@ public class OptionsGui extends GuiHandler {
 	public ButtonWidget showNameTags;
 	public ButtonWidget sendUpdateMessages;
 	public ButtonWidget showArmor;
+
+	public TextFieldWidget MaximumTrisPerPlayer;
+	public TextFieldWidget MaximumPartsPerPlayer;
 	
 	public OptionsGui() {
 		super("Options");
@@ -99,12 +102,19 @@ public class OptionsGui extends GuiHandler {
 			PixelsCharacterModels.localData.showArmor = !PixelsCharacterModels.localData.showArmor;
 			button.setMessage(Text.of(PixelsCharacterModels.localData.showArmor ? "true" : "false"));
 		}));
+
 		
+		MaximumTrisPerPlayer = addTextField(new TextFieldWidget(textRendererGUI, 35,260,50,20, Text.of("MaximumTrisPerPlayer")));
+		MaximumPartsPerPlayer = addTextField(new TextFieldWidget(textRendererGUI, 35,285,50,20, Text.of("MaximumPartsPerPlayer")));
+
 		AnimOneID.setText(PixelsCharacterModels.localData.AnimationIDOne);
 		AnimTwoID.setText(PixelsCharacterModels.localData.AnimationIDTwo);
 		AnimThreeID.setText(PixelsCharacterModels.localData.AnimationIDThree);
 		AnimFourID.setText(PixelsCharacterModels.localData.AnimationIDFour);
 		AnimFiveID.setText(PixelsCharacterModels.localData.AnimationIDFive);
+
+		MaximumTrisPerPlayer.setText("" + PixelsCharacterModels.localData.MaximumTrisPerPlayer);
+		MaximumPartsPerPlayer.setText("" + PixelsCharacterModels.localData.MaximumPartsPerPlayer);
 		
 		AnimOneFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationOneisFrames ? "Frames" : "Animation"));
 		AnimTwoFrames.setMessage(Text.of(PixelsCharacterModels.localData.AnimationTwoisFrames ? "Frames" : "Animation"));
@@ -120,6 +130,11 @@ public class OptionsGui extends GuiHandler {
 		PixelsCharacterModels.localData.AnimationIDThree = AnimThreeID.getText();
 		PixelsCharacterModels.localData.AnimationIDFour = AnimFourID.getText();
 		PixelsCharacterModels.localData.AnimationIDFive = AnimFiveID.getText();
+
+		if (isNumeric(MaximumTrisPerPlayer.getText()))
+			PixelsCharacterModels.localData.MaximumTrisPerPlayer = Long.parseLong(MaximumTrisPerPlayer.getText());
+		if (isNumeric(MaximumPartsPerPlayer.getText()))
+			PixelsCharacterModels.localData.MaximumPartsPerPlayer = Long.parseLong(MaximumPartsPerPlayer.getText());
 		super.tick();
 	}
 	
@@ -140,6 +155,9 @@ public class OptionsGui extends GuiHandler {
 		drawString(matrices, "show NameTags", 5, 185);
 		drawString(matrices, "show Messages", 5, 210);
 		drawString(matrices, "show Armor", 5, 235);
+
+		drawString(matrices, "Maximum Tris Per Player", 5, 260);
+		drawString(matrices, "Maximum Parts Per Player", 5, 285);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	
