@@ -30,8 +30,8 @@ public class MainClientHandler {
 		ClientPlayNetworking.registerGlobalReceiver(PixelsCharacterModelsMain.NetworkConstants.requestModelData, (client, handler, buf, responseSender) -> {
 			PresetData data = new PresetData();
 			
-			data.skinSuffix = FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId());
-			data.convertModelData(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
+			data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix;
+			data.convertModelData(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
 			
 			Gson gson = new Gson();
 			sendModelData(gson.toJson(data), buf.readString());
@@ -47,15 +47,15 @@ public class MainClientHandler {
 	public void reciveModelData(String json, PlayerEntity player) {
 		Gson gson = new Gson(); 
 		PresetData data = gson.fromJson(json, PresetData.class);
-		data.convertToModel(player, PixelsCharacterModels.EntityModelList.get(player), true);
+		data.convertToModel(player, PixelsCharacterModels.PlayerDataList.get(player.getUuid()).model, true);
 	}
 	
 	public void requestModelData() {
 		if (PixelsCharacterModels.client.minecraft.isInSingleplayer()) {
 			PresetData data = new PresetData();
 			
-			data.skinSuffix = FabricOfflineSkins.skinSuffix.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId());
-			data.convertModelData(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer));
+			data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix;
+			data.convertModelData(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
 			
 			Gson gson = new Gson();
 			reciveModelData(gson.toJson(data), PixelsCharacterModels.client.minecraft.player);

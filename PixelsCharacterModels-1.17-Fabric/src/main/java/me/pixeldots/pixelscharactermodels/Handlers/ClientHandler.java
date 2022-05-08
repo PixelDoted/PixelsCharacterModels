@@ -1,9 +1,13 @@
 package me.pixeldots.pixelscharactermodels.Handlers;
 
 import java.io.File;
+import java.util.UUID;
 
+import lain.mods.skins.api.SkinProviderAPI;
+import lain.mods.skins.impl.PlayerProfile;
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
 import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
 import me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain;
@@ -12,12 +16,7 @@ import me.pixeldots.pixelscharactermodels.utils.data.FramesData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import virtuoel.pehkui.api.ScaleData;
@@ -44,7 +43,7 @@ public class ClientHandler {
 	public void onDisconnect() {
 		PixelsCharacterModels.saveData.Save();
 		PixelsCharacterModels.dataPackets.clear();
-		PixelsCharacterModels.EntityModelList.clear();
+		PixelsCharacterModels.PlayerDataList.clear();
 		PixelsCharacterModels.thisPlayer = null;
 		isConnectedToWorld = false;
 		doesServerUsePCM = false;
@@ -56,7 +55,25 @@ public class ClientHandler {
 		if (minecraft.isInSingleplayer()) doesServerUsePCM = true;
 		else PixelsCharacterModelsMain.clientHandler.ping();
 	}
+
+	public void setSkinSuffix(UUID uuid, String suffix) {
+		if (PixelsCharacterModels.PlayerDataList.containsKey(uuid))
+			PixelsCharacterModels.PlayerDataList.get(uuid).skinSuffix = suffix;
+		else PixelsCharacterModels.PlayerDataList.put(uuid, new PlayerData(suffix));
+	}
+
+	public void ReloadSkins() {
+    	PixelsCharacterModels.client.sendClientMessage("Reloading Skins");
+    	for (PlayerEntity player : minecraft.world.getPlayers()) {
+            SkinProviderAPI.SKIN.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
+            SkinProviderAPI.CAPE.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
+            PixelsCharacterModels.client.sendClientMessage("Reloaded skin for " + player.getDisplayName().asString());
+        }
+    	FabricOfflineSkins.reloadConfig();
+    	PixelsCharacterModels.client.sendClientMessage("Reloaded Skins");
+    }
 	
+	/* Presets */
 	public void LoadPreset(String path, PlayerEntity entity, PlayerEntityModel<?> model) {
 		sendClientMessage("Loading Preset");
 		this.currentPreset = path;
@@ -80,7 +97,7 @@ public class ClientHandler {
 		ScaleData scale = ScaleTypes.BASE.getScaleData(PixelsCharacterModels.thisPlayer);
 		PresetData data = new PresetData();
 		
-		data.skinSuffix = FabricOfflineSkins.skinSuffix.get(entity.getGameProfile().getId());
+		data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(entity.getGameProfile().getId()).skinSuffix;
 		data.GlobalScale = scale.getTargetScale();
 		data.convertModelData(model);
 		

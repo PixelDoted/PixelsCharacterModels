@@ -3,10 +3,13 @@
 # + finished
 # * not tested
 
++ fix lighting on custom parts
++ maximum rendered tris per player limit
++ maximum rendered parts per player limit
+
 * add Multiplayer Support
 
-- fix scaling not working on singleplayer
-- fix lighting on custom parts
-- improve performance
-- load last used preset on world join
 - fix singleplayer collision pehkui
+
+-/ improve performance
+-/ load last used preset on world join

@@ -1,35 +1,36 @@
-package lain.mods.skins.providers;
+package me.pixeldots.offlinereload.mixins;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+
+import com.google.common.base.Function;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import lain.lib.SharedPool;
 import lain.mods.skins.api.interfaces.IPlayerProfile;
 import lain.mods.skins.api.interfaces.ISkin;
-import lain.mods.skins.api.interfaces.ISkinProvider;
 import lain.mods.skins.impl.Shared;
 import lain.mods.skins.impl.SkinData;
 import lain.mods.skins.impl.fabric.ImageUtils;
 import lain.mods.skins.init.fabric.FabricOfflineSkins;
+import lain.mods.skins.providers.UserManagedSkinProvider;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.file.Path;
-import java.util.function.Function;
+@Mixin(UserManagedSkinProvider.class)
+public abstract class UserManagedSkinProviderMixin {
 
-public class UserManagedSkinProvider implements ISkinProvider {
+    /*@Shadow public File _dirN;
+    @Shadow public File _dirU;
+    @Shadow public Function<ByteBuffer, ByteBuffer> _filter;
 
-    private final File _dirN;
-    private final File _dirU;
-    private Function<ByteBuffer, ByteBuffer> _filter;
-
-    public UserManagedSkinProvider(Path workDir) {
-        _dirN = new File(workDir.toFile(), "skins");
-        _dirN.mkdirs();
-        _dirU = new File(_dirN, "uuid");
-        _dirU.mkdirs();
-    }
-
-    @Override
-    public ISkin getSkin(IPlayerProfile profile) {
+    @Inject(method = "getSkin", at = @At("RETURN"))
+    public void getSkin(IPlayerProfile profile, CallbackInfoReturnable<ISkin> info) {
         SkinData skin = new SkinData();
         if (_filter != null)
             skin.setSkinFilter(_filter);
@@ -40,6 +41,7 @@ public class UserManagedSkinProvider implements ISkinProvider {
             if (PixelsCharacterModels.PlayerDataList.containsKey(profile.getPlayerID())) 
             	suffix = PixelsCharacterModels.PlayerDataList.get(profile.getPlayerID()).skinSuffix;
             
+            if (suffix.equals("")) return;
             if (!Shared.isOfflinePlayer(profile.getPlayerID(), profile.getPlayerName()))
                 data = readFile(_dirU, "%s"+suffix+".png", profile.getPlayerID().toString().replaceAll("-", ""));
             if (data == null && !Shared.isBlank(profile.getPlayerName()))
@@ -47,23 +49,10 @@ public class UserManagedSkinProvider implements ISkinProvider {
             if (data != null)   
                 skin.put(data, ImageUtils.judgeSkinType(data));
         });
-        return skin;
+        info.setReturnValue(skin);
     }
 
-    private byte[] readFile(File dir, String filename) {
-        byte[] contents;
-        if ((contents = Shared.blockyReadFile(new File(dir, filename), null, null)) != null && ImageUtils.validateData(contents))
-            return contents;
-        return null;
-    }
-
-    private byte[] readFile(File dir, String filename, Object... args) {
-        return readFile(dir, String.format(filename, args));
-    }
-
-    public UserManagedSkinProvider withFilter(Function<ByteBuffer, ByteBuffer> filter) {
-        _filter = filter;
-        return this;
-    }
+    @Shadow
+    public abstract byte[] readFile(File dir, String filename, Object... args);*/
 
 }

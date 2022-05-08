@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "pixelscharactermodels",
-    "version": "4R Fabric",
+    "version": "5R Fabric",
 
     "name": "Pixel's Character Models",
     "description": "a way to customize your player, using OfflineSkin by LainMI and Pehkui by Virtuoel",
@@ -18,8 +18,7 @@
 
     "environment": "*",
     "entrypoints": {
-        "main":
-        [
+        "main": [
             "me.pixeldots.pixelscharactermodels.main.PixelsCharacterModelsMain"
         ],
         "client": [

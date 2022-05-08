@@ -53,7 +53,7 @@ public class AnimationsGui extends GuiHandler {
 	public void init() {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			PixelsCharacterModels.client.openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui(false));
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
 			PixelsCharacterModels.client.openScreen(new EditorGui());

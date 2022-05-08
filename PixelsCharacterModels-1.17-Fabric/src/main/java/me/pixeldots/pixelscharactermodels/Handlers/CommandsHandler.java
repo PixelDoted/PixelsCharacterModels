@@ -15,7 +15,7 @@ public class CommandsHandler {
 	public static void Register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(CommandManager.literal("PCM").executes((value) -> {
 			PixelsCharacterModels.GuiData.entity = PixelsCharacterModels.client.minecraft.player;
-	    	PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.client.minecraft.player);
+	    	PixelsCharacterModels.GuiData.model = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.client.minecraft.player.getUuid()).model;
 	    	PixelsCharacterModels.OpenGUI();
 			return 1;
 		}).then(CommandManager.literal("Animation").then(CommandManager.argument("anim", StringArgumentType.string()).executes((value) -> {

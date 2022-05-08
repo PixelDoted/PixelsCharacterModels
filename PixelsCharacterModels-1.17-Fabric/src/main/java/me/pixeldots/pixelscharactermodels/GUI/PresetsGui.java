@@ -32,13 +32,16 @@ public class PresetsGui extends GuiHandler {
 	public String update;
 	public String path = "";
 	
-	public PresetsGui() {
+	public PresetsGui() { this(true); }
+	public PresetsGui(boolean checkForUpdates) {
 		super("Presets");
-		update = PixelsCharacterModels.checkForUpdate();
+		if (checkForUpdates) PixelsCharacterModels.checkForUpdate((s) -> { update = s; });
+		else update = "";
 	}
 
-	public PresetsGui(String _path) {
-		this();
+	public PresetsGui(String _path) { this(_path, true); }
+	public PresetsGui(String _path, boolean checkForUpdates) {
+		this(checkForUpdates);
 		this.path = _path;
 	}
 	
@@ -48,7 +51,7 @@ public class PresetsGui extends GuiHandler {
 		
 		File[] presets = PixelsCharacterModels.PresetsData.getPresets(path);
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
-			PixelsCharacterModels.client.openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui(false));
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
 			PixelsCharacterModels.client.openScreen(new EditorGui());
@@ -83,7 +86,7 @@ public class PresetsGui extends GuiHandler {
 			String filePath = presets[i].getPath().replace(PixelsCharacterModels.PresetsData.PresetsPath + File.separator, "");
 			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(presets[i].getName().replace(".json", "")), (value) -> {
 				if (presets[num].isDirectory()) {
-					PixelsCharacterModels.client.openScreen(new PresetsGui(filePath));
+					PixelsCharacterModels.client.openScreen(new PresetsGui(filePath, false));
 					return;
 				}
 
@@ -99,27 +102,27 @@ public class PresetsGui extends GuiHandler {
 	}
 	
 	public void SelectPreset(String path, String name) {
-		PixelsCharacterModels.client.LoadPreset(path, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+		PixelsCharacterModels.client.LoadPreset(path, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 		PixelsCharacterModels.GuiData.SelectedPresetPath = path;
 		PixelsCharacterModels.GuiData.SelectedPresetName = name;
-		client.openScreen(new PresetsGui());
+		client.openScreen(new PresetsGui(false));
 	}
 	
 	public void createPreset(String s) {
-		PixelsCharacterModels.client.writePreset(path+File.separator+s, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
-		client.openScreen(new PresetsGui());
+		PixelsCharacterModels.client.writePreset(path+File.separator+s, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
+		client.openScreen(new PresetsGui(false));
 	}
 	
 	public void renamePreset(String s) {
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json") && !s.replace(" ", "").equalsIgnoreCase(""))
 			PixelsCharacterModels.client.RenamePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, s);
-		client.openScreen(new PresetsGui());
+		client.openScreen(new PresetsGui(false));
 	}
 
 	public void deletePreset() {
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
 			PixelsCharacterModels.client.DeletePreset(PixelsCharacterModels.GuiData.SelectedPresetPath);
-		client.openScreen(new PresetsGui());
+		client.openScreen(new PresetsGui(false));
 	}
 	
 	@Override
@@ -135,11 +138,11 @@ public class PresetsGui extends GuiHandler {
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		drawString(matrices, "Pixel's Character Models - Fabric, Version: " + PixelsCharacterModels.modVersion, 5, this.height-20);
 		if (update != "") {
-			drawString(matrices, "an update is available, Version: " + update, 5, this.height-30);
+			drawString(matrices, update == null ? "Checking for Updates..." : "an update is available, Version: " + update, 5, this.height-30);
 		}
 		drawEntity(50, this.height/2+150, 75, (float)(50) - mouseX, (float)(this.height/2+150-125) - mouseY, PixelsCharacterModels.GuiData.entity);
 		if (PixelsCharacterModels.GuiData.model == null) 
-			PixelsCharacterModels.GuiData.model = PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.GuiData.entity);
+			PixelsCharacterModels.GuiData.model = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid()).model;
 		
 		super.render(matrices, mouseX, mouseY, delta);
 	}

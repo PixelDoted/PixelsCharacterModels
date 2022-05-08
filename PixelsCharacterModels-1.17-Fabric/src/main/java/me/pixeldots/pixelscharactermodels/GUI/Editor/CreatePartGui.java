@@ -58,7 +58,7 @@ public class CreatePartGui extends GuiHandler {
 		super.init();
 		Presets = addButton(new ButtonWidget(5,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Presets), (button) -> {
 			PixelsCharacterModels.previewModelPart = null;
-			PixelsCharacterModels.client.openScreen(new PresetsGui());
+			PixelsCharacterModels.client.openScreen(new PresetsGui(false));
 		}));
 		Editor = addButton(new ButtonWidget(60,5,50,20, Text.of(PixelsCharacterModels.TranslatedText.Editor), (button) -> {
 			PixelsCharacterModels.previewModelPart = null;
@@ -106,7 +106,7 @@ public class CreatePartGui extends GuiHandler {
 				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			}
 			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
-				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.EntityModelList.get(client.player));
+				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
 			
 			PixelsCharacterModels.client.openScreen(new PartsGui());
 		}));

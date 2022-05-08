@@ -19,12 +19,15 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormat.DrawMode;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class ModelPartMesh {
@@ -62,27 +65,63 @@ public class ModelPartMesh {
 		}
 	}
 	
-	public void render(MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
+	public void render(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
 		if (texture != null) {
 			RenderSystem.setShaderTexture(0, texture);
 			RenderSystem.setShaderColor(red, green, blue, alpha);
 			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
 			RenderSystem.enableDepthTest();
-		}
-		// Set RenderSystem lighting
 
+			renderTextured(tm,entry,vc,light,overlay,red,green,blue,alpha, entity);
+			return;
+		}
+
+		Matrix4f m = entry.getModel();
+		Matrix3f n = entry.getNormal();
+		
+		for (int i = 0; i < sides.length; i++) {
+			int length = sides[i].vertices.length;
+			for (int j = 0; j < 4; j++) {
+				ModelMeshVertex vertex = j >= length ? null : sides[i].vertices[j];
+				if (vertex == null) {
+					ModelMeshVertex a = sides[i].vertices[length-1];
+					ModelMeshVertex b = sides[i].vertices[0];
+					Vec3f pos = new Vec3f((a.pos.getX()+b.pos.getX())/2f,(a.pos.getY()+b.pos.getY())/2f,(a.pos.getZ()+b.pos.getZ())/2f);
+					Vec3f normal = new Vec3f((a.normal.getX()+b.normal.getX())/2f,(a.normal.getY()+b.normal.getY())/2f,(a.normal.getZ()+b.normal.getZ())/2f);
+					Vec2f uv = new Vec2f((a.u+b.u)/2f,(a.v+b.v)/2f);
+					vertex = new ModelMeshVertex(pos, normal, uv.x, uv.y);
+				}
+
+
+				vc.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).color(red, green, blue, alpha)
+					.texture(vertex.u, vertex.v).overlay(overlay).light(light).normal(n, vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
+			}
+		}
+	}
+
+	public void renderTextured(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
-		int lightUV = LightmapTextureManager.getBlockLightCoordinates(light);
 		
 		for (int i = 0; i < sides.length; i++) {
-			buffer.begin(DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
-			for (int j = 0; j < sides[i].vertices.length; j++) {
-				ModelMeshVertex vertex = sides[i].vertices[j];
+			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
+			int length = sides[i].vertices.length;
+			for (int j = 0; j < 4; j++) {
+				ModelMeshVertex vertex = j >= length ? null : sides[i].vertices[j];
+				if (vertex == null) {
+					ModelMeshVertex a = sides[i].vertices[length-1];
+					ModelMeshVertex b = sides[i].vertices[0];
+					Vec3f pos = new Vec3f((a.pos.getX()+b.pos.getX())/2f,(a.pos.getY()+b.pos.getY())/2f,(a.pos.getZ()+b.pos.getZ())/2f);
+					Vec3f normal = new Vec3f((a.normal.getX()+b.normal.getX())/2f,(a.normal.getY()+b.normal.getY())/2f,(a.normal.getZ()+b.normal.getZ())/2f);
+					Vec2f uv = new Vec2f((a.u+b.u)/2f,(a.v+b.v)/2f);
+					vertex = new ModelMeshVertex(pos, normal, uv.x, uv.y);
+				}
+
+
 				buffer.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16).color(red, green, blue, alpha)
-					.texture(vertex.u, vertex.v).light(light).normal(n, vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
+					.texture(vertex.u, vertex.v).overlay(overlay).light(light).normal(n, vertex.normal.getX(), vertex.normal.getY(), vertex.normal.getZ()).next();
 			}
 			buffer.end();
 			BufferRenderer.draw(buffer);

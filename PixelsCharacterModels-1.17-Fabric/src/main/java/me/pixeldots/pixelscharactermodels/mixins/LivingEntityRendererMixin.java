@@ -20,7 +20,8 @@ public class LivingEntityRendererMixin {
 	@Inject(at = @At("HEAD"), method = "render")
 	public void renderHead(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
 		if (livingEntity instanceof PlayerEntity) {
-			PixelsCharacterModels.Rendering.playerRenderHead((PlayerEntityModel<?>)((LivingEntityRenderer<?,?>)(Object)this).getModel(), (PlayerEntity)livingEntity, (LivingEntityRenderer<?,?>)(Object)this);
+			LivingEntityRenderer<?,?> renderer = livingRenderer();
+			PixelsCharacterModels.Rendering.playerRenderHead((PlayerEntityModel<?>)renderer.getModel(), (PlayerEntity)livingEntity, renderer);
 			PixelsCharacterModels.Rendering.currentPlayerRendering = ((PlayerEntity)livingEntity).getGameProfile();
 		}
 	}
@@ -28,7 +29,8 @@ public class LivingEntityRendererMixin {
 	@Inject(at = @At("TAIL"), method = "render")
 	public void renderTail(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
 		if (livingEntity instanceof PlayerEntity) {
-			PixelsCharacterModels.Rendering.playerRenderTail((PlayerEntityModel<?>)((LivingEntityRenderer<?,?>)(Object)this).getModel(), (PlayerEntity)livingEntity, (LivingEntityRenderer<?,?>)(Object)this);
+			LivingEntityRenderer<?,?> renderer = livingRenderer();
+			PixelsCharacterModels.Rendering.playerRenderTail((PlayerEntityModel<?>)renderer.getModel(), (PlayerEntity)livingEntity, renderer);
 		}
 	}
 	
@@ -36,5 +38,9 @@ public class LivingEntityRendererMixin {
 	public void hasLabel(LivingEntity entity, CallbackInfoReturnable<Boolean> info) {
 		if (!PixelsCharacterModels.localData.showNameTags) info.setReturnValue(false);
 	}
+
+	public LivingEntityRenderer<?,?> livingRenderer() {
+		return (LivingEntityRenderer<?,?>)(Object)this;
+	} 
 	
 }
