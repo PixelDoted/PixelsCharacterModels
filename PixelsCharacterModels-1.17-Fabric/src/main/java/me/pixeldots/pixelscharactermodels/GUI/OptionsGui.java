@@ -104,8 +104,8 @@ public class OptionsGui extends GuiHandler {
 		}));
 
 		
-		MaximumTrisPerPlayer = addTextField(new TextFieldWidget(textRendererGUI, 35,260,50,20, Text.of("MaximumTrisPerPlayer")));
-		MaximumPartsPerPlayer = addTextField(new TextFieldWidget(textRendererGUI, 35,285,50,20, Text.of("MaximumPartsPerPlayer")));
+		MaximumTrisPerPlayer = addTextField(new TextFieldWidget(textRendererGUI, 130,260,50,20, Text.of("MaximumTrisPerPlayer")));
+		MaximumPartsPerPlayer = addTextField(new TextFieldWidget(textRendererGUI, 140,285,50,20, Text.of("MaximumPartsPerPlayer")));
 
 		AnimOneID.setText(PixelsCharacterModels.localData.AnimationIDOne);
 		AnimTwoID.setText(PixelsCharacterModels.localData.AnimationIDTwo);
