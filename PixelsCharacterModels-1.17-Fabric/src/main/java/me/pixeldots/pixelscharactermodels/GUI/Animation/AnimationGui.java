@@ -3,10 +3,10 @@ package me.pixeldots.pixelscharactermodels.GUI.Animation;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.PartsGui;
-import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;

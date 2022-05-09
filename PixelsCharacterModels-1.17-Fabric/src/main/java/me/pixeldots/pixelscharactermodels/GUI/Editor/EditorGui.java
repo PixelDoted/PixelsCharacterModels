@@ -4,15 +4,13 @@ import java.io.File;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.PlayerData;
+import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
-import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
-import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
+import me.pixeldots.pixelscharactermodels.model.ModelPartData;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -176,9 +174,9 @@ public class EditorGui extends GuiHandler {
 	public void ListSkins() {
 		File[] files = new File(PixelsCharacterModels.client.minecraft.runDirectory+"/cachedImages/skins").listFiles();
 		PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("local skins >"), false);
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory()) continue;
-			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(files[i].getName()), false);
+		for (File file : files) {
+			if (file.isDirectory()) continue;
+			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(file.getName()), false);
 		}
 		PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("< local skins"), false);
 	}

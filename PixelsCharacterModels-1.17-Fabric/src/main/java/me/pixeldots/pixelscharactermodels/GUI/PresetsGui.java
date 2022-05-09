@@ -1,15 +1,12 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
 import java.io.File;
-import java.time.Instant;
-
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
-import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -82,9 +79,10 @@ public class PresetsGui extends GuiHandler {
 		int row = 0;
 		int col = 0;
 		for (int i = 0; i < presets.length; i++) { //6 per col, max 24
+			File preset = presets[i];
 			int num = i;
-			String filePath = presets[i].getPath().replace(PixelsCharacterModels.PresetsData.PresetsPath + File.separator, "");
-			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(presets[i].getName().replace(".json", "")), (value) -> {
+			String filePath = preset.getPath().replace(PixelsCharacterModels.PresetsData.PresetsPath + File.separator, "");
+			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(preset.getName().replace(".json", "")), (value) -> {
 				if (presets[num].isDirectory()) {
 					PixelsCharacterModels.client.openScreen(new PresetsGui(filePath, false));
 					return;

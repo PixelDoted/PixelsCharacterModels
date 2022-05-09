@@ -1,6 +1,5 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
-import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class ErrorGui extends GuiHandler {

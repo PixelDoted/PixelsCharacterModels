@@ -6,12 +6,11 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
-import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
-import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
-import net.minecraft.client.MinecraftClient;
+import me.pixeldots.pixelscharactermodels.model.ModelPartData;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
@@ -124,9 +123,11 @@ public class PartsGui extends GuiHandler {
 				}
 			}
 		}
-		for (int i = 0; i < Parts.size(); i++) {
-			if (Parts.get(i).getMessage().asString() == PixelsCharacterModels.GuiData.SelectedPart)
-			{Parts.get(i).active = false; break;}
+		for (ButtonWidget widget : Parts) {
+			if (widget.getMessage().asString() == PixelsCharacterModels.GuiData.SelectedPart) {
+				widget.active = false;
+				break;
+			}
 		}
 	}
 	

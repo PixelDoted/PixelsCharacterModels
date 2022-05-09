@@ -21,8 +21,7 @@ public class FramesHandler {
 				loadAnimationFrames(model, entity);
 			}
 			else {
-				for (int i = 0; i < PixelsCharacterModels.playingAnimationData.LimbParts.size(); i++) {
-					ModelPart part = PixelsCharacterModels.playingAnimationData.LimbParts.get(i);
+				for (ModelPart part : PixelsCharacterModels.playingAnimationData.LimbParts) {
 					MapVec3 rot = PixelsCharacterModels.playingAnimationData.LimbRotations.get(part);
 					if (rot == null || part == null) continue;
 					if (sameInRange((float)Math.toDegrees(part.pitch), rot.X, 0.02f) 

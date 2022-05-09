@@ -8,10 +8,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMAnimation;
+import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
-import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -78,8 +77,8 @@ public class AnimationsGui extends GuiHandler {
 		int Col = 1;
 		int Row = 1;
 		File[] Anims = PixelsCharacterModels.AnimationsData.getAnimations();
-		for (int i = 0; i < Anims.length; i++) {
-			String key = (String) Anims[i].getName().replace(".json", "");
+		for (File anim : Anims) {
+			String key = (String) anim.getName().replace(".json", "");
 			Animations.add(addButton(new ButtonWidget(200+(Row*55), 50+(Col*25), 50, 20, Text.of(key), (button) -> {
 				button.active = false;
 				SelectAnimation(key);
@@ -92,9 +91,11 @@ public class AnimationsGui extends GuiHandler {
 			if (Row > maxRow) break;
 		}
 		
-		for (int i = 0; i < Animations.size(); i++) {
-			if (Animations.get(i).getMessage().asString() == PixelsCharacterModels.GuiData.SelectedAnimation)
-			{Animations.get(i).active = false; break;}
+		for (ButtonWidget widget : Animations) {
+			if (widget.getMessage().asString() == PixelsCharacterModels.GuiData.SelectedAnimation) {
+				widget.active = false; 
+				break;
+			}
 		}
 	}
 	

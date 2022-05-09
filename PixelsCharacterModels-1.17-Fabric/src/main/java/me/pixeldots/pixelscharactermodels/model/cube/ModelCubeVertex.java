@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.model.part.cube;
+package me.pixeldots.pixelscharactermodels.model.cube;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

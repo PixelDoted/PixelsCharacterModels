@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
-import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
+import me.pixeldots.pixelscharactermodels.model.ModelPartData;
+import me.pixeldots.pixelscharactermodels.model.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -58,30 +58,30 @@ public class PresetData {
 			this.scale = data.scale;
 			this.pos = data.pos;
 			this.rot = data.rot;
-			for (int i = 0; i < data.cubes.size(); i++) {
-				PresetCubeData cube = new PresetCubeData();
-				cube.name = data.cubes.get(i).name;
-				cube.pos = data.cubes.get(i).pos;
-				cube.size = data.cubes.get(i).size;
-				cube.uvOffset = data.cubes.get(i).uv;
+			for (ModelPartCube cube : data.cubes) {
+				PresetCubeData preset_cube = new PresetCubeData();
+				preset_cube.name = cube.name;
+				preset_cube.pos = cube.pos;
+				preset_cube.size = cube.size;
+				preset_cube.uvOffset = cube.uv;
 
-				if (data.cubes.get(i).textureFile != null && !data.cubes.get(i).textureFile.equals(""))
-					cube.textureID = data.cubes.get(i).textureFile;
+				if (cube.textureFile != null && !cube.textureFile.equals(""))
+					preset_cube.textureID = cube.textureFile;
 
-				cubes.add(cube);
+				cubes.add(preset_cube);
 			}
-			for (int i = 0; i < data.meshes.size(); i++) {
-				PresetMeshData mesh = new PresetMeshData();
-				mesh.name = data.meshes.get(i).name;
-				mesh.pos = data.meshes.get(i).pos;
-				mesh.size = data.meshes.get(i).size;
-				mesh.uvOffset = data.meshes.get(i).uv;
-				mesh.meshID = data.meshes.get(i).meshID;
+			for (ModelPartMesh mesh : data.meshes) {
+				PresetMeshData preset_mesh = new PresetMeshData();
+				preset_mesh.name = mesh.name;
+				preset_mesh.pos = mesh.pos;
+				preset_mesh.size = mesh.size;
+				preset_mesh.uvOffset = mesh.uv;
+				preset_mesh.meshID = mesh.meshID;
 
-				if (data.meshes.get(i).textureFile != null && !data.meshes.get(i).textureFile.equals(""))
-					mesh.textureID = data.meshes.get(i).textureFile;
+				if (mesh.textureFile != null && !mesh.textureFile.equals(""))
+					preset_mesh.textureID = mesh.textureFile;
 
-				meshes.add(mesh);
+				meshes.add(preset_mesh);
 			}
 		}
 	}

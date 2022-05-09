@@ -1,6 +1,5 @@
-package me.pixeldots.pixelscharactermodels.model.part.cube;
+package me.pixeldots.pixelscharactermodels.model.cube;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
@@ -99,11 +98,11 @@ public class ModelPartCube {
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
 		
-		for (int i = 0; i < sides.length; i++) {
-			for (int j = 0; j < sides[i].vertices.length; j++) {
-				vc.vertex(m, sides[i].vertices[j].pos.getX()/16, sides[i].vertices[j].pos.getY()/16, sides[i].vertices[j].pos.getZ()/16)
-					.color(red, green, blue, alpha).texture(sides[i].vertices[j].u, sides[i].vertices[j].v).overlay(overlay)
-					.light(light).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
+		for (ModelCubeQuad side : sides) {
+			for (ModelCubeVertex vertex : side.vertices) {
+				vc.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16)
+					.color(red, green, blue, alpha).texture(vertex.u, vertex.v).overlay(overlay)
+					.light(light).normal(n, side.direction.getX(), side.direction.getY(), side.direction.getZ()).next();
 			}
 		}
     }
@@ -113,15 +112,12 @@ public class ModelPartCube {
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();
 		Matrix3f n = entry.getNormal();
-		
-		for (int i = 0; i < sides.length; i++) {
+				for (ModelCubeQuad side : sides) {
 			buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
-			for (int j = 0; j < 4; j++) {
-				ModelCubeVertex vertex = sides[i].vertices[j];
-
+			for (ModelCubeVertex vertex : side.vertices) {
 				buffer.vertex(m, vertex.pos.getX()/16, vertex.pos.getY()/16, vertex.pos.getZ()/16)
 					.color(red, green, blue, alpha).texture(vertex.u, vertex.v)
-					.light(light).normal(n, sides[i].direction.getX(), sides[i].direction.getY(), sides[i].direction.getZ()).next();
+					.light(light).normal(n, side.direction.getX(), side.direction.getY(), side.direction.getZ()).next();
 			}
 			buffer.end();
 			BufferRenderer.draw(buffer);

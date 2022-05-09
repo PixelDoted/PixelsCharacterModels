@@ -1,13 +1,15 @@
-package me.pixeldots.pixelscharactermodels.model.part;
+package me.pixeldots.pixelscharactermodels.model;
 
 import com.google.gson.Gson;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import me.pixeldots.pixelscharactermodels.model.part.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.part.mesh.ModelPartMesh;
+import me.pixeldots.pixelscharactermodels.model.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
+import me.pixeldots.pixelscharactermodels.utils.data.PresetData.PresetCubeData;
+import me.pixeldots.pixelscharactermodels.utils.data.PresetData.PresetMeshData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData.PresetPartData;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -57,13 +59,13 @@ public class ModelPartData {
 		this.meshes.clear();
 		
 		if (data.cubes != null) {
-			for (int i = 0; i < data.cubes.size(); i++) {
-				createPartHelper.createCuboid(data.cubes.get(i).pos, data.cubes.get(i).size, new MapVec3(), new MapVec2(64, 64), data.cubes.get(i).uvOffset, part, data.cubes.get(i).name, data.cubes.get(i).textureID);
+			for (PresetCubeData cube : data.cubes) {
+				createPartHelper.createCuboid(cube.pos, cube.size, new MapVec3(), new MapVec2(64, 64), cube.uvOffset, part, cube.name, cube.textureID);
 			}
 		}
 		if (data.meshes != null) {
-			for (int i = 0; i < data.meshes.size(); i++) {
-				createPartHelper.createMesh(data.meshes.get(i).meshID, data.meshes.get(i).pos, data.meshes.get(i).size, new MapVec2(64, 64), model, entity, part, data.meshes.get(i).name, data.meshes.get(i).textureID);
+			for (PresetMeshData mesh : data.meshes) {
+				createPartHelper.createMesh(mesh.meshID, mesh.pos, mesh.size, new MapVec2(64, 64), model, entity, part, mesh.name, mesh.textureID);
 			}
 		}
 	}

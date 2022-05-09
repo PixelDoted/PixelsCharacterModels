@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.model.part;
+package me.pixeldots.pixelscharactermodels.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import com.google.gson.Gson;
 
-import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

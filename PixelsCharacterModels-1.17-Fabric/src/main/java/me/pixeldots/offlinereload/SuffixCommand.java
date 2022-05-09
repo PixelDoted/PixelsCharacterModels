@@ -32,8 +32,8 @@ public class SuffixCommand {
 			
 			File[] files = new File(PixelsCharacterModels.client.minecraft.runDirectory+"/cachedImages/skins").listFiles();
 			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("local skins >"), false);
-			for (int i = 0; i < files.length; i++) {
-				PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(files[i].getName()), false);
+			for (File file : files) {
+				PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(file.getName()), false);
 			}
 			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("< local skins"), false);
 			

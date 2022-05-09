@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.GUI.Handlers;
+package me.pixeldots.pixelscharactermodels.GUI;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -41,46 +40,46 @@ public class GuiHandler extends Screen {
 	
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		for (int i = 0; i < TextFieldWidgets.size(); i++) {
-			TextFieldWidgets.get(i).render(matrices, mouseX, mouseY, delta);
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.render(matrices, mouseX, mouseY, delta);
 		}
-		for (int i = 0; i < buttons.size(); i++) {
-			buttons.get(i).render(matrices, mouseX, mouseY, delta);
+		for (ButtonWidget widget : buttons) {
+			widget.render(matrices, mouseX, mouseY, delta);
 		}
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		for (int i = 0; i < TextFieldWidgets.size(); i++) {
-			TextFieldWidgets.get(i).mouseClicked(mouseX, mouseY, button);
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.mouseClicked(mouseX, mouseY, button);
 		}
-		for (int i = 0; i < buttons.size(); i++) {
-			buttons.get(i).mouseClicked(mouseX, mouseY, button);
+		for (ButtonWidget widget : buttons) {
+			widget.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 	
 	@Override
 	public boolean charTyped(char chr, int keyCode) {
-		for (int i = 0; i < TextFieldWidgets.size(); i++) {
-			TextFieldWidgets.get(i).charTyped(chr, keyCode);
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.charTyped(chr, keyCode);
 		}
 		return super.charTyped(chr, keyCode);
 	}
 	
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		for (int i = 0; i < TextFieldWidgets.size(); i++) {
-			TextFieldWidgets.get(i).keyPressed(keyCode, scanCode, modifiers);
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.keyPressed(keyCode, scanCode, modifiers);
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 	
 	@Override
 	public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-		for (int i = 0; i < TextFieldWidgets.size(); i++) {
-			TextFieldWidgets.get(i).keyReleased(keyCode, scanCode, modifiers);
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.keyReleased(keyCode, scanCode, modifiers);
 		}
 		return super.keyReleased(keyCode, scanCode, modifiers);
 	}

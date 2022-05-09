@@ -107,22 +107,16 @@ public class OtherSaveData {
 	
 	public MapModelVectors ParseFile(Object[] text) {
 		MapModelVectors parsed = new MapModelVectors();
-		for (int i = 0; i < text.length; i++) {
-			if (((String)text[i]).startsWith("v ")) {
-				String s = (String)text[i]; 
-				parsed.Vertices.add(s);
-			}
-			else if (((String)text[i]).startsWith("vt ")) { 
-				String s = (String)text[i]; 
-				parsed.VertexUVs.add(s);
-			}
-			else if (((String)text[i]).startsWith("vn ")) {
-				String s = (String)text[i];
-				parsed.VertexNormals.add(s);
-			}
-			else if (((String)text[i]).startsWith("f ")) { 
-				String s = (String)text[i]; 
-				parsed.Faces.add(s); 
+		for (Object obj_text : text) {
+			String txt = (String)obj_text;
+			if (txt.startsWith("v ")) {
+				parsed.Vertices.add(txt);
+			} else if (txt.startsWith("vt ")) { 
+				parsed.VertexUVs.add(txt);
+			} else if (txt.startsWith("vn ")) {
+				parsed.VertexNormals.add(txt);
+			} else if (txt.startsWith("f ")) { 
+				parsed.Faces.add(txt); 
 			}
  		}
 		return parsed;
@@ -133,10 +127,10 @@ public class OtherSaveData {
 		File folder = new File(SavePath+File.separator+"Models");
 		File[] files = folder.listFiles();
 		BufferedReader reader = null;
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].getName().replace(".obj", "").startsWith(name)) {
+		for (File file : files) {
+			if (file.getName().replace(".obj", "").startsWith(name)) {
 				try {
-					reader = new BufferedReader(new FileReader(files[i]));
+					reader = new BufferedReader(new FileReader(file));
 					return ParseFile(reader.lines().toArray());
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();

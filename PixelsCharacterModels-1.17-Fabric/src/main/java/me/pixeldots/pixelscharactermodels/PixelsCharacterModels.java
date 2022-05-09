@@ -14,8 +14,8 @@ import me.pixeldots.pixelscharactermodels.Handlers.ClientHandler;
 import me.pixeldots.pixelscharactermodels.Handlers.CommandsHandler;
 import me.pixeldots.pixelscharactermodels.Handlers.KeyBindings;
 import me.pixeldots.pixelscharactermodels.Handlers.RenderingHandler;
+import me.pixeldots.pixelscharactermodels.model.ModelPartData;
 import me.pixeldots.pixelscharactermodels.model.PreviewModelPart;
-import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
 import me.pixeldots.pixelscharactermodels.utils.TranslatedText;
 import me.pixeldots.pixelscharactermodels.utils.Load.AnimationsSaveData;
@@ -28,7 +28,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PixelsCharacterModels implements ClientModInitializer {
@@ -101,9 +100,10 @@ public class PixelsCharacterModels implements ClientModInitializer {
 				URL tracker = new URL("https://raw.githubusercontent.com/PixelDoted/PixelsCharacterModels/main/PCM.Update");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(tracker.openStream()));
 				Object[] version = reader.lines().toArray();
-				for (int i = 0; i < version.length; i++) {
-					if (((String)version[i]).startsWith("Fabric: ")) {
-						s = ((String)version[i]).split(": ")[1];
+				for (Object obj_ver : version) {
+					String ver = (String)obj_ver;
+					if (ver.startsWith("Fabric: ")) {
+						s = ver.split(": ")[1];
 						break;
 					}
 				}
