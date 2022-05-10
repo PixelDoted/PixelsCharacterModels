@@ -30,7 +30,7 @@ public class MainClientHandler {
 			PresetData data = new PresetData();
 			
 			data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix;
-			data.convertModelData(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
+			data.convertModelData(PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
 			
 			Gson gson = new Gson();
 			sendModelData(gson.toJson(data), buf.readString());
@@ -54,7 +54,7 @@ public class MainClientHandler {
 			PresetData data = new PresetData();
 			
 			data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix;
-			data.convertModelData(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
+			data.convertModelData(PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
 			
 			Gson gson = new Gson();
 			reciveModelData(gson.toJson(data), PixelsCharacterModels.client.minecraft.player);

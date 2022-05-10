@@ -16,6 +16,7 @@ import me.pixeldots.pixelscharactermodels.utils.data.FramesData;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -42,7 +43,6 @@ public class ClientHandler {
 
 	public void onDisconnect() {
 		PixelsCharacterModels.saveData.Save();
-		PixelsCharacterModels.dataPackets.clear();
 		PixelsCharacterModels.PlayerDataList.clear();
 		PixelsCharacterModels.thisPlayer = null;
 		isConnectedToWorld = false;
@@ -50,10 +50,24 @@ public class ClientHandler {
 	}
 	
 	public void onConnect() {
+		// Handle Player
+		PlayerEntityModel<?> model = ((PlayerEntityRenderer)minecraft.getEntityRenderDispatcher().getRenderer(minecraft.player)).getModel();
+		PixelsCharacterModels.PlayerDataList.put(minecraft.player.getUuid(), new PlayerData(minecraft.player, model));
+		PixelsCharacterModels.Rendering.player.setPlayerModelPartsData(model, minecraft.player);
+
+		// handle Connection
 		isConnectedToWorld = true;
 		PixelsCharacterModels.thisPlayer = minecraft.player;
 		if (minecraft.isInSingleplayer()) doesServerUsePCM = true;
 		else PixelsCharacterModelsMain.clientHandler.ping();
+
+		// Handle Preset
+		if (!PixelsCharacterModels.localData.lastUsedPreset.equals("")) {
+			String path = PixelsCharacterModels.localData.lastUsedPreset;
+			PixelsCharacterModels.client.LoadPreset(path, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
+			PixelsCharacterModels.GuiData.SelectedPresetPath = path;
+			PixelsCharacterModels.GuiData.SelectedPresetName = PixelsCharacterModels.PresetsData.getPreset(path).getName();
+		}
 	}
 
 	public void setSkinSuffix(UUID uuid, String suffix) {
@@ -99,7 +113,7 @@ public class ClientHandler {
 		
 		data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(entity.getGameProfile().getId()).skinSuffix;
 		data.GlobalScale = scale.getTargetScale();
-		data.convertModelData(model);
+		data.convertModelData(entity, model);
 		
 		PixelsCharacterModels.PresetsData.writePresetFile(data, path);
 	}

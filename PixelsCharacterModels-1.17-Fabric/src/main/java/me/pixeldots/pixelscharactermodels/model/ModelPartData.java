@@ -1,9 +1,13 @@
 package me.pixeldots.pixelscharactermodels.model;
 
+import java.util.UUID;
+
 import com.google.gson.Gson;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.model.cube.ModelPartCube;
 import me.pixeldots.pixelscharactermodels.model.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
@@ -18,7 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 public class ModelPartData {
 	
 	public boolean Show = true;
-	public String name = "";
 	
 	public MapVec3 scale = new MapVec3(1,1,1);
 	public MapVec3 pos = new MapVec3();
@@ -31,8 +34,7 @@ public class ModelPartData {
 	public ObjectList<ModelPartMesh> meshes = new ObjectArrayList<ModelPartMesh>();
 	public ObjectList<ModelPartCube> cubes = new ObjectArrayList<ModelPartCube>();
 	
-	public PlayerEntityModel<?> model = null;
-	public PlayerEntity entity = null;
+	public UUID player = null;
 	
 	public ModelPart copyFromPart = null;
 	//Other
@@ -42,10 +44,9 @@ public class ModelPartData {
 		copyFromPart = part;
 	}
 	
-	public void setPlayerData(PlayerEntityModel<?> model, PlayerEntity entity) {
-		if (model == null) {
-			this.model = model;
-			this.entity = entity;
+	public void setPlayerData(UUID uuid) {
+		if (player == null) {
+			player = uuid;
 		}
 	}
 	
@@ -58,14 +59,14 @@ public class ModelPartData {
 		this.cubes.clear();
 		this.meshes.clear();
 		
-		if (data.cubes != null) {
+		if (data.cubes != null || data.meshes != null) {
+			PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(player);
+
 			for (PresetCubeData cube : data.cubes) {
-				createPartHelper.createCuboid(cube.pos, cube.size, new MapVec3(), new MapVec2(64, 64), cube.uvOffset, part, cube.name, cube.textureID);
+				createPartHelper.createCuboid(cube.pos, cube.size, new MapVec3(), new MapVec2(64, 64), cube.uvOffset, part, cube.name, cube.textureID, playerdata.entity);
 			}
-		}
-		if (data.meshes != null) {
 			for (PresetMeshData mesh : data.meshes) {
-				createPartHelper.createMesh(mesh.meshID, mesh.pos, mesh.size, new MapVec2(64, 64), model, entity, part, mesh.name, mesh.textureID);
+				createPartHelper.createMesh(mesh.meshID, mesh.pos, mesh.size, new MapVec2(64, 64), playerdata.model, playerdata.entity, part, mesh.name, mesh.textureID);
 			}
 		}
 	}
@@ -79,10 +80,17 @@ public class ModelPartData {
 	public String toJsonString() {
 		return new Gson().toJson(this);
 	}
+
+	public PlayerEntity getEntity() {
+		return PixelsCharacterModels.PlayerDataList.get(player).entity;
+	}
+	public PlayerEntityModel<?> getModel() {
+		return PixelsCharacterModels.PlayerDataList.get(player).model;
+	}
 	
 	public ModelPartData() {}
-	public ModelPartData(String name) {
-		this.name = name;
+	public ModelPartData(UUID uuid) {
+		this.player = uuid;
 	}
 	
 }

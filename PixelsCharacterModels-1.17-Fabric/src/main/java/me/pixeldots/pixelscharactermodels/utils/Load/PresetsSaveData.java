@@ -70,9 +70,6 @@ public class PresetsSaveData {
 	
 	public File getPreset(String path) {
 		return new File(PresetsPath + File.separator + path);
-		/*File[] files = getPresets();
-		if (files.length <= id) return null;
-		return files[id];*/
 	}
 	
 	public void writePresetFile(PresetData data, String path) {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
@@ -95,7 +96,8 @@ public class PartsGui extends GuiHandler {
 			RemovePart();
 		}));
 		if (PixelsCharacterModels.GuiData.SelectedPartModel != null) {
-			ModelPartData data = PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel);
+			PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
+			ModelPartData data = playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel);
 			int col = 0;
 			int row = 0;
 			for (int i = 0; i < data.cubes.size(); i++) {
@@ -143,9 +145,10 @@ public class PartsGui extends GuiHandler {
 		PartModelisMesh = isMesh;
 	}
 	public void RemovePart() {
+		PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
 		if (PartModelID == -1) return;
-		if (PartModelisMesh) PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
-		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
+		if (PartModelisMesh) playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
+		else playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
 		
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
 			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);

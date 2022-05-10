@@ -14,7 +14,6 @@ import me.pixeldots.pixelscharactermodels.Handlers.ClientHandler;
 import me.pixeldots.pixelscharactermodels.Handlers.CommandsHandler;
 import me.pixeldots.pixelscharactermodels.Handlers.KeyBindings;
 import me.pixeldots.pixelscharactermodels.Handlers.RenderingHandler;
-import me.pixeldots.pixelscharactermodels.model.ModelPartData;
 import me.pixeldots.pixelscharactermodels.model.PreviewModelPart;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
 import me.pixeldots.pixelscharactermodels.utils.TranslatedText;
@@ -27,7 +26,6 @@ import me.pixeldots.pixelscharactermodels.accessors.MinecraftClientAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PixelsCharacterModels implements ClientModInitializer {
@@ -53,7 +51,6 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	
 	public static LocalData localData = new LocalData();
 	public static PreviewModelPart previewModelPart = null;
-	public static Map<ModelPart, ModelPartData> dataPackets = new HashMap<>();
 	public static Map<UUID, PlayerData> PlayerDataList = new HashMap<>();
 
 	@Override

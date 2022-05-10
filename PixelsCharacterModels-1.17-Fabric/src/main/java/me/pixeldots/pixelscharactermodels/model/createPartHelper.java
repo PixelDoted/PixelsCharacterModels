@@ -48,7 +48,7 @@ public class createPartHelper {
 	public static void createMesh(String meshName, MapVec3 Pos, MapVec3 Size, MapVec2 textureOffset, PlayerEntityModel<?> model, PlayerEntity entity, ModelPart parent, String name, String textureID) {
 		ModelPartMesh mesh = createMeshReturn(meshName, Pos, Size, textureOffset, model, entity, parent, name, textureID);
 		if (mesh == null) return;
-		PixelsCharacterModels.dataPackets.get(parent).meshes.add(mesh);
+		PixelsCharacterModels.PlayerDataList.get(entity.getUuid()).limbs.get(parent).meshes.add(mesh);
 	}
 	
 	public static ModelPartCube createCuboidReturn(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name, String textureID) {
@@ -57,8 +57,8 @@ public class createPartHelper {
 		cube.textureFile = textureID;
 		return cube;
 	}
-	public static void createCuboid(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name, String textureID) {
-		PixelsCharacterModels.dataPackets.get(parent).cubes.add(createCuboidReturn(Pos, Size, Pivot, textureSize, textureOffset, parent, name, textureID));
+	public static void createCuboid(MapVec3 Pos, MapVec3 Size, MapVec3 Pivot, MapVec2 textureSize, MapVec2 textureOffset, ModelPart parent, String name, String textureID, PlayerEntity entity) {
+		PixelsCharacterModels.PlayerDataList.get(entity.getUuid()).limbs.get(parent).cubes.add(createCuboidReturn(Pos, Size, Pivot, textureSize, textureOffset, parent, name, textureID));
 	}
 
 	public static Identifier loadTexture(String filename) {

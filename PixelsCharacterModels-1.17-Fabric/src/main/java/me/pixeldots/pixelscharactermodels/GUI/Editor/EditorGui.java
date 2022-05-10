@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
@@ -89,15 +90,16 @@ public class EditorGui extends GuiHandler {
 			else ShowButton.setMessage(Text.of("Showing"));
 		}));
 		
-		if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-			PosXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.X));
-			PosYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Y));
-			PosZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Z));
+		PlayerData data = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
+		if (data.limbs.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+			PosXField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.X));
+			PosYField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Y));
+			PosZField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Z));
 			
-			ScaleXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.X));
-			ScaleYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Y));
-			ScaleZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Z));
-			ShowButton.setMessage(Text.of(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).Show ? "Showing" : "Hiding"));
+			ScaleXField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.X));
+			ScaleYField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Y));
+			ScaleZField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Z));
+			ShowButton.setMessage(Text.of(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).Show ? "Showing" : "Hiding"));
 		}
 		//drawEntity(575/2, 200, 30, 0f, 0f, PixelsCharacterModels.GuiData.entity);
 	}
@@ -156,8 +158,9 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerLimbData() {
-		if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-			ModelPartData data = PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel);
+		PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
+		if (playerdata.limbs.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+			ModelPartData data = playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel);
 			setModelPartScale(data);
 			setModelPartPos(data);
 			setModelPartVisible(data);

@@ -102,7 +102,7 @@ public class CreatePartGui extends GuiHandler {
 			if (data.createPartData.mesh != "Cube") {
 				createPartHelper.createMesh(data.createPartData.mesh, data.createPartData.Position, data.createPartData.Size, data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			} else {
-				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
+				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText(), data.entity);
 			}
 			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
 				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
@@ -184,7 +184,7 @@ public class CreatePartGui extends GuiHandler {
 
 			PreviewModelPart preview = new PreviewModelPart();
 			preview.mesh = mesh;
-			preview.owner = PixelsCharacterModels.dataPackets.get(data.SelectedPartModel);
+			preview.owner = PixelsCharacterModels.PlayerDataList.get(data.entity.getUuid()).limbs.get(data.SelectedPartModel);
 			PixelsCharacterModels.previewModelPart = preview;
 		} else {
 			ModelPartCube cube = createPartHelper.createCuboidReturn(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
@@ -192,7 +192,7 @@ public class CreatePartGui extends GuiHandler {
 
 			PreviewModelPart preview = new PreviewModelPart();
 			preview.cube = cube;
-			preview.owner = PixelsCharacterModels.dataPackets.get(data.SelectedPartModel);
+			preview.owner = PixelsCharacterModels.PlayerDataList.get(data.entity.getUuid()).limbs.get(data.SelectedPartModel);
 			PixelsCharacterModels.previewModelPart = preview;
 		}
 	}

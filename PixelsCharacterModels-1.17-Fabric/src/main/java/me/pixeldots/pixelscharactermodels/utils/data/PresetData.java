@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.ModelPartData;
 import me.pixeldots.pixelscharactermodels.model.cube.ModelPartCube;
@@ -21,28 +22,30 @@ public class PresetData {
 	public float GlobalScale = 1;
 	public String skinSuffix = "";
 	
-	public void convertModelData(PlayerEntityModel<?> model) {
-		partData.put("head", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.head)));
-		partData.put("body", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.body)));
-		partData.put("leftleg", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.leftLeg)));
-		partData.put("rightleg", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.rightLeg)));
-		partData.put("leftarm", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.leftArm)));
-		partData.put("rightarm", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.rightArm)));
+	public void convertModelData(PlayerEntity player, PlayerEntityModel<?> model) {
+		PlayerData data = PixelsCharacterModels.PlayerDataList.get(player.getUuid());
+		partData.put("head", new PresetPartData(data.limbs.get(model.head)));
+		partData.put("body", new PresetPartData(data.limbs.get(model.body)));
+		partData.put("leftleg", new PresetPartData(data.limbs.get(model.leftLeg)));
+		partData.put("rightleg", new PresetPartData(data.limbs.get(model.rightLeg)));
+		partData.put("leftarm", new PresetPartData(data.limbs.get(model.leftArm)));
+		partData.put("rightarm", new PresetPartData(data.limbs.get(model.rightArm)));
 	}
 	
 	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model, boolean isPacket) {
 		if (player == null) return;
 		if (isPacket == false) MainClientHandler.changePlayerScale(GlobalScale);
+		PlayerData data = PixelsCharacterModels.PlayerDataList.get(player.getUuid());
 		
 		PixelsCharacterModels.client.setSkinSuffix(player.getGameProfile().getId(), skinSuffix);
 		PixelsCharacterModels.client.ReloadSkins();
 		
-		PixelsCharacterModels.dataPackets.get(model.head).copyData(partData.get("head"), model.head);
-		PixelsCharacterModels.dataPackets.get(model.body).copyData(partData.get("body"), model.body);
-		PixelsCharacterModels.dataPackets.get(model.leftLeg).copyData(partData.get("leftleg"), model.leftLeg);
-		PixelsCharacterModels.dataPackets.get(model.rightLeg).copyData(partData.get("rightleg"), model.rightLeg);
-		PixelsCharacterModels.dataPackets.get(model.leftArm).copyData(partData.get("leftarm"), model.leftArm);
-		PixelsCharacterModels.dataPackets.get(model.rightArm).copyData(partData.get("rightarm"), model.rightArm);
+		data.getLimb(model.head, player, model).copyData(partData.get("head"), model.head);
+		data.getLimb(model.body, player, model).copyData(partData.get("body"), model.body);
+		data.getLimb(model.leftLeg, player, model).copyData(partData.get("leftleg"), model.leftLeg);
+		data.getLimb(model.rightLeg, player, model).copyData(partData.get("rightleg"), model.rightLeg);
+		data.getLimb(model.leftArm, player, model).copyData(partData.get("leftarm"), model.leftArm);
+		data.getLimb(model.rightArm, player, model).copyData(partData.get("rightarm"), model.rightArm);
 	}
 	
 	public class PresetPartData {

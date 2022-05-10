@@ -3,13 +3,16 @@
 # + finished
 # * not tested
 
-+ fix lighting on custom parts
-+ maximum rendered tris per player limit
-+ maximum rendered parts per player limit
++ load last used preset on world join
++ fix meshes not rendering after exiting then entering a world
 
 * add Multiplayer Support
 
 - fix singleplayer collision pehkui
 
 -/ improve performance
--/ load last used preset on world join
+-/ scripted custom parts
+-/ scripted animations/frames
+-/ blockbench converter
+-/ send mesh data over the server (if needed)
+-/ compress mesh data

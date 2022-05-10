@@ -3,6 +3,7 @@ package me.pixeldots.pixelscharactermodels.GUI.Animation;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
@@ -120,7 +121,8 @@ public class AnimationGui extends GuiHandler {
 	}
 	
 	public void setRotation() {
-		if (!PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) return;
+		PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
+		if (!playerdata.limbs.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) return;
 		if (!PixelsCharacterModels.client.currentStoredAnimation.LimbParts.contains(PixelsCharacterModels.GuiData.SelectedPartModel)) {
 			PixelsCharacterModels.client.currentStoredAnimation.LimbParts.add(PixelsCharacterModels.GuiData.SelectedPartModel);
 			PixelsCharacterModels.client.currentStoredAnimation.LimbRotations.put(PixelsCharacterModels.GuiData.SelectedPartModel, new MapVec3());
