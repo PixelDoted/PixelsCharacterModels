@@ -45,7 +45,6 @@ public class CreatePartGui extends GuiHandler {
 	public TextFieldWidget TextureSizeY;
 
 	public TextFieldWidget TextureID;
-	
 	public ButtonWidget CreatePart;
 	
 	public CreatePartGui() {

@@ -156,17 +156,14 @@ public class CubioudRenderer {
 		if (PixelsCharacterModels.previewModelPart != null && PixelsCharacterModels.previewModelPart.owner == data) hasPreview = true;
 
 		if (data.cubes.size()+data.meshes.size() >= 1 || hasPreview) {
-			TextureManager textureManager = PixelsCharacterModels.client.minecraft.getTextureManager();
 			PlayerEntity entity = data.getEntity();
 
 			for (ModelPartCube cube : data.cubes) { // renders all cubes on limb
-				if (!canRenderPart(cube))
-					continue;
-				
-					cube.render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
+				if (!canRenderPart(cube)) continue;
+				cube.render(matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
 			}
 			if (hasPreview && PixelsCharacterModels.previewModelPart.cube != null) { // renders the preview if it's a cube
-				PixelsCharacterModels.previewModelPart.cube.render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
+				PixelsCharacterModels.previewModelPart.cube.render(matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
 			}
 
 			if (data.meshes.size() >= 1 || hasPreview) { // flips the rotation and disables culling
@@ -177,13 +174,11 @@ public class CubioudRenderer {
 				matrices.getNormal().multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) Math.toRadians(180)));
 			}
 			for (ModelPartMesh mesh : data.meshes) { // renders all meshes on limb
-				if (!canRenderPart(mesh))
-					continue;
-				
-				mesh.render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
+				if (!canRenderPart(mesh)) continue;
+				mesh.render(matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
 			}
 			if (hasPreview && PixelsCharacterModels.previewModelPart.mesh != null) { // renders the preview if it's a mesh
-				PixelsCharacterModels.previewModelPart.mesh.render(textureManager, matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
+				PixelsCharacterModels.previewModelPart.mesh.render(matrices, vertex, light, overlay, 1, 1, 1, 1, entity);
 			}
 		}
 	}
@@ -218,21 +213,13 @@ public class CubioudRenderer {
 	}
 
     public void ScaleMatrixEntry(MatrixStack.Entry entry, MapVec3 value) {
-		float x = value.X;
-		float y = value.Y;
-		float z = value.Z;
-	    entry.getModel().multiply(Matrix4f.scale(x, y, z));
-	    if (x == y && y == z) {
-		    if (x > 0.0F) {
-		    	return;
-		    }
-	
+	    entry.getModel().multiply(Matrix4f.scale(value.X, value.Y, value.Z));
+	    if (value.X == value.Y && value.Y == value.Z) {
+		    if (value.X > 0.0F) return;
 		    entry.getNormal().multiply(-1.0F);
 	    }
 
-	    float f = 1.0F / x;
-	    float g = 1.0F / y;
-	    float h = 1.0F / z;
+	    float f = 1.0F / value.X, g = 1.0F / value.Y, h = 1.0F / value.Z;
 	    float i = MathHelper.fastInverseCbrt(f * g * h);
 	    entry.getNormal().multiply(Matrix3f.scale(i * f, i * g, i * h));
 	}

@@ -26,6 +26,7 @@ public class PartsGui extends GuiHandler {
 	
 	public ButtonWidget Create;
 	public ButtonWidget Remove;
+	public ButtonWidget Edit;
 	public ButtonWidget BackButton;
 	
 	public List<ButtonWidget> Parts = new ArrayList<ButtonWidget>();
@@ -95,6 +96,9 @@ public class PartsGui extends GuiHandler {
 		Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
 			RemovePart();
 		}));
+		/*Edit = addButton(new ButtonWidget(5, 150, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Edit), (button) -> {
+			PixelsCharacterModels.client.openScreen(new CreatePartGui(PartModelID, PartModelisMesh));
+		}));*/
 		if (PixelsCharacterModels.GuiData.SelectedPartModel != null) {
 			PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
 			ModelPartData data = playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel);

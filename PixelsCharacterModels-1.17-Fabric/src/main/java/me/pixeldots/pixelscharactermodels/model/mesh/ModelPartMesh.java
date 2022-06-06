@@ -66,14 +66,14 @@ public class ModelPartMesh {
 		}
 	}
 	
-	public void render(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
+	public void render(MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
 		if (texture != null) {
 			RenderSystem.setShaderTexture(0, texture);
 			RenderSystem.setShaderColor(red, green, blue, alpha);
 			RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
 			RenderSystem.enableDepthTest();
 
-			renderTextured(tm,entry,vc,light,overlay,red,green,blue,alpha, entity);
+			renderTextured(entry,vc,light,overlay,red,green,blue,alpha, entity);
 			return;
 		}
 
@@ -99,7 +99,7 @@ public class ModelPartMesh {
 		}
 	}
 
-	public void renderTextured(TextureManager tm, MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
+	public void renderTextured(MatrixStack.Entry entry, VertexConsumer vc, int light, int overlay, float red, float green, float blue, float alpha, PlayerEntity entity) {		
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buffer = tes.getBuffer();
 		Matrix4f m = entry.getModel();

@@ -9,6 +9,7 @@
 * add Multiplayer Support
 
 - fix singleplayer collision pehkui
+- edit custom parts
 
 -/ improve performance
 -/ scripted custom parts
@@ -16,3 +17,4 @@
 -/ blockbench converter
 -/ send mesh data over the server (if needed)
 -/ compress mesh data
+-/ combine "ModelPartMesh" and "ModelPartCube"
