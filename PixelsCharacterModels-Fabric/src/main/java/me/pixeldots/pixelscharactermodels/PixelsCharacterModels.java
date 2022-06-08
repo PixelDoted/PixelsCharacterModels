@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import me.pixeldots.pixelscharactermodels.gui.EditorGui;
 import me.pixeldots.pixelscharactermodels.other.KeyBindings;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
+import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 
 public class PixelsCharacterModels implements ClientModInitializer {
 
@@ -29,6 +30,8 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		minecraft = MinecraftClient.getInstance();
 		EntityPartNames = new ModelPartNames();
 		KeyBindings.registerKeyBindings();
+
+		SkinHelper.reloadSkins();
 	}
 
 	public static void OpenGUI() {

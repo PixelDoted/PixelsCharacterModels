@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.core.layout.SyslogLayout;
+
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
+import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.FabricUtils;
 import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
@@ -22,10 +25,7 @@ import virtuoel.pehkui.api.ScaleTypes;
 
 public class EditorGui extends GuiHandler {
 
-    public TextFieldWidget PositionX, PositionY, PositionZ;
-    public TextFieldWidget RotationX, RotationY, RotationZ;
-    public TextFieldWidget ScaleX, ScaleY, ScaleZ;
-    public TextFieldWidget PehkuiScale;
+    public TextFieldWidget PehkuiScale, SkinSuffix;
 
     public static int selectedPart = -1;
     public static ModelPart selectedPartModel = null;
@@ -52,15 +52,22 @@ public class EditorGui extends GuiHandler {
         if (selectedNode == -1) {
             // Pehkui Scale
             PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 20, 100, 10, Text.of("")));
-            
+            SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 35, 100, 10, Text.of("")));
+
             ScaleData basedata = ScaleTypes.BASE.getScaleData(this.client.player);
             PehkuiScale.setText(String.valueOf(basedata.getBaseScale()));
 
             PehkuiScale.setChangedListener((v) -> {
-                if (PostfixOperation.isNumeric(v)) {
-                    ScaleData data = ScaleTypes.BASE.getScaleData(this.client.player);
-			        data.setScale(Float.parseFloat(v));
-                }
+                if (PostfixOperation.isNumeric(v))
+                    ScaleTypes.BASE.getScaleData(this.client.player).setScale(Float.parseFloat(v));
+            });
+
+            if (PixelsCharacterModels.PlayerSkinList.containsKey(uuid))
+                SkinSuffix.setText(PixelsCharacterModels.PlayerSkinList.get(uuid));
+            
+            SkinSuffix.setChangedListener((v) -> {
+                PixelsCharacterModels.PlayerSkinList.put(uuid, v);
+                SkinHelper.reloadSkins();
             });
         }
 

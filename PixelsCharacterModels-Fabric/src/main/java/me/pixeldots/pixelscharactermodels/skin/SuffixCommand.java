@@ -15,12 +15,12 @@ public class SuffixCommand {
 		if (dispatcher == null) return;
 		dispatcher.register(CommandManager.literal("skinsuffix").executes(context -> {
 			SkinHelper.setSkinSuffix(PixelsCharacterModels.minecraft.player.getGameProfile().getId(), "");
-			SkinHelper.ReloadSkins();
+			SkinHelper.reloadSkins();
 			
 		    return 1;
 		}).then(CommandManager.argument("suffix", StringArgumentType.string()).executes(context -> { 
 			SkinHelper.setSkinSuffix(PixelsCharacterModels.minecraft.player.getGameProfile().getId(), StringArgumentType.getString(context, "suffix"));
-			SkinHelper.ReloadSkins();
+			SkinHelper.reloadSkins();
 			
 		    return 1;
 		})));

@@ -3,6 +3,7 @@ package me.pixeldots.pixelscharactermodels.other;
 import org.lwjgl.glfw.GLFW;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
@@ -16,14 +17,14 @@ public class KeyBindings {
 		GLFW.GLFW_KEY_R, // The keycode of the key
 		"category.PixelsCharacterModels" // The translation key of the keybinding's category.
 	));
-	/*private static KeyBinding reloadKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+	private static KeyBinding reloadKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 		"key.pixelscharactermodels.Reload", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_KP_1, // The keycode of the key
 		"category.PixelsCharacterModels" // The translation key of the keybinding's category.
 	));
 	
-	private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(
+	/*private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(
 			new KeyBinding("key.pixelscharactermodels.anim1", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_1, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim2 = KeyBindingHelper.registerKeyBinding(
 			new KeyBinding("key.pixelscharactermodels.anim2", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_2, "category.PixelsCharacterModels"));
@@ -39,6 +40,9 @@ public class KeyBindings {
 		    if (openGUI.wasPressed()) {
 		    	PixelsCharacterModels.OpenGUI();
 		    }
+			if (reloadKey.wasPressed()) {
+				SkinHelper.reloadSkins();
+			}
 		    /*if (KeyBindings.reloadKey.wasPressed()) {
             	PixelsCharacterModels.client.ReloadSkins();
             	PixelsCharacterModelsMain.clientHandler.requestModelData();
