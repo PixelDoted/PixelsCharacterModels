@@ -60,6 +60,26 @@ public class GuiHandler extends Screen {
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		}
+		for (ButtonWidget widget : buttons) {
+			widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		}
+		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+	}
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		for (TextFieldWidget widget : TextFieldWidgets) {
+			widget.mouseReleased(mouseX, mouseY, button);
+		}
+		for (ButtonWidget widget : buttons) {
+			widget.mouseReleased(mouseX, mouseY, button);
+		}
+		return super.mouseReleased(mouseX, mouseY, button);
+	}
 	
 	@Override
 	public boolean charTyped(char chr, int keyCode) {
@@ -156,16 +176,25 @@ public class GuiHandler extends Screen {
         DiffuseLighting.enableGuiDepthLighting();
 	}
 
+	public void drawVerticalLine(MatrixStack matrices, int x, int y0, int y1, int r, int g, int b, int a) {
+		int argb = a;
+		argb = (argb << 8) + r;
+		argb = (argb << 8) + g;
+		argb = (argb << 8) + b;
+
+		this.drawVerticalLine(matrices, x, y0, y1, argb);
+	}
+
 	public void drawColor(MatrixStack matrices, int x, int y, int width, int height, int r, int g, int b, int a) {
 		int x0 = x, x1 = x + width;
 		int y0 = y, y1 = y + height;
 
-		int rgba = r;
-		rgba = (rgba << 8) + g;
-		rgba = (rgba << 8) + b;
-		rgba = (rgba << 8) + a;
+		int argb = a;
+		argb = (argb << 8) + r;
+		argb = (argb << 8) + g;
+		argb = (argb << 8) + b;
 
-		DrawableHelper.fill(matrices, x0, y0, x1, y1, rgba);
+		DrawableHelper.fill(matrices, x0, y0, x1, y1, argb);
     }
 
 }

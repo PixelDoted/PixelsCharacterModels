@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.gui;
+package me.pixeldots.pixelscharactermodels.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 

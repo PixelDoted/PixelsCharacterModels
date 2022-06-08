@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.logging.log4j.core.layout.SyslogLayout;
-
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -47,7 +47,9 @@ public class EditorGui extends GuiHandler {
         IAnimalModelMixin model = (IAnimalModelMixin)FabricUtils.getModel(entity);
         uuid = entity.getUuid();
 
-        addButton(new ButtonWidget(5, 5, 100, 10, Text.of("compile"), (btn) -> { }));
+        addButton(new ButtonWidget(5, 5, 100, 10, Text.of("compile"), (btn) -> {
+            compile_nodes(uuid, selectedPartModel, true);
+        }));
 
         if (selectedNode == -1) {
             // Pehkui Scale
@@ -71,7 +73,7 @@ public class EditorGui extends GuiHandler {
             });
         }
 
-        listModelParts(this.width-105, 5+yscroll, entity, model);
+        listModelParts(this.width-115, 5+yscroll, entity, model);
     }
 
     @Override
@@ -89,7 +91,17 @@ public class EditorGui extends GuiHandler {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        drawEntity(this.width/2, this.height/2, 75, (float)(this.width/2) - mouseX, (float)(this.height/2-125) - mouseY, this.client.player);
+        int player_height = 37;
+        drawEntity(this.width/2, this.height/2+player_height, 75, (float)(this.width/2) - mouseX, (float)(this.height/2+player_height-125) - mouseY, this.client.player);
+        
+        drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
+        drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
+        drawVerticalLine(matrices, 119, -1, this.height, 0, 0, 0, 255);
+
+        drawColor(matrices, this.width-120, 0, 120, this.height, 0, 4, 17, 222);
+        drawVerticalLine(matrices, this.width-120, -1, this.height, 0, 0, 0, 255);
+        drawVerticalLine(matrices, this.width-121, -1, this.height, 0, 0, 0, 255);
+
         super.render(matrices, mouseX, mouseY, delta);
     }
     @Override 
@@ -106,7 +118,7 @@ public class EditorGui extends GuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity, IAnimalModelMixin model) {
-        addScrollable(new AButtonWidget(x, y, 100, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
+        addScrollable(new AButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
@@ -158,39 +170,32 @@ public class EditorGui extends GuiHandler {
 
             final int num = i;
 
-            addScrollable(new ButtonWidget(x, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+            addScrollable(new ButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
                 if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
                 else nodes.get(0).changed = true;
                 this.client.setScreen(new EditorGui());
             }));
-            addScrollable(new ButtonWidget(x-10, y+((row+i)*11), 10, 5, Text.of("-"), (btn) -> {
-                int sub = num-1;
-                if (sub < 0) return;
 
-                nodes.add(sub, nodes.remove(num));
-                nodes.get(sub).changed = true;
-                this.client.setScreen(new EditorGui());
-            }));
-            addScrollable(new ButtonWidget(x-10, y+((row+i)*11)+5, 10, 5, Text.of("-"), (btn) -> {
-                int sum = num+1;
-                if (sum == nodes.size()) return;
-
-                nodes.add(sum, nodes.remove(num));
-                nodes.get(sum).changed = true;
-                this.client.setScreen(new EditorGui());
-            }));
-
-            addScrollable(new ButtonWidget(x+10, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
+            addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
+                
+                this.client.setScreen(new EditorGui());
+            }, (dragged, scroll) -> {
+                int d = -(int)Math.round(scroll/15d);
+                int move = dragged + d;
+                move = (move <= -1 ? move = 0 : (move >= nodes.size() ? move = nodes.size()-1 : move));
+
+                nodes.add(move, nodes.remove(num));
+                nodes.get(move).changed = true;
                 
                 this.client.setScreen(new EditorGui());
             }));
         }
 
-        addScrollable(new ButtonWidget(x+10, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
+        addScrollable(new ButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
             this.client.setScreen(new NodeSelectGui());
         }));
 
@@ -198,7 +203,7 @@ public class EditorGui extends GuiHandler {
     }
 
     public void createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
-        addScrollable(new AButtonWidget(x, y+(row*11), 100, 10, name, (btn) -> {
+        addScrollable(new AButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
                 selectedPart = -1;
