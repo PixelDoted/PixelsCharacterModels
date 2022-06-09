@@ -21,8 +21,9 @@ public class NodeButtonWidget extends AButtonWidget {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (isDragging) {
             DragDistance += deltaY/(this.height+5d);
-        } else if (this.clicked(mouseX, mouseY)) {
+        } else if (!EditorGui.isDragging && this.clicked(mouseX, mouseY)) {
             isDragging = true;
+            EditorGui.isDragging = true;
             DragDistance = deltaY/(this.height+5d);
             lastScroll = EditorGui.yscroll;
         }
@@ -32,6 +33,7 @@ public class NodeButtonWidget extends AButtonWidget {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (isDragging) {
             isDragging = false;
+            EditorGui.isDragging = false;
             action.drag((int)Math.round(DragDistance), lastScroll);
         }
         return super.mouseReleased(mouseX, mouseY, button);

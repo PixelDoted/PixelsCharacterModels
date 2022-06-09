@@ -27,7 +27,9 @@ public class NodeSelectGui extends GuiHandler {
             }
 
             addButton(new ButtonWidget(5+(col*105), 10+(row*15), 100, 10, Text.of(t.name().toLowerCase()), (btn) -> {
-                EditorGui.nodes.add(new Node(t));
+                Node node = new Node(t);
+                node.changed = true;
+                EditorGui.nodes.add(node);
                 this.client.setScreen(new EditorGui());
             }));
 

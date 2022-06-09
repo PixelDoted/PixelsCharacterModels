@@ -61,11 +61,35 @@ public class Node {
         ANGLE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, 3),
         VERTEX((gui, x, y, node) -> {}, (node) -> { return "vertex " + node.argsToString(); }, 12),
         CUBE((gui, x, y, node) -> {
+            TextFieldWidget bU = new TextFieldWidget(gui.textRendererGUI, x, y, 30, 10, Text.of(""));
+            TextFieldWidget bV = new TextFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, Text.of(""));
+            TextFieldWidget bW = new TextFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, Text.of(""));
+            TextFieldWidget bH = new TextFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, Text.of(""));
 
-        }, (node) -> { return ""; }, 0),
+            bU.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
+            bV.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
+            bW.setChangedListener((s) -> { node.args[2] = s; node.changed = true; });
+            bH.setChangedListener((s) -> { node.args[3] = s; node.changed = true; });
+
+            bU.setText(node.args[0]); bV.setText(node.args[1]); bW.setText(node.args[2]); bH.setText(node.args[3]);
+            gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH);
+        }, (node) -> { return NodeHelper.cubeToString(node); }, 4),
         MESH((gui, x, y, node) -> {
+            TextFieldWidget meshID = new TextFieldWidget(gui.textRendererGUI, x, y, 100, 10, Text.of(""));
+            TextFieldWidget bU = new TextFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, Text.of(""));
+            TextFieldWidget bV = new TextFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, Text.of(""));
+            TextFieldWidget bW = new TextFieldWidget(gui.textRendererGUI, x, y+30, 30, 10, Text.of(""));
+            TextFieldWidget bH = new TextFieldWidget(gui.textRendererGUI, x+35, y+30, 30, 10, Text.of(""));
 
-        }, (node) -> { return ""; }, 0),
+            meshID.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
+            bU.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
+            bV.setChangedListener((s) -> { node.args[2] = s; node.changed = true; });
+            bW.setChangedListener((s) -> { node.args[3] = s; node.changed = true; });
+            bH.setChangedListener((s) -> { node.args[4] = s; node.changed = true; });
+
+            meshID.setText(node.args[0]); bU.setText(node.args[1]); bV.setText(node.args[2]); bW.setText(node.args[3]); bH.setText(node.args[4]);
+            gui.addTextField(meshID); gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH);
+        }, (node) -> { return NodeHelper.meshToString(node); }, 5),
         CANCEL((gui, x, y, node) -> {}, (node) -> { return "cancel"; }, 0);
 
         NodeFunc func;

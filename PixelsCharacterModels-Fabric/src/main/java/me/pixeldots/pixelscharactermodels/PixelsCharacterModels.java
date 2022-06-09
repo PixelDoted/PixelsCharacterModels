@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import me.pixeldots.pixelscharactermodels.gui.EditorGui;
+import me.pixeldots.pixelscharactermodels.gui.PresetsGui;
 import me.pixeldots.pixelscharactermodels.other.KeyBindings;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -39,7 +40,8 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	}
 
 	public static void OpenGUI() {
-		minecraft.setScreen(new EditorGui());
+		if (settings.keybinding_opens_editor) minecraft.setScreen(new EditorGui());
+		else minecraft.setScreen(new PresetsGui());
 	}
 
 }

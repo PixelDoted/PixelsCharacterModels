@@ -14,6 +14,7 @@ public class PCMSettings {
     
     public boolean show_block_under_player_ui = true;
     public boolean player_faces_cursor_ui = true;
+    public boolean keybinding_opens_editor = false;
 
     public static PCMSettings load(Path path) {
         Gson gson = new Gson();

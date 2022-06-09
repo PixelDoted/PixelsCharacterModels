@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
@@ -14,7 +15,6 @@ import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.FabricUtils;
 import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import me.pixeldots.scriptedmodels.script.PostfixOperation;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
@@ -33,6 +33,7 @@ public class EditorGui extends GuiHandler {
     public static int selectedNode = -1;
     public static List<Node> nodes = new ArrayList<>();
     public static int yscroll = 0;
+    public static boolean isDragging = false;
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
     public UUID uuid;
@@ -43,6 +44,11 @@ public class EditorGui extends GuiHandler {
         super("Editor");
     }
 
+    public EditorGui(float _entityViewScale) {
+        super("Editor");
+        entityViewScale = _entityViewScale;
+    }
+
     @Override
     public void init() {
         super.init();
@@ -50,14 +56,23 @@ public class EditorGui extends GuiHandler {
         IAnimalModelMixin model = (IAnimalModelMixin)FabricUtils.getModel(entity);
         uuid = entity.getUuid();
 
-        addButton(new ButtonWidget(5, 5, 100, 10, Text.of("compile"), (btn) -> {
+        // Top Bar
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
+            this.client.setScreen(new PresetsGui(this.entityViewScale));
+        }));
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
+            //this.client.setScreen(new EditorGui());
+        }));
+
+        // Left Panel
+        addButton(new ButtonWidget(5, 15, 100, 10, Text.of("compile"), (btn) -> {
             compile_nodes(uuid, selectedPartModel, true);
         }));
 
         if (selectedNode == -1) {
             // Pehkui Scale
-            PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 20, 100, 10, Text.of("")));
-            SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 35, 100, 10, Text.of("")));
+            PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 30, 100, 10, Text.of("")));
+            SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 45, 100, 10, Text.of("")));
 
             ScaleData basedata = ScaleTypes.BASE.getScaleData(this.client.player);
             stored_pehkuiscale = basedata.getBaseScale();
@@ -79,7 +94,8 @@ public class EditorGui extends GuiHandler {
             });
         }
 
-        listModelParts(this.width-115, 5+yscroll, entity, model);
+        // Right Panel
+        listModelParts(this.width-115, 15+yscroll, entity, model);
     }
 
     @Override
@@ -127,6 +143,7 @@ public class EditorGui extends GuiHandler {
         drawVerticalLine(matrices, this.width-120, -1, this.height, 0, 0, 0, 255);
         drawVerticalLine(matrices, this.width-121, -1, this.height, 0, 0, 0, 255);
 
+        drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
         super.render(matrices, mouseX, mouseY, delta);
     }
     @Override 
@@ -138,6 +155,7 @@ public class EditorGui extends GuiHandler {
         selectedNode = -1;
         selectedPartModel = null;
         nodes.clear();
+        EditorGui.isDragging = false;
 
         super.close(); 
     }
@@ -191,7 +209,7 @@ public class EditorGui extends GuiHandler {
 
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
-            if (i == selectedNode) node.init(this, 5, 20);
+            if (i == selectedNode) node.init(this, 5, 30);
 
             final int num = i;
 
@@ -249,8 +267,25 @@ public class EditorGui extends GuiHandler {
         nodes.clear();
 
         String[] s = ClientHelper.decompile_script(uuid, part).split("\n");
+        int ignore_lines = 0;
         for (String line : s) {
             if (line.trim().equals("")) continue;
+
+            if (ignore_lines > 0) {
+                ignore_lines--;
+                continue;
+            }
+            if (line.toLowerCase().startsWith("define")) {
+                String[] args = line.split(" ");
+                ignore_lines = Math.round(Float.parseFloat(args[1]));
+
+                String new_line = args[2];
+                for (int i = 3; i < args.length; i++) {
+                    new_line += " " + args[i];
+                }
+
+                line = new_line;
+            }
             nodes.add(toNode(line));
         }
     }
