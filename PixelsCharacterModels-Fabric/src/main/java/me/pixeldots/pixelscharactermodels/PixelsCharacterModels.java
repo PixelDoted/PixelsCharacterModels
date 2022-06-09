@@ -3,6 +3,7 @@ package me.pixeldots.pixelscharactermodels;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class PixelsCharacterModels implements ClientModInitializer {
 	public static Map<UUID, String> PlayerSkinList = new HashMap<>();
 	public static ModelPartNames EntityPartNames;
 
+	public static PCMSettings settings;
 
 	@Override
 	public void onInitializeClient() {
@@ -32,6 +34,8 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		KeyBindings.registerKeyBindings();
 
 		SkinHelper.reloadSkins();
+
+		settings = PCMSettings.load(Paths.get(".", "config/PCM.json"));
 	}
 
 	public static void OpenGUI() {

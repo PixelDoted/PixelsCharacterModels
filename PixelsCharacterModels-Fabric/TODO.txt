@@ -11,8 +11,8 @@
 - Save/Load Presets
 - Compile Preset to Script
 
-- Pehkui Support
-- OfflineSkins Support
++ Pehkui Support
++ OfflineSkins Support
 
 
 

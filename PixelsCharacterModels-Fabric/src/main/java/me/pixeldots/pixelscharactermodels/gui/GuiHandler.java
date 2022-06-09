@@ -6,13 +6,16 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -131,7 +134,28 @@ public class GuiHandler extends Screen {
 		buttons.add(button);
 		return button;
 	}
-	
+
+	public void drawVerticalLine(MatrixStack matrices, int x, int y0, int y1, int r, int g, int b, int a) {
+		int argb = a;
+		argb = (argb << 8) + r;
+		argb = (argb << 8) + g;
+		argb = (argb << 8) + b;
+
+		this.drawVerticalLine(matrices, x, y0, y1, argb);
+	}
+
+	public void drawColor(MatrixStack matrices, int x, int y, int width, int height, int r, int g, int b, int a) {
+		int x0 = x, x1 = x + width;
+		int y0 = y, y1 = y + height;
+
+		int argb = a;
+		argb = (argb << 8) + r;
+		argb = (argb << 8) + g;
+		argb = (argb << 8) + b;
+
+		DrawableHelper.fill(matrices, x0, y0, x1, y1, argb);
+    }
+
 	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
 		float f = (float)Math.atan(mouseX / 40.0f);
         float g = (float)Math.atan(mouseY / 40.0f);
@@ -176,25 +200,54 @@ public class GuiHandler extends Screen {
         DiffuseLighting.enableGuiDepthLighting();
 	}
 
-	public void drawVerticalLine(MatrixStack matrices, int x, int y0, int y1, int r, int g, int b, int a) {
-		int argb = a;
-		argb = (argb << 8) + r;
-		argb = (argb << 8) + g;
-		argb = (argb << 8) + b;
+	public static void drawEntityOnBlock(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
+		float f = (float)Math.atan(mouseX / 40.0f);
+        float g = (float)Math.atan(mouseY / 40.0f);
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(x, y, 1050.0);
+        matrixStack.scale(1.0f, 1.0f, -1.0f);
+        RenderSystem.applyModelViewMatrix();
+        MatrixStack matrixStack2 = new MatrixStack();
+        matrixStack2.translate(0.0, 0.0, 1000.0);
+        matrixStack2.scale(size, size, size);
+        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f);
+        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
+        quaternion.hamiltonProduct(quaternion2);
+        matrixStack2.multiply(quaternion);
+        float h = entity.bodyYaw;
+        float i = entity.getYaw();
+        float j = entity.getPitch();
+        float k = entity.prevHeadYaw;
+        float l = entity.headYaw;
+        entity.bodyYaw = 180.0f + f * 20.0f;
+        entity.setYaw(180.0f + f * 40.0f);
+        entity.setPitch(-g * 20.0f);
+        entity.headYaw = entity.getYaw();
+        entity.prevHeadYaw = entity.getYaw();
+        DiffuseLighting.method_34742();
+		BlockRenderManager blockRenderManager = PixelsCharacterModels.minecraft.getBlockRenderManager();
+        EntityRenderDispatcher entityRenderDispatcher = PixelsCharacterModels.minecraft.getEntityRenderDispatcher();
+        quaternion2.conjugate();
+        entityRenderDispatcher.setRotation(quaternion2);
+        entityRenderDispatcher.setRenderShadows(false);
+        VertexConsumerProvider.Immediate immediate = PixelsCharacterModels.minecraft.getBufferBuilders().getEntityVertexConsumers();
+        RenderSystem.runAsFancy(() -> {
+			matrixStack2.translate(-.5, -1, -.5);
+			blockRenderManager.renderBlockAsEntity(Blocks.GRASS_BLOCK.getDefaultState(), matrixStack2, immediate, 0xF000F0, OverlayTexture.DEFAULT_UV);
+			matrixStack2.translate(.5, 1, .5);
 
-		this.drawVerticalLine(matrices, x, y0, y1, argb);
+			entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0);
+		});
+        immediate.draw();
+        entityRenderDispatcher.setRenderShadows(true);
+        entity.bodyYaw = h;
+        entity.setYaw(i);
+        entity.setPitch(j);
+        entity.prevHeadYaw = k;
+        entity.headYaw = l;
+        matrixStack.pop();
+        RenderSystem.applyModelViewMatrix();
+        DiffuseLighting.enableGuiDepthLighting();
 	}
-
-	public void drawColor(MatrixStack matrices, int x, int y, int width, int height, int r, int g, int b, int a) {
-		int x0 = x, x1 = x + width;
-		int y0 = y, y1 = y + height;
-
-		int argb = a;
-		argb = (argb << 8) + r;
-		argb = (argb << 8) + g;
-		argb = (argb << 8) + b;
-
-		DrawableHelper.fill(matrices, x0, y0, x1, y1, argb);
-    }
-
 }

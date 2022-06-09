@@ -14,6 +14,7 @@ import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.FabricUtils;
 import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import me.pixeldots.scriptedmodels.script.PostfixOperation;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
@@ -35,6 +36,8 @@ public class EditorGui extends GuiHandler {
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
     public UUID uuid;
+    public float stored_pehkuiscale = 1;
+    public float entityViewScale = 75;
 
     public EditorGui() {
         super("Editor");
@@ -57,11 +60,14 @@ public class EditorGui extends GuiHandler {
             SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 35, 100, 10, Text.of("")));
 
             ScaleData basedata = ScaleTypes.BASE.getScaleData(this.client.player);
-            PehkuiScale.setText(String.valueOf(basedata.getBaseScale()));
+            stored_pehkuiscale = basedata.getBaseScale();
+            PehkuiScale.setText(String.valueOf(stored_pehkuiscale));
 
             PehkuiScale.setChangedListener((v) -> {
-                if (PostfixOperation.isNumeric(v))
-                    ScaleTypes.BASE.getScaleData(this.client.player).setScale(Float.parseFloat(v));
+                if (PostfixOperation.isNumeric(v)) {
+                    stored_pehkuiscale = Float.parseFloat(v);
+                    ScaleTypes.BASE.getScaleData(this.client.player).setScale(stored_pehkuiscale);
+                }
             });
 
             if (PixelsCharacterModels.PlayerSkinList.containsKey(uuid))
@@ -78,12 +84,17 @@ public class EditorGui extends GuiHandler {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        yscroll += amount*10;
-        if (yscroll > 0) yscroll = 0;
-        else {
-            for (ButtonWidget widget : scrollable_widgets) {
-                widget.y += amount*10;
+        if (mouseX >= this.width-120 && mouseX < this.width) {
+            yscroll += amount*10;
+            if (yscroll > 0) yscroll = 0;
+            else {
+                for (ButtonWidget widget : scrollable_widgets) {
+                    widget.y += amount*10;
+                }
             }
+        } else if (mouseX >= 120 && mouseX < this.width-120) {
+            entityViewScale += amount*10;
+            if (entityViewScale < 1) entityViewScale = 1;
         }
         
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -91,9 +102,23 @@ public class EditorGui extends GuiHandler {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        int player_height = 37;
-        drawEntity(this.width/2, this.height/2+player_height, 75, (float)(this.width/2) - mouseX, (float)(this.height/2+player_height-125) - mouseY, this.client.player);
-        
+        float entityMouseX = (float)(this.width/2);
+        float entityMouseY = (float)(this.height/2+37-125);
+
+        if (PixelsCharacterModels.settings.player_faces_cursor_ui) { 
+            entityMouseX -= mouseX;
+            entityMouseY -= mouseY;
+        } else {
+            entityMouseX -= this.width/2-13.5f;
+            entityMouseY -= this.height/2+80;
+        }
+
+        if (PixelsCharacterModels.settings.show_block_under_player_ui) {
+            drawEntityOnBlock(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, this.client.player);
+        } else {
+            drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, this.client.player);
+        }
+
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
         drawVerticalLine(matrices, 119, -1, this.height, 0, 0, 0, 255);
