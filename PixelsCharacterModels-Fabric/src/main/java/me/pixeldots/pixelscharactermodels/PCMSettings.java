@@ -10,12 +10,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 public class PCMSettings {
     
-    public boolean show_block_under_player_ui = true;
-    public boolean player_faces_cursor_ui = true;
-    public boolean keybinding_opens_editor = false;
-    public boolean preview_preset = true;
+    @Environment(EnvType.CLIENT) public boolean show_block_under_player_ui = true;
+    @Environment(EnvType.CLIENT) public boolean player_faces_cursor_ui = true;
+    @Environment(EnvType.CLIENT) public boolean keybinding_opens_editor = false;
+    @Environment(EnvType.CLIENT) public boolean preview_preset = true;
+    
+    public boolean save_entity_scripts = false;
 
     public static PCMSettings load(Path path) {
         Gson gson = new Gson();

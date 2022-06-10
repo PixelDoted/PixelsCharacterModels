@@ -3,12 +3,18 @@ package me.pixeldots.pixelscharactermodels.gui;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.other.Node.NodeType;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
 public class NodeSelectGui extends GuiHandler {
 
-    public NodeSelectGui() {
+    public LivingEntity entity;
+    public float entityViewScale = 75;
+
+    public NodeSelectGui(LivingEntity _entity, float _entityViewScale) {
         super("Node Selector");
+        entity = _entity;
+        entityViewScale = _entityViewScale;
     }
 
     @Override
@@ -16,7 +22,7 @@ public class NodeSelectGui extends GuiHandler {
         super.init();
 
         addButton(new ButtonWidget(5, 5, 100, 10, Text.of("Cancel"), (btn) -> {
-            this.client.setScreen(new EditorGui());
+            this.client.setScreen(new EditorGui(entity, entityViewScale));
         }));
 
         int row = 1, col = 0;
@@ -30,7 +36,7 @@ public class NodeSelectGui extends GuiHandler {
                 Node node = new Node(t);
                 node.changed = true;
                 EditorGui.nodes.add(node);
-                this.client.setScreen(new EditorGui());
+                this.client.setScreen(new EditorGui(entity, entityViewScale));
             }));
 
             row++;

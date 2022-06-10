@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 import lain.mods.skins.api.SkinProviderAPI;
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PCMClient;
 
 public class SkinHelper {
     
@@ -17,7 +17,7 @@ public class SkinHelper {
     }
 
     public static void setSkinSuffix(UUID uuid, String suffix) {
-        PixelsCharacterModels.PlayerSkinList.put(uuid, suffix);
+        PCMClient.PlayerSkinList.put(uuid, suffix);
     }
 
 }

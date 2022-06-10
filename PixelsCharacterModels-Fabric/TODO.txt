@@ -1,20 +1,17 @@
 
 
-- Presets
-- Animations
+- Save Entity scripts to World (world/entity specific presets)
 
-- New Presets GUI
-- New Editor GUI
+- Animations
 - New Animation GUI
 
-- Save/Load Presets
-- Compile Preset to Script
-
-- old
+> old
 + Mesh to Vertices and Back
 + Cube to Vertices and Back
 + Pehkui Support
 + OfflineSkins Support
-
-
-
++ New Editor GUI
++ Presets
++ Save/Load Presets
++ Compile Preset to Script
++ New Presets GUI

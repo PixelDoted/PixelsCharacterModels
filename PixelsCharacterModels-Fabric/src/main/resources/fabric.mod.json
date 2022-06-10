@@ -18,9 +18,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "me.pixeldots.pixelscharactermodels.PixelsCharacterModels"
-    ]
+    "client": [ "me.pixeldots.pixelscharactermodels.PCMClient" ],
+    "main": [ "me.pixeldots.pixelscharactermodels.PCMMain" ]
   },
   "mixins": [
     "pcm.mixins.json"

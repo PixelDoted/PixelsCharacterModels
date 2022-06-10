@@ -3,7 +3,7 @@ package me.pixeldots.pixelscharactermodels.other;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PCMClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
@@ -38,8 +38,8 @@ public class ModelPartNames {
     }
 
     private static EntityParts getMap(String name) {
-        if (!PixelsCharacterModels.EntityPartNames.map.containsKey(name)) return null;
-        return PixelsCharacterModels.EntityPartNames.map.get(name);
+        if (!PCMClient.EntityPartNames.map.containsKey(name)) return null;
+        return PCMClient.EntityPartNames.map.get(name);
     }
 
     public class EntityParts {

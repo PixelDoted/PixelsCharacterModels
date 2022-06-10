@@ -2,7 +2,7 @@ package me.pixeldots.pixelscharactermodels.other;
 
 import org.lwjgl.glfw.GLFW;
 
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -38,7 +38,7 @@ public class KeyBindings {
 	public static void registerKeyBindings() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 		    if (openGUI.wasPressed()) {
-		    	PixelsCharacterModels.OpenGUI();
+		    	PCMClient.OpenGUI();
 		    }
 			if (reloadKey.wasPressed()) {
 				SkinHelper.reloadSkins();

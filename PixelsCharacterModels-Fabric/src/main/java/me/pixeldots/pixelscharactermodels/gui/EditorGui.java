@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PCMClient;
+import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
@@ -12,7 +13,7 @@ import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
-import me.pixeldots.scriptedmodels.platform.FabricUtils;
+import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -40,25 +41,27 @@ public class EditorGui extends GuiHandler {
     public float stored_pehkuiscale = 1;
     public float entityViewScale = 75;
 
-    public EditorGui() {
+    public LivingEntity entity;
+    public IAnimalModelMixin model;
+    
+    public EditorGui(LivingEntity _entity) {
         super("Editor");
+        entity = _entity;
+        model = (IAnimalModelMixin)PlatformUtils.getModel(_entity);
+        uuid = _entity.getUuid();
     }
 
-    public EditorGui(float _entityViewScale) {
-        super("Editor");
+    public EditorGui(LivingEntity _entity, float _entityViewScale) {
+        this(_entity);
         entityViewScale = _entityViewScale;
     }
 
     @Override
     public void init() {
         super.init();
-        LivingEntity entity = PixelsCharacterModels.minecraft.player;
-        IAnimalModelMixin model = (IAnimalModelMixin)FabricUtils.getModel(entity);
-        uuid = entity.getUuid();
-
         // Top Bar
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
-            this.client.setScreen(new PresetsGui(this.entityViewScale));
+            this.client.setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
             //this.client.setScreen(new EditorGui());
@@ -74,22 +77,22 @@ public class EditorGui extends GuiHandler {
             PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 30, 100, 10, Text.of("")));
             SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 45, 100, 10, Text.of("")));
 
-            ScaleData basedata = ScaleTypes.BASE.getScaleData(this.client.player);
+            ScaleData basedata = ScaleTypes.BASE.getScaleData(entity);
             stored_pehkuiscale = basedata.getBaseScale();
             PehkuiScale.setText(String.valueOf(stored_pehkuiscale));
 
             PehkuiScale.setChangedListener((v) -> {
                 if (PostfixOperation.isNumeric(v)) {
                     stored_pehkuiscale = Float.parseFloat(v);
-                    ScaleTypes.BASE.getScaleData(this.client.player).setScale(stored_pehkuiscale);
+                    ScaleTypes.BASE.getScaleData(entity).setScale(stored_pehkuiscale);
                 }
             });
 
-            if (PixelsCharacterModels.PlayerSkinList.containsKey(uuid))
-                SkinSuffix.setText(PixelsCharacterModels.PlayerSkinList.get(uuid));
+            if (PCMClient.PlayerSkinList.containsKey(uuid))
+                SkinSuffix.setText(PCMClient.PlayerSkinList.get(uuid));
             
             SkinSuffix.setChangedListener((v) -> {
-                PixelsCharacterModels.PlayerSkinList.put(uuid, v);
+                SkinHelper.setSkinSuffix(uuid, v);
                 SkinHelper.reloadSkins();
             });
         }
@@ -121,7 +124,7 @@ public class EditorGui extends GuiHandler {
         float entityMouseX = (float)(this.width/2);
         float entityMouseY = (float)(this.height/2+37-125);
 
-        if (PixelsCharacterModels.settings.player_faces_cursor_ui) { 
+        if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX -= mouseX;
             entityMouseY -= mouseY;
         } else {
@@ -129,10 +132,12 @@ public class EditorGui extends GuiHandler {
             entityMouseY -= this.height/2+80;
         }
 
-        if (PixelsCharacterModels.settings.show_block_under_player_ui) {
-            drawEntityOnBlock(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, this.client.player);
-        } else {
-            drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, this.client.player);
+        if (entity != null) {
+            if (PCMMain.settings.show_block_under_player_ui) {
+                drawEntityOnBlock(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
+            } else {
+                drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
+            }
         }
 
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
@@ -175,7 +180,7 @@ public class EditorGui extends GuiHandler {
                 decompile_script(null);
             }
 
-            this.client.setScreen(new EditorGui());
+            this.client.setScreen(new EditorGui(entity, entityViewScale));
         }));
 
         int row = 1 + showNodes(-2, 0, x, y);
@@ -219,14 +224,14 @@ public class EditorGui extends GuiHandler {
 
                 if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
                 else nodes.get(0).changed = true;
-                this.client.setScreen(new EditorGui());
+                this.client.setScreen(new EditorGui(entity, entityViewScale));
             }));
 
             addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
-                this.client.setScreen(new EditorGui());
+                this.client.setScreen(new EditorGui(entity, entityViewScale));
             }, (dragged, scroll) -> {
                 int d = -(int)Math.round(scroll/15d);
                 int move = dragged + d;
@@ -235,12 +240,12 @@ public class EditorGui extends GuiHandler {
                 nodes.add(move, nodes.remove(num));
                 nodes.get(move).changed = true;
                 
-                this.client.setScreen(new EditorGui());
+                this.client.setScreen(new EditorGui(entity, entityViewScale));
             }));
         }
 
         addScrollable(new ButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
-            this.client.setScreen(new NodeSelectGui());
+            this.client.setScreen(new NodeSelectGui(entity, entityViewScale));
         }));
 
         return nodes.size()+1;
@@ -260,7 +265,7 @@ public class EditorGui extends GuiHandler {
                 decompile_script(part);
             }
 
-            this.client.setScreen(new EditorGui());
+            this.client.setScreen(new EditorGui(entity, entityViewScale));
         }));
     }
 

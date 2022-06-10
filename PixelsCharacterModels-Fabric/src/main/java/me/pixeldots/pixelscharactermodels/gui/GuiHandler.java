@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PCMClient;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -31,7 +31,7 @@ public class GuiHandler extends Screen {
 	
 	public GuiHandler(String title) {
 		super(Text.of(title));
-		textRendererGUI = PixelsCharacterModels.minecraft.textRenderer;
+		textRendererGUI = PCMClient.minecraft.textRenderer;
 		buttons.clear();
 		TextFieldWidgets.clear();
 	}
@@ -182,11 +182,11 @@ public class GuiHandler extends Screen {
         entity.headYaw = entity.getYaw();
         entity.prevHeadYaw = entity.getYaw();
         DiffuseLighting.method_34742();
-        EntityRenderDispatcher entityRenderDispatcher = PixelsCharacterModels.minecraft.getEntityRenderDispatcher();
+        EntityRenderDispatcher entityRenderDispatcher = PCMClient.minecraft.getEntityRenderDispatcher();
         quaternion2.conjugate();
         entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
-        VertexConsumerProvider.Immediate immediate = PixelsCharacterModels.minecraft.getBufferBuilders().getEntityVertexConsumers();
+        VertexConsumerProvider.Immediate immediate = PCMClient.minecraft.getBufferBuilders().getEntityVertexConsumers();
         RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0));
         immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
@@ -226,12 +226,12 @@ public class GuiHandler extends Screen {
         entity.headYaw = entity.getYaw();
         entity.prevHeadYaw = entity.getYaw();
         DiffuseLighting.method_34742();
-		BlockRenderManager blockRenderManager = PixelsCharacterModels.minecraft.getBlockRenderManager();
-        EntityRenderDispatcher entityRenderDispatcher = PixelsCharacterModels.minecraft.getEntityRenderDispatcher();
+		BlockRenderManager blockRenderManager = PCMClient.minecraft.getBlockRenderManager();
+        EntityRenderDispatcher entityRenderDispatcher = PCMClient.minecraft.getEntityRenderDispatcher();
         quaternion2.conjugate();
         entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
-        VertexConsumerProvider.Immediate immediate = PixelsCharacterModels.minecraft.getBufferBuilders().getEntityVertexConsumers();
+        VertexConsumerProvider.Immediate immediate = PCMClient.minecraft.getBufferBuilders().getEntityVertexConsumers();
         RenderSystem.runAsFancy(() -> {
 			matrixStack2.translate(-.5, -1, -.5);
 			blockRenderManager.renderBlockAsEntity(Blocks.GRASS_BLOCK.getDefaultState(), matrixStack2, immediate, 0xF000F0, OverlayTexture.DEFAULT_UV);

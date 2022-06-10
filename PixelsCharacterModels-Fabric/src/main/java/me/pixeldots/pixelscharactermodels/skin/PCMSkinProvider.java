@@ -10,7 +10,7 @@ import lain.mods.skins.api.interfaces.ISkinProvider;
 import lain.mods.skins.impl.Shared;
 import lain.mods.skins.impl.SkinData;
 import lain.mods.skins.impl.fabric.ImageUtils;
-import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PCMClient;
 
 public class PCMSkinProvider implements ISkinProvider {
 
@@ -32,8 +32,8 @@ public class PCMSkinProvider implements ISkinProvider {
             byte[] data = null;
             
             String suffix = "";
-            if (PixelsCharacterModels.PlayerSkinList.containsKey(profile.getPlayerID())) 
-            	suffix = PixelsCharacterModels.PlayerSkinList.get(profile.getPlayerID());
+            if (PCMClient.PlayerSkinList.containsKey(profile.getPlayerID())) 
+            	suffix = PCMClient.PlayerSkinList.get(profile.getPlayerID());
 
             if (!Shared.isOfflinePlayer(profile.getPlayerID(), profile.getPlayerName()))
                 data = readFile(_dirU, "%s"+suffix+".png", profile.getPlayerID().toString().replaceAll("-", ""));

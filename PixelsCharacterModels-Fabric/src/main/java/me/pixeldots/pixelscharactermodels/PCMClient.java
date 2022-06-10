@@ -2,8 +2,10 @@ package me.pixeldots.pixelscharactermodels;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,15 +19,13 @@ import me.pixeldots.pixelscharactermodels.other.KeyBindings;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 
-public class PixelsCharacterModels implements ClientModInitializer {
+public class PCMClient implements ClientModInitializer {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger("pcm");
 	public static MinecraftClient minecraft;
 
 	public static Map<UUID, String> PlayerSkinList = new HashMap<>();
 	public static ModelPartNames EntityPartNames;
-
-	public static PCMSettings settings;
 
 	@Override
 	public void onInitializeClient() {
@@ -35,13 +35,23 @@ public class PixelsCharacterModels implements ClientModInitializer {
 		KeyBindings.registerKeyBindings();
 
 		SkinHelper.reloadSkins();
-
-		settings = PCMSettings.load(Paths.get(".", "config/PCM.json"));
 	}
 
 	public static void OpenGUI() {
-		if (settings.keybinding_opens_editor) minecraft.setScreen(new EditorGui());
-		else minecraft.setScreen(new PresetsGui());
+		LivingEntity entity = minecraft.player;
+
+		if (minecraft.player.isSneaking()) {
+			HitResult result = minecraft.crosshairTarget;
+			if (result instanceof EntityHitResult) {
+				EntityHitResult eResult = (EntityHitResult)result;
+				if (eResult.getEntity() instanceof LivingEntity) {
+					entity = (LivingEntity)eResult.getEntity();
+				}
+			}
+		}
+
+		if (PCMMain.settings.keybinding_opens_editor) minecraft.setScreen(new EditorGui(entity));
+		else minecraft.setScreen(new PresetsGui(entity));
 	}
 
 }
