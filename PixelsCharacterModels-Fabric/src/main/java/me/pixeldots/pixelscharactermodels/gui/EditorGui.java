@@ -145,6 +145,7 @@ public class EditorGui extends GuiHandler {
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
         super.render(matrices, mouseX, mouseY, delta);
+        drawColor(matrices, this.width-120, 0, this.width, 10, 0, 0, 0, 255);
     }
     @Override 
     public void close() {

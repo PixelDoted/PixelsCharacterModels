@@ -54,7 +54,28 @@ public class Node {
     }
 
     public enum NodeType {
-        PARTICLE((gui, x, y, node) -> {}, (node) -> { return "particle " + node.argsToString(); }, 7),
+        PARTICLE((gui, x, y, node) -> {
+            TextFieldWidget type = new TextFieldWidget(gui.textRendererGUI, x, y, 100, 10, Text.of(""));
+            TextFieldWidget bx = new TextFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, Text.of(""));
+            TextFieldWidget by = new TextFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, Text.of(""));
+            TextFieldWidget bz = new TextFieldWidget(gui.textRendererGUI, x+69, y+15, 30, 10, Text.of(""));
+            TextFieldWidget vx = new TextFieldWidget(gui.textRendererGUI, x, y+30, 30, 10, Text.of(""));
+            TextFieldWidget vy = new TextFieldWidget(gui.textRendererGUI, x+35, y+30, 30, 10, Text.of(""));
+            TextFieldWidget vz = new TextFieldWidget(gui.textRendererGUI, x+69, y+30, 30, 10, Text.of(""));
+
+            type.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
+            bx.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
+            by.setChangedListener((s) -> { node.args[2] = s; node.changed = true; });
+            bz.setChangedListener((s) -> { node.args[3] = s; node.changed = true; });
+            vx.setChangedListener((s) -> { node.args[4] = s; node.changed = true; });
+            vy.setChangedListener((s) -> { node.args[5] = s; node.changed = true; });
+            vz.setChangedListener((s) -> { node.args[6] = s; node.changed = true; });
+
+            type.setText(node.args[0]); bx.setText(node.args[1]); by.setText(node.args[2]); bz.setText(node.args[3]); 
+            vx.setText(node.args[4]); vy.setText(node.args[5]); vz.setText(node.args[6]);
+            gui.addTextField(type); gui.addTextField(bx); gui.addTextField(by); gui.addTextField(bz); 
+            gui.addTextField(vx); gui.addTextField(vy); gui.addTextField(vz);
+        }, (node) -> { return "particle " + node.argsToString(); }, 7),
         TRANSLATE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, 3),
         SCALE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, 3),
         ROTATE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, 3),

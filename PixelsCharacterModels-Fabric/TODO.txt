@@ -2,7 +2,6 @@
 
 - Presets
 - Animations
-- Particles
 
 - New Presets GUI
 - New Editor GUI
