@@ -26,7 +26,7 @@ public class PCMClient implements ClientModInitializer {
 
 	public static Map<UUID, String> PlayerSkinList = new HashMap<>();
 	public static ModelPartNames EntityPartNames;
-
+	
 	@Override
 	public void onInitializeClient() {
 		LOGGER.info("Hello Fabric world!");

@@ -1,8 +1,8 @@
 package me.pixeldots.pixelscharactermodels.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
@@ -25,8 +25,8 @@ import net.minecraft.util.math.Vec3f;
 
 public class GuiHandler extends Screen {
 	
-	public List<TextFieldWidget> TextFieldWidgets = Lists.newArrayList();
-	public List<ButtonWidget> buttons = Lists.newArrayList();
+	public List<TextFieldWidget> TextFieldWidgets = new ArrayList<>();
+	public List<ButtonWidget> buttons = new ArrayList<>();
 	public TextRenderer textRendererGUI;
 	
 	public GuiHandler(String title) {

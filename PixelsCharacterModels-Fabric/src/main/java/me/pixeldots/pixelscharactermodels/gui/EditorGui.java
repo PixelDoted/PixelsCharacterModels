@@ -56,15 +56,21 @@ public class EditorGui extends GuiHandler {
         entityViewScale = _entityViewScale;
     }
 
+    public void setScreen(GuiHandler gui) {
+        this.client.setScreen(gui);
+    }
+
     @Override
     public void init() {
         super.init();
         // Top Bar
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
-            this.client.setScreen(new PresetsGui(entity, this.entityViewScale));
+            setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
-            //this.client.setScreen(new EditorGui());
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {}));
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
+        }));
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
         }));
 
         // Left Panel

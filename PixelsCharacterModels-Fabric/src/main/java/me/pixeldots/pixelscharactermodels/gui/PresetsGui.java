@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.PresetHelper;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
@@ -46,17 +45,23 @@ public class PresetsGui extends GuiHandler {
         entityViewScale = _entityViewScale;
     }
 
+    public void setScreen(GuiHandler gui) {
+        path_offset = "";
+        this.client.setScreen(gui);
+    }
+
     @Override
     public void init() {
         super.init();
 
         // Top Bar
-        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
-            //this.client.setScreen(new PresetsGui());
-        }));
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {}));
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
-            path_offset = "";
-            this.client.setScreen(new EditorGui(entity, this.entityViewScale));
+            setScreen(new EditorGui(entity, this.entityViewScale));
+        }));
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
+        }));
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
         }));
 
         int presets_offset = 15;

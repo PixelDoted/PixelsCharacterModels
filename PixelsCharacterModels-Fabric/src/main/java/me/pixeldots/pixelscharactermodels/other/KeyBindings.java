@@ -12,16 +12,16 @@ import net.minecraft.client.util.InputUtil;
 public class KeyBindings {
 	
 	private static KeyBinding openGUI = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-		"key.pixelscharactermodels.openGui", // The translation key of the keybinding's name
+		"key.pixelscharactermodels.opengui", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_R, // The keycode of the key
-		"category.PixelsCharacterModels" // The translation key of the keybinding's category.
+		"category.pixelscharactermodels" // The translation key of the keybinding's category.
 	));
 	private static KeyBinding reloadKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-		"key.pixelscharactermodels.Reload", // The translation key of the keybinding's name
+		"key.pixelscharactermodels.reload", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_KP_1, // The keycode of the key
-		"category.PixelsCharacterModels" // The translation key of the keybinding's category.
+		"category.pixelscharactermodels" // The translation key of the keybinding's category.
 	));
 	
 	/*private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(

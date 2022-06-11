@@ -17,12 +17,16 @@ public class NodeSelectGui extends GuiHandler {
         entityViewScale = _entityViewScale;
     }
 
+    public void setScreen(GuiHandler gui) {
+        this.client.setScreen(gui);
+    }
+
     @Override
     public void init() {
         super.init();
 
         addButton(new ButtonWidget(5, 5, 100, 10, Text.of("Cancel"), (btn) -> {
-            this.client.setScreen(new EditorGui(entity, entityViewScale));
+            setScreen(new EditorGui(entity, entityViewScale));
         }));
 
         int row = 1, col = 0;
