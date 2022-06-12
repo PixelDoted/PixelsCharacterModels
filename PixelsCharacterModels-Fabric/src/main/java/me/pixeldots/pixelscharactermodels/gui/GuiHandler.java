@@ -8,7 +8,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -25,85 +27,73 @@ import net.minecraft.util.math.Vec3f;
 
 public class GuiHandler extends Screen {
 	
-	public List<TextFieldWidget> TextFieldWidgets = new ArrayList<>();
-	public List<ButtonWidget> buttons = new ArrayList<>();
+	public List<Drawable> gui_drawables = new ArrayList<>();
+	public List<Element> gui_elements = new ArrayList<>();
 	public TextRenderer textRendererGUI;
 	
 	public GuiHandler(String title) {
 		super(Text.of(title));
 		textRendererGUI = PCMClient.minecraft.textRenderer;
-		buttons.clear();
-		TextFieldWidgets.clear();
+		gui_drawables.clear();
+		gui_elements.clear();
 	}
 	
 	@Override
 	public void init() {
-		buttons.clear();
-		TextFieldWidgets.clear();
+		gui_drawables.clear();
+		gui_elements.clear();
 	}
 	
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.render(matrices, mouseX, mouseY, delta);
-		}
-		for (ButtonWidget widget : buttons) {
-			widget.render(matrices, mouseX, mouseY, delta);
+		for (Drawable drawable : gui_drawables) {
+			drawable.render(matrices, mouseX, mouseY, delta);
 		}
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 	
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.mouseClicked(mouseX, mouseY, button);
-		}
-		for (ButtonWidget widget : buttons) {
-			widget.mouseClicked(mouseX, mouseY, button);
+		for (Element element : gui_elements) {
+			element.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-		}
-		for (ButtonWidget widget : buttons) {
-			widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		for (Element element : gui_elements) {
+			element.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 		}
 		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 	}
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.mouseReleased(mouseX, mouseY, button);
-		}
-		for (ButtonWidget widget : buttons) {
-			widget.mouseReleased(mouseX, mouseY, button);
+		for (Element element : gui_elements) {
+			element.mouseReleased(mouseX, mouseY, button);
 		}
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
 	
 	@Override
 	public boolean charTyped(char chr, int keyCode) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.charTyped(chr, keyCode);
+		for (Element element : gui_elements) {
+			element.charTyped(chr, keyCode);
 		}
 		return super.charTyped(chr, keyCode);
 	}
 	
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.keyPressed(keyCode, scanCode, modifiers);
+		for (Element element : gui_elements) {
+			element.keyPressed(keyCode, scanCode, modifiers);
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 	
 	@Override
 	public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-		for (TextFieldWidget widget : TextFieldWidgets) {
-			widget.keyReleased(keyCode, scanCode, modifiers);
+		for (Element element : gui_elements) {
+			element.keyReleased(keyCode, scanCode, modifiers);
 		}
 		return super.keyReleased(keyCode, scanCode, modifiers);
 	}
@@ -117,22 +107,28 @@ public class GuiHandler extends Screen {
 	public void tick() {
 	}
 	
-	public TextFieldWidget addTextField(TextFieldWidget TextField) {	
-		this.TextFieldWidgets.add(TextField);
+	public TextFieldWidget addTextField(TextFieldWidget TextField) {
+		addDrawableElement(TextField);
 		return TextField;
 	}
-	
+
+	public ButtonWidget addButton(ButtonWidget button) {
+		addDrawableElement(button);
+		return button;
+	}
+
+	public <T extends Element & Drawable> T addDrawableElement(T element) {
+		this.gui_drawables.add(element);
+		this.gui_elements.add(element);
+		return element;
+	}
+
 	public void drawString(MatrixStack matrices, String text, int x, int y, int color) {
 		drawCenteredText(matrices, textRendererGUI, text, x+textRendererGUI.getWidth(text)/2, y+5, color);
 	}
 	
 	public void drawString(MatrixStack matrices, String text, int x, int y) {
 		drawCenteredText(matrices, textRendererGUI, text, x+textRendererGUI.getWidth(text)/2, y+5, 16777215);
-	}
-	
-	public ButtonWidget addButton(ButtonWidget button) {
-		buttons.add(button);
-		return button;
 	}
 
 	public void drawVerticalLine(MatrixStack matrices, int x, int y0, int y1, int r, int g, int b, int a) {

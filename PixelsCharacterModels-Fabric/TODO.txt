@@ -1,7 +1,5 @@
 
 
-- Settings GUI
-
 - Save Entity scripts to World (world/entity specific presets)
 
 - Animations
@@ -17,3 +15,4 @@
 + Save/Load Presets
 + Compile Preset to Script
 + New Presets GUI
++ Settings GUI

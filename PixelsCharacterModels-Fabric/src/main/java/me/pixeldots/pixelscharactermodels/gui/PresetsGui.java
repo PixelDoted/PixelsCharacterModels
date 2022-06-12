@@ -11,9 +11,9 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -24,7 +24,7 @@ public class PresetsGui extends GuiHandler {
     private int yscroll = 0;
 
     public LivingEntity entity;
-    public IAnimalModelMixin model;
+    public EntityModel<?> model;
     public UUID uuid;
     public float entityViewScale = 75;
 
@@ -36,7 +36,7 @@ public class PresetsGui extends GuiHandler {
     public PresetsGui(LivingEntity _entity) {
         super("Presets");
         entity = _entity;
-        model = (IAnimalModelMixin)PlatformUtils.getModel(_entity);
+        model = PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
     }
 
@@ -62,21 +62,20 @@ public class PresetsGui extends GuiHandler {
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
+            setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
 
         int presets_offset = 15;
         if (PCMMain.settings.preview_preset) {
             presets_offset = 35;
             addButton(new ButtonWidget(5, 15, 110, 10, Text.of("Select"), (btn) -> {
-                selectPreset(entity, model, new File(selectedPreset), true);
+                if (selectedPreset.equals("default")) defaultPreset(true);
+                else selectPreset(new File(selectedPreset), true);
             }));
         }
 
         ButtonWidget default_preset = addButton(new ButtonWidget(5, presets_offset+yscroll, 110, 10, Text.of("default"), (btn) -> {
-            ClientHelper.reset_entity(uuid);
-            ScaleTypes.BASE.getScaleData(entity).setScale(1);
-            SkinHelper.setSkinSuffix(uuid, "");
-            SkinHelper.reloadSkins();
+            defaultPreset(false);
         }));
         presetButtons.add(default_preset);
 
@@ -87,7 +86,7 @@ public class PresetsGui extends GuiHandler {
 
             final boolean is_preset = file.isDirectory() && containsRoot(file.listFiles());
             ButtonWidget widget = addButton(new ButtonWidget(15, presets_offset+(i*10)+yscroll, 100, 10, Text.of((is_preset ? "" : "~") + file.getName()), (btn) -> {
-                if (is_preset) selectPreset(entity, model, file, false);
+                if (is_preset) selectPreset(file, false);
                 else path_offset += "/" + file.getName();
             }));
             ButtonWidget save_widget = addButton(new ButtonWidget(5, presets_offset+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
@@ -166,10 +165,21 @@ public class PresetsGui extends GuiHandler {
         return false;
     }
 
-    public void selectPreset(LivingEntity entity, IAnimalModelMixin model, File file, boolean force_load) {
+    public void selectPreset(File file, boolean force_load) {
         if (!force_load && PCMMain.settings.preview_preset) {
             selectedPreset = file.getAbsolutePath();
         } else PresetHelper.read_preset(file, entity, model);
+    }
+
+    public void defaultPreset(boolean force_load) {
+        if (!force_load && PCMMain.settings.preview_preset) {
+            selectedPreset = "default";
+        } else {
+            ClientHelper.reset_entity(uuid);
+            ScaleTypes.BASE.getScaleData(entity).setScale(1);
+            SkinHelper.setSkinSuffix(uuid, "");
+            SkinHelper.reloadSkins();
+        }
     }
 
 }

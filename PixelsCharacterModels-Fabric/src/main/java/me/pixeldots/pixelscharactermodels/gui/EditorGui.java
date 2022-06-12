@@ -71,6 +71,7 @@ public class EditorGui extends GuiHandler {
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
+            setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
 
         // Left Panel
