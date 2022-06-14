@@ -37,7 +37,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "maven.modrinth:scripted-models:${project.scripedmodels_version}"
+	modImplementation files("./scripted-models-0.5.1.jar")//"maven.modrinth:scripted-models:${project.scripedmodels_version}"
 	modImplementation "com.github.Virtuoel:Pehkui:${pehkui_version}"
 	modImplementation "curse.maven:offlineskins-fabric-382582:${offlineskins_fileid}"
 	//mappings fileTree(dir: "mapping", include: "**.jar")

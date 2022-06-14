@@ -140,6 +140,15 @@ public class GuiHandler extends Screen {
 		this.drawVerticalLine(matrices, x, y0, y1, argb);
 	}
 
+	public void drawHorizontalLine(MatrixStack matrices, int x0, int x1, int y, int r, int g, int b, int a) {
+		int argb = a;
+		argb = (argb << 8) + r;
+		argb = (argb << 8) + g;
+		argb = (argb << 8) + b;
+
+		this.drawHorizontalLine(matrices, x0, x1, y, argb);
+	}
+
 	public void drawColor(MatrixStack matrices, int x, int y, int width, int height, int r, int g, int b, int a) {
 		int x0 = x, x1 = x + width;
 		int y0 = y, y1 = y + height;

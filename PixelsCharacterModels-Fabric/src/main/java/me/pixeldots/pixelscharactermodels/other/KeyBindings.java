@@ -1,13 +1,19 @@
 package me.pixeldots.pixelscharactermodels.other;
 
+import java.nio.file.Paths;
+
 import org.lwjgl.glfw.GLFW;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
+import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
+import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.LivingEntity;
 
 public class KeyBindings {
 	
@@ -24,9 +30,9 @@ public class KeyBindings {
 		"category.pixelscharactermodels" // The translation key of the keybinding's category.
 	));
 	
-	/*private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(
+	private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(
 			new KeyBinding("key.pixelscharactermodels.anim1", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_1, "category.PixelsCharacterModels"));
-	private static KeyBinding Anim2 = KeyBindingHelper.registerKeyBinding(
+	/*private static KeyBinding Anim2 = KeyBindingHelper.registerKeyBinding(
 			new KeyBinding("key.pixelscharactermodels.anim2", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_2, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim3 = KeyBindingHelper.registerKeyBinding(
 			new KeyBinding("key.pixelscharactermodels.anim3", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_3, "category.PixelsCharacterModels"));
@@ -46,12 +52,19 @@ public class KeyBindings {
 		    /*if (KeyBindings.reloadKey.wasPressed()) {
             	PixelsCharacterModels.client.ReloadSkins();
             	PixelsCharacterModelsMain.clientHandler.requestModelData();
-            }
+            }*/
 		    
 		    if (Anim1.wasPressed()) {
-		    	setAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.localData.AnimationOneisFrames);
+				LivingEntity entity = client.player;
+				EntityModel<?> model = PlatformUtils.getModel(entity);
+				String current = AnimationHelper.get_current(entity, model);
+				if (current.equals("ScriptedModels.json"))
+					AnimationHelper.stop(entity, model);
+				else
+					AnimationHelper.play(Paths.get(".", "PCM/Animations/ScriptedModels.json").toFile(), entity, model);
+		    	//setAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.localData.AnimationOneisFrames);
 		    }
-		    if (Anim2.wasPressed()) {
+		    /*if (Anim2.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDTwo, PixelsCharacterModels.localData.AnimationTwoisFrames);
 		    }
 		    if (Anim3.wasPressed()) {

@@ -29,7 +29,9 @@ public class NodeSelectGui extends GuiHandler {
         super.init();
 
         addButton(new ButtonWidget(5, 5, 100, 10, Text.of("Cancel"), (btn) -> {
-            setScreen(new EditorGui(entity, entityViewScale));
+            if (is_animation)
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
+            else this.client.setScreen(new EditorGui(entity, entityViewScale));
         }));
 
         int row = 1, col = 0;

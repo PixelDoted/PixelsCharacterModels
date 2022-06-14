@@ -8,6 +8,7 @@ import java.util.Map;
 public class AnimationFile {
     
     public boolean loop = false;
+    public int fps = 60;
     public List<Frame> frames = new ArrayList<>();
 
     public AnimationFile() {
@@ -17,7 +18,7 @@ public class AnimationFile {
     public class Frame {
         public String script = "";
         public Map<String, String> parts = new HashMap<>();
-        public long time = 0;
+        public int frame = 0;
     }
 
 }

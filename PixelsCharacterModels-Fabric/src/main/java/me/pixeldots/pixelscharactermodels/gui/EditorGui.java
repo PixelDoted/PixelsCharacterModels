@@ -294,6 +294,8 @@ public class EditorGui extends GuiHandler {
                 ignore_lines = Math.round(Float.parseFloat(args[1]));
 
                 String new_line = args[2];
+                if (new_line.equalsIgnoreCase("animation")) continue;
+                
                 for (int i = 3; i < args.length; i++) {
                     new_line += " " + args[i];
                 }

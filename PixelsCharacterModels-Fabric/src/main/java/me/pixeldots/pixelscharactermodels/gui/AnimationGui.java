@@ -106,6 +106,8 @@ public class AnimationGui extends GuiHandler {
 
         // Right Panel
         listModelParts(this.width-115, 15+yscroll, entity, model);
+
+        // TODO: Bottom Panel
     }
 
     @Override
@@ -129,7 +131,7 @@ public class AnimationGui extends GuiHandler {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         float entityMouseX = (float)(this.width/2);
-        float entityMouseY = (float)(this.height/2+37-125);
+        float entityMouseY = (float)(this.height/2-128);
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX -= mouseX;
@@ -141,11 +143,15 @@ public class AnimationGui extends GuiHandler {
 
         if (entity != null) {
             if (PCMMain.settings.show_block_under_player_ui) {
-                drawEntityOnBlock(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
+                drawEntityOnBlock(this.width/2, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity);
             } else {
-                drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
+                drawEntity(this.width/2, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity);
             }
         }
+
+        drawColor(matrices, 120, this.height-80, this.width-240, 80, 0, 4, 17, 222);
+        drawHorizontalLine(matrices, 120, this.width-120, this.height-80, 0, 0, 0, 255);
+        drawHorizontalLine(matrices, 120, this.width-120, this.height-79, 0, 0, 0, 255);
 
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
