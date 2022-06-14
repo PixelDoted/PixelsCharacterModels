@@ -1,36 +1,32 @@
 package me.pixeldots.pixelscharactermodels.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
+import me.pixeldots.pixelscharactermodels.files.AnimationFile;
+import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
-import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
-import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
-import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleTypes;
 
-public class EditorGui extends GuiHandler {
+public class AnimationGui extends GuiHandler {
 
-    public TextFieldWidget PehkuiScale, SkinSuffix;
-
+    public static AnimationFile animation = new AnimationFile();
     public static int selectedPart = -1;
-    public static ModelPart selectedPartModel = null;
+    public static String selectedPartName = "";
     public static int selectedNode = -1;
     public static List<Node> nodes = new ArrayList<>();
     public static int yscroll = 0;
@@ -40,18 +36,19 @@ public class EditorGui extends GuiHandler {
     public UUID uuid;
     public float stored_pehkuiscale = 1;
     public float entityViewScale = 75;
+    public String path_offset = "";
 
     public LivingEntity entity;
     public IAnimalModelMixin model;
     
-    public EditorGui(LivingEntity _entity) {
-        super("Editor");
+    public AnimationGui(LivingEntity _entity) {
+        super("Animation");
         entity = _entity;
         model = (IAnimalModelMixin)PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
     }
 
-    public EditorGui(LivingEntity _entity, float _entityViewScale) {
+    public AnimationGui(LivingEntity _entity, float _entityViewScale) {
         this(_entity);
         entityViewScale = _entityViewScale;
     }
@@ -67,42 +64,44 @@ public class EditorGui extends GuiHandler {
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
             setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {}));
-        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
-            setScreen(new AnimationGui(entity, this.entityViewScale));
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
+            setScreen(new EditorGui(entity, entityViewScale));
         }));
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {}));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
 
         // Left Panel
-        addButton(new ButtonWidget(5, 15, 100, 10, Text.of("compile"), (btn) -> {
-            compile_nodes(uuid, selectedPartModel, true);
-        }));
-
         if (selectedNode == -1) {
-            // Pehkui Scale
-            PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 30, 100, 10, Text.of("")));
-            SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 45, 100, 10, Text.of("")));
+            File[] files = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Animations" + path_offset).listFiles();
+            for (int i = 0; i < files.length; i++) {
+                final File file = files[i];
 
-            ScaleData basedata = ScaleTypes.BASE.getScaleData(entity);
-            stored_pehkuiscale = basedata.getBaseScale();
-            PehkuiScale.setText(String.valueOf(stored_pehkuiscale));
+                ButtonWidget widget = addButton(new ButtonWidget(15, 15+(i*10)+yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
+                    if (file.isDirectory()) path_offset += "/" + file.getName();
+                    else selectAnimation(file);
+                }));
+                ButtonWidget save_widget = addButton(new ButtonWidget(5, 15+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
+                    boolean result = AnimationHelper.write(file, animation);
+                    if (result == false)
+                        this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be saved"), false);
+                }));
 
-            PehkuiScale.setChangedListener((v) -> {
-                if (PostfixOperation.isNumeric(v)) {
-                    stored_pehkuiscale = Float.parseFloat(v);
-                    ScaleTypes.BASE.getScaleData(entity).setScale(stored_pehkuiscale);
-                }
-            });
+                widget.visible = !(widget.y < 10);
+                addButton(widget); addButton(save_widget);
+                //presetButtons.add(widget); presetButtons.add(save_widget);
+            }
 
-            if (PCMClient.PlayerSkinList.containsKey(uuid))
-                SkinSuffix.setText(PCMClient.PlayerSkinList.get(uuid));
-            
-            SkinSuffix.setChangedListener((v) -> {
-                SkinHelper.setSkinSuffix(uuid, v);
-                SkinHelper.reloadSkins();
-            });
+            TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 5, this.height-30, 110, 10, Text.of("")));
+            addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("create"), (btn) -> {
+                File file = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Animations" + path_offset + "/" + createname.getText() + ".json");
+                boolean result = AnimationHelper.write(file, animation);
+                if (result == false)
+                    this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be created"), false);
+
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
+            }));
         }
 
         // Right Panel
@@ -162,14 +161,14 @@ public class EditorGui extends GuiHandler {
     }
     @Override 
     public void close() {
-        compile_nodes(uuid, selectedPartModel, false);
+        compile_nodes(uuid, false);
 
         yscroll = 0;
         selectedPart = -1;
         selectedNode = -1;
-        selectedPartModel = null;
+        selectedPartName = null;
         nodes.clear();
-        EditorGui.isDragging = false;
+        AnimationGui.isDragging = false;
 
         super.close(); 
     }
@@ -179,25 +178,26 @@ public class EditorGui extends GuiHandler {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
-                selectedPartModel = null;
-                compile_nodes(uuid, null, false);
+                selectedPartName = null;
+                compile_nodes(uuid, false);
                 nodes.clear();
             } else {
                 selectedPart = -2;
-                selectedPartModel = null;
+                selectedPartName = null;
                 decompile_script(null);
             }
 
-            this.client.setScreen(new EditorGui(entity, entityViewScale));
+            this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
 
         int row = 1 + showNodes(-2, 0, x, y);
         int index = 100;
         for (ModelPart part : model.getHeadParts()) {
             boolean isSelected = selectedPart == index;
-            Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getHeadName(entity, index-100));
+            String partName = ModelPartNames.getHeadName(entity, index-100);
+            Text name = Text.of((isSelected ? "- " : "+ ") + partName);
 
-            createSelectableModelPart(part, x, y, row, index, name);
+            createSelectableModelPart(partName, x, y, row, index, name);
             row += showNodes(index, row, x, y);
 
             index++;
@@ -207,9 +207,10 @@ public class EditorGui extends GuiHandler {
         index = 0;
         for (ModelPart part : model.getBodyParts()) {
             boolean isSelected = selectedPart == index;
-            Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getBodyName(entity, index));
+            String partName = ModelPartNames.getBodyName(entity, index);
+            Text name = Text.of((isSelected ? "- " : "+ ") + partName);
 
-            createSelectableModelPart(part, x, y, row, index, name);
+            createSelectableModelPart(partName, x, y, row, index, name);
             row += showNodes(index, row, x, y);
 
             index++;
@@ -230,16 +231,16 @@ public class EditorGui extends GuiHandler {
             addScrollable(new ButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
-                if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
+                if (nodes.size() == 0) compile_nodes(uuid, true);
                 else nodes.get(0).changed = true;
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
 
             addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }, (dragged, scroll) -> {
                 int d = -(int)Math.round(scroll/15d);
                 int move = dragged + d;
@@ -248,39 +249,44 @@ public class EditorGui extends GuiHandler {
                 nodes.add(move, nodes.remove(num));
                 nodes.get(move).changed = true;
                 
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
         }
 
         addScrollable(new ButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
-            this.client.setScreen(new NodeSelectGui(entity, entityViewScale, false));
+            this.client.setScreen(new NodeSelectGui(entity, entityViewScale, true));
         }));
 
         return nodes.size()+1;
     }
 
-    public void createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
+    public void createSelectableModelPart(final String partName, int x, int y, int row, final int index, Text name) {
         addScrollable(new AButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
                 selectedPart = -1;
-                selectedPartModel = null;
-                compile_nodes(uuid, part, false);
+                selectedPartName = null;
+                compile_nodes(uuid, false);
                 nodes.clear();
             } else {
                 selectedPart = index;
-                selectedPartModel = part;
-                decompile_script(part);
+                selectedPartName = partName.toLowerCase();
+                decompile_script(selectedPartName);
             }
 
-            this.client.setScreen(new EditorGui(entity, entityViewScale));
+            this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
     }
 
-    public void decompile_script(ModelPart part) {
+    public void decompile_script(String part_name) {
         nodes.clear();
 
-        String[] s = ClientHelper.decompile_script(uuid, part).split("\n");
+        String[] s;
+        AnimationFile.Frame frame = animation.frames.get(0);
+        if (frame.parts.containsKey(part_name))
+            s = frame.parts.get(part_name).split("\n");
+        else s = frame.script.split("\n");
+
         int ignore_lines = 0;
         for (String line : s) {
             if (line.trim().equals("")) continue;
@@ -304,7 +310,7 @@ public class EditorGui extends GuiHandler {
         }
     }
 
-    public void compile_nodes(UUID uuid, ModelPart part, boolean force_change) {
+    public void compile_nodes(UUID uuid, boolean force_change) {
         String script = "";
         boolean changed = force_change;
         for (Node node : nodes) {
@@ -313,7 +319,12 @@ public class EditorGui extends GuiHandler {
         }
 
         if (changed == false) return;
-        ClientHelper.change_script(uuid, part, selectedPart, script.trim());
+
+        String part_name = selectedPartName;
+        AnimationFile.Frame frame = animation.frames.get(0);
+        if (frame.parts.containsKey(part_name))
+            frame.parts.put(part_name, script);
+        else frame.script = script;
     }
 
     public ButtonWidget addScrollable(ButtonWidget widget) {
@@ -324,6 +335,14 @@ public class EditorGui extends GuiHandler {
     public Node toNode(String s) {
         String[] args = s.split(" ");
         return new Node(args[0], args, 1);
+    }
+
+    public void selectAnimation(File file) {
+        AnimationFile anim = AnimationHelper.read(file);
+        if (anim == null)
+            this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be loaded"), false);
+
+        animation = anim;
     }
     
 }

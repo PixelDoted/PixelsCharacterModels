@@ -11,10 +11,13 @@ public class NodeSelectGui extends GuiHandler {
     public LivingEntity entity;
     public float entityViewScale = 75;
 
-    public NodeSelectGui(LivingEntity _entity, float _entityViewScale) {
+    public boolean is_animation = false;
+
+    public NodeSelectGui(LivingEntity _entity, float _entityViewScale, boolean _isanimation) {
         super("Node Selector");
         entity = _entity;
         entityViewScale = _entityViewScale;
+        this.is_animation = _isanimation;
     }
 
     public void setScreen(GuiHandler gui) {
@@ -39,8 +42,13 @@ public class NodeSelectGui extends GuiHandler {
             addButton(new ButtonWidget(5+(col*105), 10+(row*15), 100, 10, Text.of(t.name().toLowerCase()), (btn) -> {
                 Node node = new Node(t);
                 node.changed = true;
-                EditorGui.nodes.add(node);
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                if (is_animation) {
+                    AnimationGui.nodes.add(node);
+                    this.client.setScreen(new AnimationGui(entity, entityViewScale));
+                } else {
+                    EditorGui.nodes.add(node);
+                    this.client.setScreen(new EditorGui(entity, entityViewScale));
+                }
             }));
 
             row++;

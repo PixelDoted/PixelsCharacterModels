@@ -55,6 +55,7 @@ public class SettingsGui extends GuiHandler {
             setScreen(new EditorGui(entity, this.entityViewScale));
         }));
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
+            setScreen(new AnimationGui(entity, this.entityViewScale));
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {}));
 

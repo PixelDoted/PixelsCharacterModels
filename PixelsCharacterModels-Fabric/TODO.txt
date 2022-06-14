@@ -2,8 +2,13 @@
 
 - Save Entity scripts to World (world/entity specific presets)
 
+- Static Animations
 - Animations
 - New Animation GUI
+
+- Pehkui Scale Networking
+- Animation Networking
+- Skin Suffix Networking
 
 > old
 + Mesh to Vertices and Back

@@ -8,3 +8,9 @@ nodes:
     cube { u, v, u-width, v-height }
     mesh { meshid, u, v u-width, v-height }
     cancel
+
+animation:
+    translate
+    rotate
+    scale
+    angle
