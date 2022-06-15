@@ -3,6 +3,7 @@
 - Save Entity scripts to World (world/entity specific presets)
 
 - Animations
+- Frame editor Panel
 - New Animation GUI
 
 - Pehkui Scale Networking

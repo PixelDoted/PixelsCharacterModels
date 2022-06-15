@@ -108,6 +108,7 @@ public class AnimationGui extends GuiHandler {
         listModelParts(this.width-115, 15+yscroll, entity, model);
 
         // TODO: Bottom Panel
+        
     }
 
     @Override
