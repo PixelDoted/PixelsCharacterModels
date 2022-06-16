@@ -14,9 +14,10 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 
 public class PCMCapeProvider implements ISkinProvider {
 
-    public File _dirN;
-    public File _dirU;
+    private static File _dirN;
+    private static File _dirU;
 
+    public PCMCapeProvider() {}
     public PCMCapeProvider(Path workDir) {
         _dirN = new File(workDir.toFile(), "capes");
         _dirN.mkdirs();

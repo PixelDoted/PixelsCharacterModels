@@ -13,8 +13,10 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import me.pixeldots.pixelscharactermodels.files.AnimationPlayer;
 import me.pixeldots.pixelscharactermodels.gui.EditorGui;
 import me.pixeldots.pixelscharactermodels.gui.PresetsGui;
+import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.KeyBindings;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -25,16 +27,18 @@ public class PCMClient implements ClientModInitializer {
 	public static MinecraftClient minecraft;
 
 	public static Map<UUID, String> PlayerSkinList = new HashMap<>();
+	public static Map<UUID, AnimationPlayer> EntityAnimationList = new HashMap<>();
 	public static ModelPartNames EntityPartNames;
 	
 	@Override
 	public void onInitializeClient() {
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("Pixel's Character Models Version 2 Initialized");
 		minecraft = MinecraftClient.getInstance();
 		EntityPartNames = new ModelPartNames();
 		KeyBindings.registerKeyBindings();
 
-		SkinHelper.reloadSkins();
+		SkinHelper.registerProviders(false);
+		ClientNetwork.register();
 	}
 
 	public static void OpenGUI() {

@@ -9,6 +9,7 @@ import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
+import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -67,7 +68,7 @@ public class EditorGui extends GuiHandler {
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
             setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {}));
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {})).active = false;
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
             setScreen(new AnimationGui(entity, this.entityViewScale));
         }));
@@ -92,7 +93,7 @@ public class EditorGui extends GuiHandler {
             PehkuiScale.setChangedListener((v) -> {
                 if (PostfixOperation.isNumeric(v)) {
                     stored_pehkuiscale = Float.parseFloat(v);
-                    ScaleTypes.BASE.getScaleData(entity).setScale(stored_pehkuiscale);
+                    ClientNetwork.send_pehkui_scale(entity, stored_pehkuiscale);
                 }
             });
 

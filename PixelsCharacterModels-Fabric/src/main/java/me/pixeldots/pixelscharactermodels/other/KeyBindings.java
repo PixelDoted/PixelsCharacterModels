@@ -59,7 +59,7 @@ public class KeyBindings {
 				EntityModel<?> model = PlatformUtils.getModel(entity);
 				String current = AnimationHelper.get_current(entity, model);
 				if (current.equals("ScriptedModels.json"))
-					AnimationHelper.stop(entity, model);
+					AnimationHelper.stop(entity, model, true);
 				else
 					AnimationHelper.play(Paths.get(".", "PCM/Animations/ScriptedModels.json").toFile(), entity, model);
 		    	//setAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.localData.AnimationOneisFrames);

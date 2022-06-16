@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "AnimalModelMixin",
+    "IMinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

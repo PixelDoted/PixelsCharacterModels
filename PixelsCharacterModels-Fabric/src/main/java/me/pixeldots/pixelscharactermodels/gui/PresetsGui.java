@@ -8,6 +8,7 @@ import java.util.UUID;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.PresetHelper;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
+import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
@@ -17,7 +18,6 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import virtuoel.pehkui.api.ScaleTypes;
 
 public class PresetsGui extends GuiHandler {
 
@@ -55,7 +55,7 @@ public class PresetsGui extends GuiHandler {
         super.init();
 
         // Top Bar
-        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {}));
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {})).active = false;
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
             setScreen(new EditorGui(entity, this.entityViewScale));
         }));
@@ -177,7 +177,9 @@ public class PresetsGui extends GuiHandler {
             selectedPreset = "default";
         } else {
             ClientHelper.reset_entity(uuid);
-            ScaleTypes.BASE.getScaleData(entity).setScale(1);
+
+            ClientNetwork.send_pehkui_scale(entity, 1);
+
             SkinHelper.setSkinSuffix(uuid, "");
             SkinHelper.reloadSkins();
         }

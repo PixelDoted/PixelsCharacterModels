@@ -8,8 +8,12 @@ import java.util.Map;
 public class AnimationFile {
     
     public boolean loop = false;
-    public int fps = 60;
+    public float framerate = 60;
     public List<Frame> frames = new ArrayList<>();
+
+    public float getFPSDifference(float fps) {
+        return 1f/(fps/framerate);
+    }
 
     public AnimationFile() {
         frames.add(new Frame());
@@ -18,7 +22,7 @@ public class AnimationFile {
     public class Frame {
         public String script = "";
         public Map<String, String> parts = new HashMap<>();
-        public int frame = 0;
+        public float run_frame = 0;
     }
 
 }

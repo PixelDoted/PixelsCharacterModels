@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.ToggleWidget;
+import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
+import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -57,7 +60,7 @@ public class SettingsGui extends GuiHandler {
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
             setScreen(new AnimationGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {}));
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {})).active = false;
 
 
         addDrawableElement(new ToggleWidget(5, 15, 110, 10, "Show block under Player", PCMMain.settings.show_block_under_player_ui, (val) -> {
@@ -72,11 +75,17 @@ public class SettingsGui extends GuiHandler {
         addDrawableElement(new ToggleWidget(5, 60, 110, 10, "Preview Preset", PCMMain.settings.preview_preset, (val) -> {
             PCMMain.settings.preview_preset = val;
         }));
+
+        addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("Clear Entity Data"), (btn) -> {
+            SkinHelper.clearSkins();
+            PCMClient.EntityAnimationList.clear();
+            ScriptedModels.EntityScript.clear();
+        }));
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (mouseX >= 120 && mouseX < this.width) {
+        if (mouseX >= 240 && mouseX < this.width) {
             entityViewScale += amount*10;
             if (entityViewScale < 1) entityViewScale = 1;
         }
@@ -85,7 +94,7 @@ public class SettingsGui extends GuiHandler {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = (float)(this.width/2);
+        float entityMouseX = (float)(this.width/2)+120;
         float entityMouseY = (float)(this.height/2+37-125);
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
@@ -98,15 +107,15 @@ public class SettingsGui extends GuiHandler {
 
         if (entity != null) {
             if (PCMMain.settings.show_block_under_player_ui) {
-                drawEntityOnBlock(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
+                drawEntityOnBlock(this.width/2+120, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
             } else {
-                drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
+                drawEntity(this.width/2+120, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
             }
         }
 
-        drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
-        drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
-        drawVerticalLine(matrices, 119, -1, this.height, 0, 0, 0, 255);
+        drawColor(matrices, 0, 0, 240, this.height, 0, 4, 17, 222);
+        drawVerticalLine(matrices, 240, -1, this.height, 0, 0, 0, 255);
+        drawVerticalLine(matrices, 239, -1, this.height, 0, 0, 0, 255);
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
         super.render(matrices, mouseX, mouseY, delta);

@@ -11,6 +11,7 @@ import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.NumberFieldWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
@@ -25,6 +26,8 @@ import net.minecraft.text.Text;
 public class AnimationGui extends GuiHandler {
 
     public static AnimationFile animation = new AnimationFile();
+    public static File animation_file;
+
     public static int selectedPart = -1;
     public static String selectedPartName = "";
     public static int selectedNode = -1;
@@ -67,7 +70,7 @@ public class AnimationGui extends GuiHandler {
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
             setScreen(new EditorGui(entity, entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {}));
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {})).active = false;
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
@@ -89,7 +92,8 @@ public class AnimationGui extends GuiHandler {
                 }));
 
                 widget.visible = !(widget.y < 10);
-                addButton(widget); addButton(save_widget);
+                save_widget.visible = !(save_widget.y < 10);
+                //addButton(widget); addButton(save_widget);
                 //presetButtons.add(widget); presetButtons.add(save_widget);
             }
 
@@ -100,15 +104,23 @@ public class AnimationGui extends GuiHandler {
                 if (result == false)
                     this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be created"), false);
 
+                animation_file = file;
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
+            }));
+        } else {
+            addButton(new ButtonWidget(5, 15+yscroll, 110, 10, Text.of("Save"), (btn) -> {
+                boolean result = AnimationHelper.write(animation_file, animation);
+                if (result == false)
+                    this.client.player.sendMessage(Text.of("File \"" + animation_file.getAbsolutePath() + "\" could not be saved"), false);
             }));
         }
 
         // Right Panel
         listModelParts(this.width-115, 15+yscroll, entity, model);
 
-        // TODO: Bottom Panel
-        
+        // Bottom Panel
+        NumberFieldWidget frame_index = new NumberFieldWidget(textRenderer, 125, this.height-75, 100, 20, 0, false); addTextField(frame_index);
+        NumberFieldWidget frame_count = new NumberFieldWidget(textRenderer, 125, this.height-50, 100, 20, 0, false); addTextField(frame_count);
     }
 
     @Override
@@ -121,7 +133,7 @@ public class AnimationGui extends GuiHandler {
                     widget.y += amount*10;
                 }
             }
-        } else if (mouseX >= 120 && mouseX < this.width-120) {
+        } else if (mouseX >= 120 && mouseX < this.width-120 && mouseY < this.height-80) {
             entityViewScale += amount*10;
             if (entityViewScale < 1) entityViewScale = 1;
         }
@@ -176,6 +188,9 @@ public class AnimationGui extends GuiHandler {
         selectedPartName = null;
         nodes.clear();
         AnimationGui.isDragging = false;
+
+        animation = null;
+        animation_file = null;
 
         super.close(); 
     }
@@ -350,6 +365,7 @@ public class AnimationGui extends GuiHandler {
             this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be loaded"), false);
 
         animation = anim;
+        animation_file = file;
     }
     
 }

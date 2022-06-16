@@ -10,6 +10,7 @@ import java.io.IOException;
 import org.spongepowered.include.com.google.gson.Gson;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
+import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames.EntityParts;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -25,7 +26,7 @@ public class PresetHelper {
     
     // Writing Preset
     public static void write_preset(File file, LivingEntity entity, EntityModel<?> model) {
-        file.mkdir(); // create preset folder
+        file.mkdirs(); // create preset folder
 
         // add settings to the preset folder
         PresetSettings settings = new PresetSettings();
@@ -86,6 +87,7 @@ public class PresetHelper {
 
     // Reading Preset
     public static void read_preset(File folder, LivingEntity entity, EntityModel<?> model) {
+        folder.mkdirs();
         if (model == null) model = PlatformUtils.getModel(entity);
         ClientHelper.reset_entity(entity.getUuid());
         
@@ -114,7 +116,7 @@ public class PresetHelper {
             reader = new FileReader(file);
             PresetSettings settings = gson.fromJson(reader, PresetSettings.class);
             
-            ScaleTypes.BASE.getScaleData(entity).setScale(settings.pehkui_scale);
+            ClientNetwork.send_pehkui_scale(entity, settings.pehkui_scale);
 
             SkinHelper.setSkinSuffix(entity.getUuid(), settings.skin_suffix);
             SkinHelper.reloadSkins();

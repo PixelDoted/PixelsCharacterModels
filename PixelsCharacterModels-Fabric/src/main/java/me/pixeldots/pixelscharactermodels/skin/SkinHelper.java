@@ -8,16 +8,30 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 
 public class SkinHelper {
     
-    public static void reloadSkins() {
+    public static void registerProviders(boolean reload) {
         SkinProviderAPI.SKIN.clearProviders();
         SkinProviderAPI.CAPE.clearProviders();
         
-        SkinProviderAPI.SKIN.registerProvider(new PCMSkinProvider(Paths.get(".", "PCM")));
-        SkinProviderAPI.CAPE.registerProvider(new PCMCapeProvider(Paths.get(".", "PCM")));
+        if (!reload) {
+            SkinProviderAPI.SKIN.registerProvider(new PCMSkinProvider(Paths.get(".", "PCM")));
+            SkinProviderAPI.CAPE.registerProvider(new PCMCapeProvider(Paths.get(".", "PCM")));
+        } else {
+            SkinProviderAPI.SKIN.registerProvider(new PCMSkinProvider());
+            SkinProviderAPI.CAPE.registerProvider(new PCMCapeProvider());
+        }
+    }
+        
+    public static void reloadSkins() {
+        registerProviders(true);
     }
 
     public static void setSkinSuffix(UUID uuid, String suffix) {
         PCMClient.PlayerSkinList.put(uuid, suffix);
+    }
+
+    public static void clearSkins() {
+        PCMClient.PlayerSkinList.clear();
+        reloadSkins();
     }
 
 }

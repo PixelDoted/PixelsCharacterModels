@@ -67,6 +67,13 @@ public class GuiHandler extends Screen {
 		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 	}
 	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+		for (Element element : gui_elements) {
+			element.mouseScrolled(mouseX, mouseY, amount);
+		}
+		return super.mouseScrolled(mouseX, mouseY, amount);
+	}
+	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
 		for (Element element : gui_elements) {
 			element.mouseReleased(mouseX, mouseY, button);

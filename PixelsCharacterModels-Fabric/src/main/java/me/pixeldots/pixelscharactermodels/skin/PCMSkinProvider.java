@@ -14,9 +14,10 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 
 public class PCMSkinProvider implements ISkinProvider {
 
-    public File _dirN;
-    public File _dirU;
+    private static File _dirN;
+    private static File _dirU;
 
+    public PCMSkinProvider() {}
     public PCMSkinProvider(Path workDir) {
         _dirN = new File(workDir.toFile(), "skins");
         _dirN.mkdirs();

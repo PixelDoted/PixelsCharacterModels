@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import me.pixeldots.pixelscharactermodels.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
 
 public class PCMMain implements ModInitializer {
@@ -16,6 +17,7 @@ public class PCMMain implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		settings = PCMSettings.load(Paths.get(".", "config/PCM.json"));
+		ServerNetwork.register();
 	}
 
 }

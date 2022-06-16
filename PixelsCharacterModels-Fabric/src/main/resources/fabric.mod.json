@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Pixel's Character Models",
-  "description": "Pixel's Character Models + Scripted Models",
+  "description": "Customize your Player",
   "authors": [
     "PixelDots"
   ],
@@ -13,7 +13,7 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "CC0-1.0",
+  "license": "LGPL-3",
   "icon": "assets/pcm/icon.png",
 
   "environment": "*",
@@ -31,6 +31,9 @@
     "java": ">=17"
   },
   "suggests": {
-    "another-mod": "*"
+    "scriptedmodels": "*",
+    "pehkui": "*",
+    "offlineskins": "*",
+    "modmenu": "*"
   }
 }
