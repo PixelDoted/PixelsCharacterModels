@@ -21,10 +21,15 @@ import virtuoel.pehkui.api.ScaleTypes;
 
 public class ClientNetwork {
 
+    public static Identifier receive_skinsuffix = new Identifier("receive_skinsuffix");
     public static Identifier receive_animation = new Identifier("receive_animation");
 
     @Environment(EnvType.CLIENT)
     public static void register() {
+        ClientPlayNetworking.registerGlobalReceiver(receive_skinsuffix, (client, handler, buf, sender) -> {
+            PCMClient.PlayerSkinList.put(buf.readUuid(), buf.readString());
+        });
+
         ClientPlayNetworking.registerGlobalReceiver(receive_animation, (client, handler, buf, sender) -> {
             UUID uuid = buf.readUuid();
 
@@ -69,6 +74,15 @@ public class ClientNetwork {
             buf.writeString(name);
         }
         ClientPlayNetworking.send(ServerNetwork.animation, buf);
+    }
+
+    // sends skin suffix data to the server
+    @Environment(EnvType.CLIENT)
+    public static void send_skin_suffix(UUID uuid, String suffix) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        buf.writeString(suffix);
+        ClientPlayNetworking.send(ServerNetwork.skin_suffix, buf);
     }
 
 }

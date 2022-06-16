@@ -45,8 +45,8 @@ public class MeshReader {
 
     // get file extension from file name
     public static String getFileExtension(String name) {
-        String[] s = name.split(".");
-        return s[s.length-1].toLowerCase();
+        String[] s = name.split("\\.");
+        return s.length == 0 ? name : s[s.length-1].toLowerCase();
     }
 
     public static class Mesh {

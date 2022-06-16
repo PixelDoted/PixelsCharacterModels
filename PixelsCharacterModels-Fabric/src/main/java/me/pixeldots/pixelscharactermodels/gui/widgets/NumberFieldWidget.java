@@ -8,7 +8,8 @@ import net.minecraft.text.Text;
 public class NumberFieldWidget extends TextFieldWidget {
 
     public float value = 0;
-    public boolean show_decimal = true;
+    public boolean show_decimal = false;
+    public boolean only_positive = true;
 
     public NumberFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, float _value) {
         super(textRenderer, x, y, width, height, Text.of(""));
@@ -26,14 +27,13 @@ public class NumberFieldWidget extends TextFieldWidget {
     }
 
     public void setNumber(float _value) {
-        this.value = _value;
-        this.setText(String.valueOf(value));
+        this.value = only_positive && _value < 0 ? 0 : _value;
+        this.setText(String.valueOf(this.value));
     }
 
     @Override
     public void setText(String text) {
-        if (!show_decimal) text = text.substring(0, text.indexOf("."));
-        super.setText(text);
+        super.setText(!show_decimal ? text.substring(0, text.indexOf(".")) : text);
     }
 
     @Override
@@ -42,6 +42,15 @@ public class NumberFieldWidget extends TextFieldWidget {
             setNumber(value+Math.round(amount));
         
         return super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
+    @Override
+    public void write(String text) {
+        float v = PCMUtils.getFloat(text);
+        this.value = only_positive && v < 0 ? 0 : v;
+
+        String s = String.valueOf(this.value);
+        super.write(!show_decimal ? s.substring(0, s.indexOf(".")) : s);
     }
     
 }

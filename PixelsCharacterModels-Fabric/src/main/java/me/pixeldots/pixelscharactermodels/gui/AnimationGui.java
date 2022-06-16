@@ -26,8 +26,9 @@ import net.minecraft.text.Text;
 
 public class AnimationGui extends GuiHandler {
 
-    public static AnimationFile animation = new AnimationFile();
+    public static AnimationFile animation;
     public static File animation_file;
+    public static int frame_index_value;
 
     public static int selectedPart = -1;
     public static String selectedPartName = "";
@@ -58,12 +59,26 @@ public class AnimationGui extends GuiHandler {
     }
 
     public void setScreen(GuiHandler gui) {
+        compile_nodes(uuid, false);
+
+        yscroll = 0;
+        selectedPart = -1;
+        selectedNode = -1;
+        selectedPartName = null;
+        nodes.clear();
+        AnimationGui.isDragging = false;
+
+        animation = null;
+        animation_file = null;
+        frame_index_value = 0;
         this.client.setScreen(gui);
     }
 
     @Override
     public void init() {
+        if (animation == null) animation = new AnimationFile();
         super.init();
+        
         // Top Bar
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
             setScreen(new PresetsGui(entity, this.entityViewScale));
@@ -85,6 +100,8 @@ public class AnimationGui extends GuiHandler {
                 ButtonWidget widget = addButton(new ButtonWidget(15, 15+(i*10)+yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
                     if (file.isDirectory()) path_offset += "/" + file.getName();
                     else selectAnimation(file);
+
+                    this.client.setScreen(new AnimationGui(entity, entityViewScale));
                 }));
                 ButtonWidget save_widget = addButton(new ButtonWidget(5, 15+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
                     boolean result = AnimationHelper.write(file, animation);
@@ -120,8 +137,36 @@ public class AnimationGui extends GuiHandler {
         listModelParts(this.width-115, 15+yscroll, entity, model);
 
         // Bottom Panel
-        NumberFieldWidget frame_index = new NumberFieldWidget(textRenderer, 125, this.height-75, 100, 20, 0, false); addTextField(frame_index);
-        NumberFieldWidget frame_count = new NumberFieldWidget(textRenderer, 125, this.height-50, 100, 20, 0, false); addTextField(frame_count);
+        NumberFieldWidget framerate = new NumberFieldWidget(textRenderer, 125, this.height-65, 40, 10, frame_index_value, false); addTextField(framerate);
+        framerate.setChangedListener((s) -> {
+            animation.framerate = framerate.getNumber();
+        });
+        framerate.setNumber(animation.framerate);
+        
+        NumberFieldWidget frame_index = new NumberFieldWidget(textRenderer, 125+60, this.height-65, 25, 10, frame_index_value, false); addTextField(frame_index);
+        addButton(new ButtonWidget(155+60, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
+            animation.frames.add(new AnimationFile.Frame());
+            frame_index_value = animation.frames.size()-1;
+            this.client.setScreen(new AnimationGui(entity, entityViewScale));
+        }));
+        addButton(new ButtonWidget(190+60, this.height-65, 50, 10, Text.of("Remove"), (btn) -> {
+            animation.frames.remove(frame_index_value);
+            frame_index_value--;
+            this.client.setScreen(new AnimationGui(entity, entityViewScale));
+        }));
+
+        NumberFieldWidget frame_count = new NumberFieldWidget(textRenderer, 125+60, this.height-40, 40, 10, animation.frames.get(frame_index_value).run_frame, false); addTextField(frame_count);
+
+        frame_index.setChangedListener((s) -> {
+            frame_index_value = Math.round(frame_index.value);
+            if (animation.frames.size() <= frame_index_value)
+                frame_index_value = animation.frames.size()-1;
+
+            this.client.setScreen(new AnimationGui(entity, entityViewScale));
+        });
+        frame_count.setChangedListener((s) -> {
+            animation.frames.get(frame_index_value).run_frame = Math.round(frame_count.value);
+        });
     }
 
     @Override
@@ -176,6 +221,11 @@ public class AnimationGui extends GuiHandler {
         drawVerticalLine(matrices, this.width-121, -1, this.height, 0, 0, 0, 255);
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
+
+        drawString(matrices, "Framerate", 125, this.height-80);
+        drawString(matrices, "Frame Index", 125+60, this.height-80);
+        drawString(matrices, "Delay Frames", 125+60, this.height-55);
+
         super.render(matrices, mouseX, mouseY, delta);
         drawColor(matrices, this.width-120, 0, this.width, 10, 0, 0, 0, 255);
     }
@@ -192,6 +242,7 @@ public class AnimationGui extends GuiHandler {
 
         animation = null;
         animation_file = null;
+        frame_index_value = 0;
 
         super.close(); 
     }
@@ -305,10 +356,10 @@ public class AnimationGui extends GuiHandler {
         nodes.clear();
 
         String[] s;
-        AnimationFile.Frame frame = animation.frames.get(0);
-        if (frame.parts.containsKey(part_name))
-            s = frame.parts.get(part_name).split("\n");
-        else s = frame.script.split("\n");
+        AnimationFile.Frame frame = animation.frames.get(frame_index_value);
+        if (part_name == null) s = frame.script.split("\n");
+        else if (frame.parts.containsKey(part_name)) s = frame.parts.get(part_name).split("\n");
+        else return;
 
         int ignore_lines = 0;
         for (String line : s) {
@@ -344,7 +395,7 @@ public class AnimationGui extends GuiHandler {
         if (changed == false) return;
 
         String part_name = selectedPartName;
-        AnimationFile.Frame frame = animation.frames.get(0);
+        AnimationFile.Frame frame = animation.frames.get(frame_index_value);
         if (frame.parts.containsKey(part_name))
             frame.parts.put(part_name, script);
         else frame.script = script;

@@ -13,6 +13,7 @@ import virtuoel.pehkui.api.ScaleTypes;
 public class ServerNetwork {
     
     public static Identifier scale_pehkui = new Identifier("scale_pehkui");
+    public static Identifier skin_suffix = new Identifier("skin_suffix");
     public static Identifier animation = new Identifier("animation");
 
     public static void register() {
@@ -21,6 +22,16 @@ public class ServerNetwork {
             LivingEntity entity = PlatformUtils.getLivingEntity(buf.readUuid());
             ScaleTypes.BASE.getScaleData(entity).setScale(scale);
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(skin_suffix, (server, player, handler, buf, sender) -> {
+            PCMMain.skinsuffix_data.put(buf.readUuid(), buf.readString());
+
+            for (ServerPlayerEntity receiver : server.getPlayerManager().getPlayerList()) {
+                if (receiver == player) continue;
+                ServerPlayNetworking.send(receiver, ClientNetwork.receive_skinsuffix, buf);
+            }
+        });
+
         ServerPlayNetworking.registerGlobalReceiver(animation, (server, player, handler, buf, sender) -> {
             UUID uuid = buf.readUuid();
             if (buf.readBoolean()) {

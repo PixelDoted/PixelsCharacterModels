@@ -21,6 +21,8 @@ public class PCMMain implements ModInitializer {
 
 	@Environment(EnvType.SERVER) 
 	public static Map<UUID, String> animation_data = new HashMap<>(); // the stored animation data
+	@Environment(EnvType.SERVER) 
+	public static Map<UUID, String> skinsuffix_data = new HashMap<>(); // the stored skin suffix data
 
 	@Override
 	public void onInitialize() {

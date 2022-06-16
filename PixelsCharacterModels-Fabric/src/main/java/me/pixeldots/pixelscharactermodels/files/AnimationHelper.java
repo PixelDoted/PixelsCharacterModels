@@ -83,7 +83,7 @@ public class AnimationHelper {
         add_lines(name, scripted.global, frame.script); // add lines to global
         int index = 0;
         for (ModelPart part : PlatformUtils.getHeadParts(model)) { // add lines to ModelParts
-            String part_name = ModelPartNames.getHeadName(entity, index);
+            String part_name = ModelPartNames.getHeadName(entity, index).toLowerCase();
             index++;
 
             if (!frame.parts.containsKey(part_name)) continue;
@@ -92,7 +92,7 @@ public class AnimationHelper {
         }
         index = 0;
         for (ModelPart part : PlatformUtils.getBodyParts(model)) { // add lines to ModelParts
-            String part_name = ModelPartNames.getBodyName(entity, index);
+            String part_name = ModelPartNames.getBodyName(entity, index).toLowerCase();
             index++;
 
             if (!frame.parts.containsKey(part_name)) continue;

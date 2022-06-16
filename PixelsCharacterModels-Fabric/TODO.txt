@@ -1,14 +1,7 @@
-+ Static Animations
 
 - Save Entity scripts to World (world/entity specific presets)
 
-- Animations
-- Frame editor Panel
-- New Animation GUI
-
-- Pehkui Scale Networking
-- Animation Networking
-- Skin Suffix Networking
+- Lerping Non static animations
 
 > old
 + Mesh to Vertices and Back
@@ -21,3 +14,9 @@
 + Compile Preset to Script
 + New Presets GUI
 + Settings GUI
++ Static Animations
++ Animation Networking
++ Pehkui Scale Networking
++ Animations
++ Skin Suffix Networking
++ New Animation GUI
