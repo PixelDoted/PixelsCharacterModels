@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels.other;
 
+import me.pixeldots.pixelscharactermodels.files.MeshReader;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3f;
 
@@ -33,7 +34,6 @@ public class NodeHelper {
         String define = "define " + 6*4 + " cube \"" + tu + " " + tv + " " + tw + " " + th + "\n";
         return define + f1 + "\n" + f2 + "\n" + f3 + "\n" + f4 + "\n" + f5 + "\n" + f6;
     }
-
     public static String meshToString(Node node) {
         String meshID = getArgFloat(node.args, 0);
         String tu = getArgFloat(node.args, 1);

@@ -7,12 +7,14 @@ import java.util.Map;
 
 public class AnimationFile {
     
-    public boolean loop = false;
-    public float framerate = 60;
-    public List<Frame> frames = new ArrayList<>();
+    public boolean loop = false; // if the animations is looping
+    public float framerate = 60; // the animations framerate
+    public List<Frame> frames = new ArrayList<>(); // the animations frames
 
+    // get the frame from fps and framerate
     public float getFPSDifference(float fps) {
-        return 1f/(fps/framerate);
+        if (fps == 0) return 0;
+        return (1f/fps)*framerate;
     }
 
     public AnimationFile() {
@@ -20,9 +22,9 @@ public class AnimationFile {
     }
 
     public class Frame {
-        public String script = "";
-        public Map<String, String> parts = new HashMap<>();
-        public float run_frame = 0;
+        public String script = ""; // frame script
+        public Map<String, String> parts = new HashMap<>(); // frame parts script
+        public float run_frame = 0; // frames till run
     }
 
 }

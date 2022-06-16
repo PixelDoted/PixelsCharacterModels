@@ -13,6 +13,7 @@ import com.google.gson.JsonParseException;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.script.Interpreter;
@@ -24,6 +25,7 @@ import net.minecraft.entity.LivingEntity;
 
 public class AnimationHelper {
 
+    // writes the animation file to file
     public static boolean write(File file, AnimationFile animation) {
         file.mkdirs();
         FileWriter writer = null;
@@ -42,6 +44,7 @@ public class AnimationHelper {
         return true;
     }
 
+    // reads the animation file from file
     public static AnimationFile read(File file) {
         if (!file.exists()) return null;
         FileReader reader = null;
@@ -58,6 +61,7 @@ public class AnimationHelper {
         return null;
     }
 
+    // plays an animation from file
     public static AnimationFile play(File file, LivingEntity entity, EntityModel<?> model) {
         AnimationFile animation = read(file);
         if (animation == null) return null;
@@ -68,16 +72,17 @@ public class AnimationHelper {
         return animation;
     }
 
+    // plays an animation frame
     public static void play(String name, AnimationFile.Frame frame, LivingEntity entity, EntityModel<?> model) {
         UUID uuid = entity.getUuid();
         if (!ScriptedModels.EntityScript.containsKey(uuid))
             ScriptedModels.EntityScript.put(uuid, new ScriptedEntity());
 
-        ScriptedEntity scripted = ScriptedModels.EntityScript.get(uuid);
+        ScriptedEntity scripted = ScriptedModels.EntityScript.get(uuid); // the entity's scripts
 
-        add_lines(name, scripted.global, frame.script);
+        add_lines(name, scripted.global, frame.script); // add lines to global
         int index = 0;
-        for (ModelPart part : PlatformUtils.getHeadParts(model)) {
+        for (ModelPart part : PlatformUtils.getHeadParts(model)) { // add lines to ModelParts
             String part_name = ModelPartNames.getHeadName(entity, index);
             index++;
 
@@ -86,7 +91,7 @@ public class AnimationHelper {
             add_lines(name, scripted.parts.get(part), frame.parts.get(part_name));
         }
         index = 0;
-        for (ModelPart part : PlatformUtils.getBodyParts(model)) {
+        for (ModelPart part : PlatformUtils.getBodyParts(model)) { // add lines to ModelParts
             String part_name = ModelPartNames.getBodyName(entity, index);
             index++;
 
@@ -96,22 +101,24 @@ public class AnimationHelper {
         }
     }
 
+    // adds lines to an entity/modelpart script
     private static void add_lines(String name, List<Line> lines, String script) {
         List<Line> f_lines = Interpreter.compile(script.split("\n"));
         int length = f_lines.size();
         Line define = Interpreter.compile_line("define " + length + " animation " + length + " " + name);
-        lines.add(define);
+        lines.add(define); // add the define line
 
         for (Line line : f_lines) {
             lines.add(line);
         }
     }
 
+    // get the currently playing animation
     public static String get_current(LivingEntity entity, EntityModel<?> model) {
         UUID uuid = entity.getUuid();
         if (!ScriptedModels.EntityScript.containsKey(uuid)) return "";
 
-        List<Line> lines = ScriptedModels.EntityScript.get(entity.getUuid()).global;
+        List<Line> lines = ScriptedModels.EntityScript.get(entity.getUuid()).global; // the entity's global scripts
         for (String line : Interpreter.decompile(lines).split("\n")) {
             if (line.toLowerCase().startsWith("define")) {
                 String[] define = line.split(" ");
@@ -124,6 +131,7 @@ public class AnimationHelper {
         return "";
     }
 
+    // stops an animation
     public static String stop(LivingEntity entity, EntityModel<?> model, boolean can_remove_entityanim) {
         UUID uuid = entity.getUuid();
         if (!ScriptedModels.EntityScript.containsKey(uuid)) return "";
@@ -135,14 +143,14 @@ public class AnimationHelper {
         String stopped_animation = clean_lines(root_lines, Interpreter.decompile(root_lines).split("\n"));
         scripted.global = root_lines;
 
-        for (ModelPart part : PlatformUtils.getHeadParts(model)) {
+        for (ModelPart part : PlatformUtils.getHeadParts(model)) { // clean all modelpart scripts
             if (!scripted.parts.containsKey(part)) continue;
 
             List<Line> lines = scripted.parts.get(part);
             clean_lines(lines, Interpreter.decompile(lines).split("\n"));
             scripted.parts.put(part, lines);
         }
-        for (ModelPart part : PlatformUtils.getBodyParts(model)) {
+        for (ModelPart part : PlatformUtils.getBodyParts(model)) { // clean all modelpart scripts
             if (!scripted.parts.containsKey(part)) continue;
 
             List<Line> lines = scripted.parts.get(part);
@@ -153,6 +161,7 @@ public class AnimationHelper {
         return stopped_animation;
     }
 
+    // cleans all the lines with the animation definition
     private static String clean_lines(List<Line> lines, String[] s_lines) {
         String animation = "";
         int anim_count = 0;
@@ -167,7 +176,7 @@ public class AnimationHelper {
                 String[] define = line.split(" ");
                 if (define.length >= 4 && define[2].equalsIgnoreCase("animation")) {
                     lines.remove(index);
-                    anim_count = Math.round(Float.parseFloat(define[3]));
+                    anim_count = Math.round(PCMUtils.getFloat(define[3]));
                     animation = define[4];
                     index--;
                 }

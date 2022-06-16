@@ -5,23 +5,27 @@ import net.minecraft.entity.LivingEntity;
 
 public class AnimationPlayer {
     
-    public int index;
-    public float frame;
+    public int index; // current frame index
+    public float frame; // current frame
 
-    public String name;
-    public AnimationFile animation;
+    public String name; // animation name
+    public AnimationFile animation; // animation data
 
     public AnimationPlayer(AnimationFile _animation, String _name) {
         this.animation = _animation;
         this.name = _name;
     }
 
-    public void updateCurrent(LivingEntity entity, EntityModel<?> model, float _frame, int _index) {
-        if (animation.frames.size() > _index+1) {
-            if (animation.frames.get(_index+1).run_frame <= _frame) {
+    // updates the current frame index
+    public void updateCurrent(LivingEntity entity, EntityModel<?> model) {
+        boolean check = animation.frames.size() > index+1;
+        if (animation.loop || check) {
+            if (!check) index = -1;
+            if (animation.frames.get(index+1).run_frame <= frame) {
                 AnimationHelper.stop(entity, model, false);
-                AnimationHelper.play(name, animation.frames.get(_index+1), entity, model);
-                index = _index+1;
+                AnimationHelper.play(name, animation.frames.get(index+1), entity, model);
+                index = index+1;
+                this.frame = 0;
             }
         } else AnimationHelper.stop(entity, model, true);
     }

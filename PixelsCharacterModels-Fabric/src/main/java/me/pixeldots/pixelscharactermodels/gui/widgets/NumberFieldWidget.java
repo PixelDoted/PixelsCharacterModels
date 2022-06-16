@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels.gui.widgets;
 
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
@@ -21,11 +22,7 @@ public class NumberFieldWidget extends TextFieldWidget {
     }
 
     public float getNumber() {
-        String text = this.getText();
-        try {
-            value = Float.parseFloat(text);
-        } catch (NumberFormatException e) {}
-        return value;
+        return PCMUtils.getFloat(this.getText());
     }
 
     public void setNumber(float _value) {

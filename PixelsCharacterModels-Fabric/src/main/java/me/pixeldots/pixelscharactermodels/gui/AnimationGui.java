@@ -14,6 +14,7 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NumberFieldWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -319,7 +320,7 @@ public class AnimationGui extends GuiHandler {
             }
             if (line.toLowerCase().startsWith("define")) {
                 String[] args = line.split(" ");
-                ignore_lines = Math.round(Float.parseFloat(args[1]));
+                ignore_lines = Math.round(PCMUtils.getFloat(args[1]));
 
                 String new_line = args[2];
                 for (int i = 3; i < args.length; i++) {

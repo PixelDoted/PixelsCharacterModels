@@ -49,20 +49,11 @@ public class KeyBindings {
 			if (reloadKey.wasPressed()) {
 				SkinHelper.reloadSkins();
 			}
-		    /*if (KeyBindings.reloadKey.wasPressed()) {
-            	PixelsCharacterModels.client.ReloadSkins();
-            	PixelsCharacterModelsMain.clientHandler.requestModelData();
-            }*/
 		    
 		    if (Anim1.wasPressed()) {
 				LivingEntity entity = client.player;
 				EntityModel<?> model = PlatformUtils.getModel(entity);
-				String current = AnimationHelper.get_current(entity, model);
-				if (current.equals("ScriptedModels.json"))
-					AnimationHelper.stop(entity, model, true);
-				else
-					AnimationHelper.play(Paths.get(".", "PCM/Animations/ScriptedModels.json").toFile(), entity, model);
-		    	//setAnimation(PixelsCharacterModels.localData.AnimationIDOne, PixelsCharacterModels.localData.AnimationOneisFrames);
+				setAnimation("ScriptedModels.json", entity, model);
 		    }
 		    /*if (Anim2.wasPressed()) {
 		    	setAnimation(PixelsCharacterModels.localData.AnimationIDTwo, PixelsCharacterModels.localData.AnimationTwoisFrames);
@@ -78,43 +69,12 @@ public class KeyBindings {
 		    }*/
 		});
 	}
-	
-	/*public static void setAnimation(String key, boolean isFrames) {
-		if (!isFrames) {
-			if (PixelsCharacterModels.playingAnimation != key) {
-				PixelsCharacterModels.isPlayingFrames = false;
-				PixelsCharacterModels.playingFramesData = null;
-	    		if (PixelsCharacterModels.AnimationsData.loadAnimation(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model)) {
-		    		PixelsCharacterModels.playingAnimation = key;
-		    		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.client.currentStoredAnimation;
-	    		}
-	    	}
-	    	else {
-	    		PixelsCharacterModels.playingAnimation = "";
-	    		PixelsCharacterModels.playingAnimationData = null;
-	    	}
-		} else {
-			if (PixelsCharacterModels.playingFramesData == null || !PixelsCharacterModels.playingFramesData.name.equalsIgnoreCase(key)) {
-	    		if (PixelsCharacterModels.FramesData.loadFrame(key, PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model)) {
-	    			PixelsCharacterModels.isPlayingFrames = true;
-	    			PixelsCharacterModels.playingFramesData = PixelsCharacterModels.client.currentStoredFrames;
-	    			PixelsCharacterModels.client.framesAnimationID = 0;
-					//loadAnimationFrames(PixelsCharacterModels.EntityModelList.get(PixelsCharacterModels.thisPlayer), PixelsCharacterModels.thisPlayer);
-				}
-	    	}
-	    	else if (PixelsCharacterModels.playingFramesData.name.equalsIgnoreCase(key)) {
-	    		PixelsCharacterModels.isPlayingFrames = false;
-	    		PixelsCharacterModels.playingFramesData = null;
-	    		PixelsCharacterModels.playingAnimation = "";
-	    		PixelsCharacterModels.playingAnimationData = null;
-	    	}
-		}
-	}*/
-	
-	/*public static void loadAnimationFrames(PlayerEntityModel<?> model, PlayerEntity entity) {
-		String s = PixelsCharacterModels.playingFramesData.frames.get(PixelsCharacterModels.PCMClient.framesAnimationID);
-		PixelsCharacterModels.AnimationsData.loadAnimation(s, entity, model);
-		PixelsCharacterModels.playingAnimation = s;
-		PixelsCharacterModels.playingAnimationData = PixelsCharacterModels.PCMClient.currentStoredAnimation;
-	}*/
+
+	public static void setAnimation(String name, LivingEntity entity, EntityModel<?> model) {
+		String current = AnimationHelper.get_current(entity, model);
+		if (current.equals(name))
+			AnimationHelper.stop(entity, model, true);
+		else
+			AnimationHelper.play(Paths.get(".", "PCM/Animations/" + name).toFile(), entity, model);
+	}
 }

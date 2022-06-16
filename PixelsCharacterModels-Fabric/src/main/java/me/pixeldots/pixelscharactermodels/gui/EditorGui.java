@@ -12,6 +12,7 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
@@ -92,7 +93,7 @@ public class EditorGui extends GuiHandler {
 
             PehkuiScale.setChangedListener((v) -> {
                 if (PostfixOperation.isNumeric(v)) {
-                    stored_pehkuiscale = Float.parseFloat(v);
+                    stored_pehkuiscale = PCMUtils.getFloat(v);
                     ClientNetwork.send_pehkui_scale(entity, stored_pehkuiscale);
                 }
             });
@@ -292,7 +293,7 @@ public class EditorGui extends GuiHandler {
             }
             if (line.toLowerCase().startsWith("define")) {
                 String[] args = line.split(" ");
-                ignore_lines = Math.round(Float.parseFloat(args[1]));
+                ignore_lines = Math.round(PCMUtils.getFloat(args[1]));
 
                 String new_line = args[2];
                 if (new_line.equalsIgnoreCase("animation")) continue;

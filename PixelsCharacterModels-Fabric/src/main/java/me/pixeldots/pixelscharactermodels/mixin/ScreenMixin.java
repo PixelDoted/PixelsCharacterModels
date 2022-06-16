@@ -20,6 +20,8 @@ import net.minecraft.text.Text;
 
 //@Mixin(Screen.class)
 public abstract class ScreenMixin {
+    // useless, this is useless
+
     /*@Shadow abstract Element addDrawableChild(Element drawableElement);
 
     @Inject(at = @At("RETURN"), method = "init(Lnet/minecraft/client/MinecraftClient;II)V")

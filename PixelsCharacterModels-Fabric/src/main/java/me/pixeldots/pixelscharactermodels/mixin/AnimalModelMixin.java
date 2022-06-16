@@ -18,13 +18,15 @@ import net.minecraft.client.util.math.MatrixStack;
 @Mixin(AnimalModel.class)
 public class AnimalModelMixin {
     
+    // update the entity's current animation
     @Inject(method = "render", at = @At("TAIL"))
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
         UUID uuid = ScriptedModels.Rendering_Entity.getUuid();
-        if (PCMClient.EntityAnimationList.containsKey(uuid)) {
-            AnimationPlayer player = PCMClient.EntityAnimationList.get(uuid);
-            player.frame += player.animation.getFPSDifference(((IMinecraftClientMixin)PCMClient.minecraft).getFPS());
-            player.updateCurrent(ScriptedModels.Rendering_Entity, (EntityModel<?>)(Object)this, player.frame, player.index);
+        if (PCMClient.EntityAnimationList.containsKey(uuid)) { // check if the entity is playing an animation
+            AnimationPlayer player = PCMClient.EntityAnimationList.get(uuid); // get the animation player
+
+            player.frame += player.animation.getFPSDifference(((IMinecraftClientMixin)PCMClient.minecraft).getFPS()); // increase the current frame value
+            player.updateCurrent(ScriptedModels.Rendering_Entity, (EntityModel<?>)(Object)this); // update the current frame index
         }
     }
 

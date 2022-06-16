@@ -26,14 +26,14 @@ public class PCMSkinProvider implements ISkinProvider {
     }
 
     @Override
-    public ISkin getSkin(IPlayerProfile profile) {
+    public ISkin getSkin(IPlayerProfile profile) { // Offline Skins, Custom Skin Provider
         SkinData skin = new SkinData();
         skin.setSkinFilter(ImageUtils::legacyFilter);
         SharedPool.execute(() -> {
             byte[] data = null;
             
             String suffix = "";
-            if (PCMClient.PlayerSkinList.containsKey(profile.getPlayerID())) 
+            if (PCMClient.PlayerSkinList.containsKey(profile.getPlayerID())) // get skin suffix if available
             	suffix = PCMClient.PlayerSkinList.get(profile.getPlayerID());
 
             if (!Shared.isOfflinePlayer(profile.getPlayerID(), profile.getPlayerName()))
@@ -47,6 +47,7 @@ public class PCMSkinProvider implements ISkinProvider {
         return skin;
     }
 
+    // read Skin File
     private byte[] readFile(File dir, String filename) {
         byte[] contents;
         if ((contents = Shared.readFile(new File(dir, filename), null, null)) != null && ImageUtils.validateData(contents))
@@ -54,6 +55,7 @@ public class PCMSkinProvider implements ISkinProvider {
         return null;
     }
 
+    // read Skin File
     private byte[] readFile(File dir, String filename, Object... args) {
         return readFile(dir, String.format(filename, args));
     }

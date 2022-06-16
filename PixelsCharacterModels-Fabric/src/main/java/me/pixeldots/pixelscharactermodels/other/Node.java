@@ -6,9 +6,9 @@ import net.minecraft.text.Text;
 
 public class Node {
 
-    public NodeType type;
-    public String[] args;
-    public boolean changed = false;
+    public NodeType type; // the nodes Type
+    public String[] args; // the node arguments
+    public boolean changed = false; // has the node been modified
 
     public Node(NodeType t) {
         type = t;
@@ -24,10 +24,12 @@ public class Node {
         }
     }
 
+    // Node to Script
     public String toScript() {
         return type.tofunc.run(this);
     }
 
+    // Arguments to String
     public String argsToString() {
         String out = "";
         for (String arg : args) {
@@ -36,10 +38,12 @@ public class Node {
         return out.trim();
     }
 
+    // Initialize the Nodes GUI
     public void init(GuiHandler gui, int x, int y) {
         this.type.func.init(gui, x, y, this);
     }
 
+    // create 3 GUI Buttons
     public static void threeButton(GuiHandler gui, int x, int y, Node node) {
         TextFieldWidget bX = new TextFieldWidget(gui.textRendererGUI, x, y, 30, 10, Text.of(""));
         TextFieldWidget bY = new TextFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, Text.of(""));

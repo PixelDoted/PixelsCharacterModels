@@ -39,7 +39,7 @@ public class PresetHelper {
         if (!root.trim().equals("")) write_script(new File(file.getAbsolutePath() + "/root.sm"), root);
 
         int index = 0;
-        for (ModelPart part : PlatformUtils.getHeadParts(model)) {
+        for (ModelPart part : PlatformUtils.getHeadParts(model)) { // decompile modelparts
             String script = ClientHelper.decompile_script(entity.getUuid(), part);
             if (!script.trim().equals("")) { 
                 String name = ModelPartNames.getHeadName(entity, index).toLowerCase();
@@ -51,7 +51,7 @@ public class PresetHelper {
         }
 
         index = 0;
-        for (ModelPart part : PlatformUtils.getBodyParts(model)) {
+        for (ModelPart part : PlatformUtils.getBodyParts(model)) { // decompile modelparts
             String script = ClientHelper.decompile_script(entity.getUuid(), part);
             if (!script.trim().equals("")) { 
                 String name = ModelPartNames.getBodyName(entity, index).toLowerCase();
@@ -61,6 +61,7 @@ public class PresetHelper {
         }
     }
 
+    // write a script to file
     private static void write_script(File file, String script) {
         FileWriter writer = null;
         try {
@@ -73,6 +74,7 @@ public class PresetHelper {
         }
     }
 
+    // write preset settings to file
     private static void write_settings(File file, PresetSettings settings) {
         FileWriter writer = null;
         try {
@@ -86,21 +88,22 @@ public class PresetHelper {
     }
 
     // Reading Preset
+    // read preset
     public static void read_preset(File folder, LivingEntity entity, EntityModel<?> model) {
         folder.mkdirs();
         if (model == null) model = PlatformUtils.getModel(entity);
-        ClientHelper.reset_entity(entity.getUuid());
+        ClientHelper.reset_entity(entity.getUuid()); // reset entity scripts
         
         File[] files = folder.listFiles();
         for (File file : files) {
             String name = file.getName();
 
-            if (name.equalsIgnoreCase("preset.json")) {
+            if (name.equalsIgnoreCase("preset.json")) { // read settings if the file is "preset.json"
                 read_settings(file, entity);
                 continue;
             }
 
-            if (name.endsWith(".sm")) {
+            if (name.endsWith(".sm")) { // read script if the file ends with ".sm"
                 name = name.substring(0, name.length()-3);
                 String s = read_script(file);
 
@@ -109,6 +112,7 @@ public class PresetHelper {
         }
     }
 
+    // read settings from file
     private static void read_settings(File file, LivingEntity entity) {
         Gson gson = new Gson();
         FileReader reader = null;
@@ -116,10 +120,10 @@ public class PresetHelper {
             reader = new FileReader(file);
             PresetSettings settings = gson.fromJson(reader, PresetSettings.class);
             
-            ClientNetwork.send_pehkui_scale(entity, settings.pehkui_scale);
+            ClientNetwork.send_pehkui_scale(entity, settings.pehkui_scale); // set pehkui sccale
 
-            SkinHelper.setSkinSuffix(entity.getUuid(), settings.skin_suffix);
-            SkinHelper.reloadSkins();
+            SkinHelper.setSkinSuffix(entity.getUuid(), settings.skin_suffix); // set skin suffix
+            SkinHelper.reloadSkins(); // reload all skins
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -127,6 +131,7 @@ public class PresetHelper {
         }
     }
 
+    // read script from file
     private static String read_script(File file) {
         String output = "";
 
@@ -143,6 +148,7 @@ public class PresetHelper {
         return output;
     }
 
+    // attach script to entity
     private static void attach_script(String part_id, String script, LivingEntity entity, EntityModel<?> model) {
         if (part_id.equalsIgnoreCase("root")) {
             ClientHelper.change_script(entity.getUuid(), null, -1, script);
@@ -153,6 +159,7 @@ public class PresetHelper {
         ClientHelper.change_script(entity.getUuid(), part.part, part.id, script);
     }
 
+    // get modelpart from part_id
     private static ModelPartItem getModelPart(String part_id, LivingEntity entity, EntityModel<?> model) {
         int part_int = PostfixOperation.isNumeric(part_id) ? Integer.parseInt(part_id) : -1;
         EntityParts parts = PCMClient.EntityPartNames.map.get(entity.getType().getUntranslatedName());
