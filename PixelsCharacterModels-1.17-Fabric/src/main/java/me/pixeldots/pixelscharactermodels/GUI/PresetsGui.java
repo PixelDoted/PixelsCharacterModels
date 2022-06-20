@@ -83,16 +83,17 @@ public class PresetsGui extends GuiHandler {
 		int col = 0;
 		for (int i = 0; i < presets.length; i++) { //6 per col, max 24
 			int num = i;
-			String filePath = presets[i].getPath().replace(PixelsCharacterModels.PresetsData.PresetsPath + File.separator, "");
+
+			String fileName = presets[i].getName();
 			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(presets[i].getName().replace(".json", "")), (value) -> {
 				if (presets[num].isDirectory()) {
-					PixelsCharacterModels.client.openScreen(new PresetsGui(filePath, false));
+					PixelsCharacterModels.client.openScreen(new PresetsGui(fileName, false));
 					return;
 				}
 
-				SelectPreset(filePath, value.getMessage().asString());
+				SelectPreset(fileName, value.getMessage().asString());
 			}));
-			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) if (filePath.equals(PixelsCharacterModels.GuiData.SelectedPresetPath)) b.active = false;
+			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) if (fileName.equals(PixelsCharacterModels.GuiData.SelectedPresetPath)) b.active = false;
 			row++;
 			if (row >= 11) {
 				row = 0;
