@@ -83,9 +83,9 @@ public class PresetsGui extends GuiHandler {
         File[] files = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Presets" + path_offset).listFiles();
         for (int i = 0; i < files.length; i++) {
             final File file = files[i];
-            if (!file.isDirectory()) continue;
+            //if (!file.isDirectory()) continue;
 
-            final boolean is_preset = file.isDirectory() && containsRoot(file.listFiles());
+            final boolean is_preset = (file.isDirectory() && containsRoot(file.listFiles())) || file.getName().endsWith(".json");
             ButtonWidget widget = addButton(new ButtonWidget(15, presets_offset+(i*10)+yscroll, 100, 10, Text.of((is_preset ? "" : "~") + file.getName()), (btn) -> {
                 if (is_preset) selectPreset(file, false);
                 else path_offset += "/" + file.getName();

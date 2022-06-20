@@ -1,13 +1,6 @@
 package me.pixeldots.pixelscharactermodels.files;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import org.spongepowered.include.com.google.gson.Gson;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
@@ -32,11 +25,11 @@ public class PresetHelper {
         PresetSettings settings = new PresetSettings();
         settings.pehkui_scale = ScaleTypes.BASE.getScaleData(entity).getBaseScale();
         settings.skin_suffix = PCMClient.PlayerSkinList.get(entity.getUuid());
-        write_settings(new File(file.getAbsolutePath() + "/preset.json"), settings);
+        FileHelper.write(new File(file.getAbsolutePath() + "/preset.json"), settings);
 
         // add scripts to the preset folder
         String root = ClientHelper.decompile_script(entity.getUuid(), null);
-        if (!root.trim().equals("")) write_script(new File(file.getAbsolutePath() + "/root.sm"), root);
+        if (!root.trim().equals("")) FileHelper.write(new File(file.getAbsolutePath() + "/root.sm"), root);
 
         int index = 0;
         for (ModelPart part : PlatformUtils.getHeadParts(model)) { // decompile modelparts
@@ -45,7 +38,7 @@ public class PresetHelper {
                 String name = ModelPartNames.getHeadName(entity, index).toLowerCase();
                 if (PostfixOperation.isNumeric(name)) name = "" + (Integer.parseInt(name) + 100);
 
-                write_script(new File(file.getAbsolutePath() + "/" + name + ".sm"), script);
+                FileHelper.write(new File(file.getAbsolutePath() + "/" + name + ".sm"), script);
             }
             index++;
         }
@@ -55,35 +48,9 @@ public class PresetHelper {
             String script = ClientHelper.decompile_script(entity.getUuid(), part);
             if (!script.trim().equals("")) { 
                 String name = ModelPartNames.getBodyName(entity, index).toLowerCase();
-                write_script(new File(file.getAbsolutePath() + "/" + name + ".sm"), script);
+                FileHelper.write(new File(file.getAbsolutePath() + "/" + name + ".sm"), script);
             }
             index++;
-        }
-    }
-
-    // write a script to file
-    private static void write_script(File file, String script) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(file);
-            writer.write(script);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try { writer.close(); } catch (IOException e) {}
-        }
-    }
-
-    // write preset settings to file
-    private static void write_settings(File file, PresetSettings settings) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(file);
-            new Gson().toJson(settings, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try { writer.close(); } catch (IOException e) {}
         }
     }
 
@@ -105,7 +72,7 @@ public class PresetHelper {
 
             if (name.endsWith(".sm")) { // read script if the file ends with ".sm"
                 name = name.substring(0, name.length()-3);
-                String s = read_script(file);
+                String s = FileHelper.read(file);
 
                 attach_script(name, s, entity, model);
             }
@@ -114,38 +81,12 @@ public class PresetHelper {
 
     // read settings from file
     private static void read_settings(File file, LivingEntity entity) {
-        Gson gson = new Gson();
-        FileReader reader = null;
-        try {
-            reader = new FileReader(file);
-            PresetSettings settings = gson.fromJson(reader, PresetSettings.class);
-            
-            ClientNetwork.send_pehkui_scale(entity, settings.pehkui_scale); // set pehkui sccale
+        PresetSettings settings = (PresetSettings)FileHelper.read(file, PresetSettings.class);
+        
+        ClientNetwork.send_pehkui_scale(entity, settings.pehkui_scale); // set pehkui sccale
 
-            SkinHelper.setSkinSuffix(entity.getUuid(), settings.skin_suffix); // set skin suffix
-            SkinHelper.reloadSkins(); // reload all skins
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try { reader.close(); } catch (IOException e) {}
-        }
-    }
-
-    // read script from file
-    private static String read_script(File file) {
-        String output = "";
-
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-            output = new String(fis.readAllBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try { fis.close(); } catch (IOException e) {}
-        }
-
-        return output;
+        SkinHelper.setSkinSuffix(entity.getUuid(), settings.skin_suffix); // set skin suffix
+        SkinHelper.reloadSkins(); // reload all skins
     }
 
     // attach script to entity

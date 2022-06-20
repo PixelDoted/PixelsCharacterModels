@@ -1,15 +1,9 @@
 package me.pixeldots.pixelscharactermodels.files;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
@@ -28,37 +22,12 @@ public class AnimationHelper {
     // writes the animation file to file
     public static boolean write(File file, AnimationFile animation) {
         file.mkdirs();
-        FileWriter writer = null;
-        Gson gson = new Gson();
-
-        try {
-            writer = new FileWriter(file);
-            gson.toJson(animation, writer);
-        } catch (IOException | JsonParseException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try { writer.close(); } catch (IOException e) {}
-        }
-
-        return true;
+        return FileHelper.write(file, animation);
     }
 
-    // reads the animation file from file
+    // reads an animation file from a file
     public static AnimationFile read(File file) {
-        if (!file.exists()) return null;
-        FileReader reader = null;
-        Gson gson = new Gson();
-
-        try {
-            reader = new FileReader(file);
-            return gson.fromJson(reader, AnimationFile.class);
-        } catch (IOException | JsonParseException e) {
-            e.printStackTrace();
-        } finally {
-            try { reader.close(); } catch (IOException e) {}
-        }
-        return null;
+        return (AnimationFile)FileHelper.read(file, AnimationFile.class);
     }
 
     // plays an animation from file
@@ -68,12 +37,12 @@ public class AnimationHelper {
         if (animation.frames.size() > 1)
             PCMClient.EntityAnimationList.put(entity.getUuid(), new AnimationPlayer(animation, file.getName()));
 
-        play(file.getName(), animation.frames.get(0), entity, model);
+        play(file.getName(), null, animation.frames.get(0), entity, model);
         return animation;
     }
 
     // plays an animation frame
-    public static void play(String name, AnimationFile.Frame frame, LivingEntity entity, EntityModel<?> model) {
+    public static void play(String name, AnimationPlayer player, AnimationFile.Frame frame, LivingEntity entity, EntityModel<?> model) {
         UUID uuid = entity.getUuid();
         if (!ScriptedModels.EntityScript.containsKey(uuid))
             ScriptedModels.EntityScript.put(uuid, new ScriptedEntity());
@@ -97,7 +66,7 @@ public class AnimationHelper {
 
             if (!frame.parts.containsKey(part_name)) continue;
             if (!scripted.parts.containsKey(part)) scripted.parts.put(part, new ArrayList<>());
-            add_lines(name, scripted.parts.get(part), frame.script);
+            add_lines(name, scripted.parts.get(part), frame.parts.get(part_name));
         }
     }
 

@@ -3,6 +3,9 @@
 
 - Lerping Non static animations
 
+- old to new Preset Converter
+- old to new Animations Converter
+
 > old
 + Mesh to Vertices and Back
 + Cube to Vertices and Back

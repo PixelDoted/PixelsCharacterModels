@@ -9,6 +9,7 @@ public class AnimationFile {
     
     public boolean loop = false; // if the animations is looping
     public float framerate = 60; // the animations framerate
+    public boolean lerp = true;
     public List<Frame> frames = new ArrayList<>(); // the animations frames
 
     // get the frame from fps and framerate
