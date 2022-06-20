@@ -28,10 +28,10 @@ public class PCMAnimation {
 		AnimationData data = new AnimationData();
 		data.name = this.name;
 		data.playerTransform = this.playerTransform;
-		for (ModelPart part : LimbParts) {
-			String name = getModelPartName(part, model);
+		for (int i = 0; i < LimbParts.size(); i++) {
+			String name = getModelPartName(LimbParts.get(i), model);
 			data.LimbIDs.add(name);
-			data.LimbRotations.add(LimbRotations.get(part));
+			data.LimbRotations.add(LimbRotations.get(LimbParts.get(i)));
 		}
 		return data;
 	}

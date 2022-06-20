@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.google.gson.Gson;
 
+import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.utils.data.PresetData;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -30,7 +31,7 @@ public class MainClientHandler {
 			PresetData data = new PresetData();
 			
 			data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix;
-			data.convertModelData(PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
+			data.convertModelData(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
 			
 			Gson gson = new Gson();
 			sendModelData(gson.toJson(data), buf.readString());
@@ -54,7 +55,7 @@ public class MainClientHandler {
 			PresetData data = new PresetData();
 			
 			data.skinSuffix = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getGameProfile().getId()).skinSuffix;
-			data.convertModelData(PixelsCharacterModels.thisPlayer, PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
+			data.convertModelData(PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.thisPlayer.getUuid()).model);
 			
 			Gson gson = new Gson();
 			reciveModelData(gson.toJson(data), PixelsCharacterModels.client.minecraft.player);

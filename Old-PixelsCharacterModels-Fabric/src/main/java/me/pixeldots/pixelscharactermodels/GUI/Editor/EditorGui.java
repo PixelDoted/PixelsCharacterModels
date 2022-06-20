@@ -4,14 +4,15 @@ import java.io.File;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.PlayerData;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
-import me.pixeldots.pixelscharactermodels.model.ModelPartData;
+import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -90,16 +91,15 @@ public class EditorGui extends GuiHandler {
 			else ShowButton.setMessage(Text.of("Showing"));
 		}));
 		
-		PlayerData data = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
-		if (data.limbs.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-			PosXField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.X));
-			PosYField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Y));
-			PosZField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Z));
+		if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+			PosXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.X));
+			PosYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Y));
+			PosZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).pos.Z));
 			
-			ScaleXField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.X));
-			ScaleYField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Y));
-			ScaleZField.setText(String.valueOf(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Z));
-			ShowButton.setMessage(Text.of(data.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).Show ? "Showing" : "Hiding"));
+			ScaleXField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.X));
+			ScaleYField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Y));
+			ScaleZField.setText(String.valueOf(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).scale.Z));
+			ShowButton.setMessage(Text.of(PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).Show ? "Showing" : "Hiding"));
 		}
 		//drawEntity(575/2, 200, 30, 0f, 0f, PixelsCharacterModels.GuiData.entity);
 	}
@@ -158,9 +158,8 @@ public class EditorGui extends GuiHandler {
 	}
 	
 	public void setPlayerLimbData() {
-		PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
-		if (playerdata.limbs.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
-			ModelPartData data = playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel);
+		if (PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) {
+			ModelPartData data = PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel);
 			setModelPartScale(data);
 			setModelPartPos(data);
 			setModelPartVisible(data);
@@ -177,9 +176,9 @@ public class EditorGui extends GuiHandler {
 	public void ListSkins() {
 		File[] files = new File(PixelsCharacterModels.client.minecraft.runDirectory+"/cachedImages/skins").listFiles();
 		PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("local skins >"), false);
-		for (File file : files) {
-			if (file.isDirectory()) continue;
-			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(file.getName()), false);
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isDirectory()) continue;
+			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(files[i].getName()), false);
 		}
 		PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("< local skins"), false);
 	}

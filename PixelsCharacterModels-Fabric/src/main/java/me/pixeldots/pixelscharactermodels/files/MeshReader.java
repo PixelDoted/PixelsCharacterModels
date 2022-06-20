@@ -26,7 +26,7 @@ public class MeshReader {
 
     // read mesh from path
     public static Mesh readMesh(String path) {
-        return readMesh(Paths.get("./PCM/Models", path).toFile());
+        return readMesh(Paths.get("." + File.separator + "PCM" + File.separator + "Models", path).toFile());
     }
 
     // read mesh from file

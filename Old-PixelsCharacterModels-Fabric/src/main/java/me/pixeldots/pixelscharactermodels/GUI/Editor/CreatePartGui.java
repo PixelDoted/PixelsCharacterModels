@@ -3,17 +3,18 @@ package me.pixeldots.pixelscharactermodels.GUI.Editor;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.model.CreatePartData;
 import me.pixeldots.pixelscharactermodels.model.PreviewModelPart;
-import me.pixeldots.pixelscharactermodels.model.createPartHelper;
-import me.pixeldots.pixelscharactermodels.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.mesh.ModelPartMesh;
+import me.pixeldots.pixelscharactermodels.model.part.createPartHelper;
+import me.pixeldots.pixelscharactermodels.model.part.cube.ModelPartCube;
+import me.pixeldots.pixelscharactermodels.model.part.mesh.ModelPartMesh;
 import me.pixeldots.pixelscharactermodels.utils.GuiData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -45,6 +46,7 @@ public class CreatePartGui extends GuiHandler {
 	public TextFieldWidget TextureSizeY;
 
 	public TextFieldWidget TextureID;
+	
 	public ButtonWidget CreatePart;
 	
 	public CreatePartGui() {
@@ -101,7 +103,7 @@ public class CreatePartGui extends GuiHandler {
 			if (data.createPartData.mesh != "Cube") {
 				createPartHelper.createMesh(data.createPartData.mesh, data.createPartData.Position, data.createPartData.Size, data.createPartData.UV, data.model, data.entity, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			} else {
-				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText(), data.entity);
+				createPartHelper.createCuboid(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
 			}
 			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
 				PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);
@@ -183,7 +185,7 @@ public class CreatePartGui extends GuiHandler {
 
 			PreviewModelPart preview = new PreviewModelPart();
 			preview.mesh = mesh;
-			preview.owner = PixelsCharacterModels.PlayerDataList.get(data.entity.getUuid()).limbs.get(data.SelectedPartModel);
+			preview.owner = PixelsCharacterModels.dataPackets.get(data.SelectedPartModel);
 			PixelsCharacterModels.previewModelPart = preview;
 		} else {
 			ModelPartCube cube = createPartHelper.createCuboidReturn(data.createPartData.Position, data.createPartData.Size, data.createPartData.Pivot, new MapVec2(64, 64), data.createPartData.UV, data.SelectedPartModel, PartName.getText(), TextureID.getText());
@@ -191,7 +193,7 @@ public class CreatePartGui extends GuiHandler {
 
 			PreviewModelPart preview = new PreviewModelPart();
 			preview.cube = cube;
-			preview.owner = PixelsCharacterModels.PlayerDataList.get(data.entity.getUuid()).limbs.get(data.SelectedPartModel);
+			preview.owner = PixelsCharacterModels.dataPackets.get(data.SelectedPartModel);
 			PixelsCharacterModels.previewModelPart = preview;
 		}
 	}

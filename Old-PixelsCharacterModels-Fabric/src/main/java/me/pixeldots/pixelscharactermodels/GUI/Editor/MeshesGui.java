@@ -7,10 +7,11 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
@@ -67,8 +68,8 @@ public class MeshesGui extends GuiHandler {
 		int row = 1;
 		int col = 0;
 		if (MeshFiles != null) {
-			for (File file : MeshFiles) {
-				String name = file.getName().replace(".obj", "");
+			for (int i = 0; i < MeshFiles.length; i++) {
+				String name = MeshFiles[i].getName().replace(".obj", "");
 				Meshes.add(addButton(new ButtonWidget(200+(55*col),50+(25*row),50,20, Text.of(name), (button) -> {
 					button.active = true;
 					SelectMesh(name);
@@ -81,11 +82,9 @@ public class MeshesGui extends GuiHandler {
 			}
 		}
 		
-		for (ButtonWidget widget : Meshes) {
-			if (widget.getMessage().asString() == PixelsCharacterModels.GuiData.createPartData.mesh) {
-				widget.active = false;
-				break;
-			}
+		for (int i = 0; i < Meshes.size(); i++) {
+			if (Meshes.get(i).getMessage().asString() == PixelsCharacterModels.GuiData.createPartData.mesh)
+			{Meshes.get(i).active = false; break;}
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels.other;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 import org.lwjgl.glfw.GLFW;
@@ -75,6 +76,6 @@ public class KeyBindings {
 		if (current.equals(name))
 			AnimationHelper.stop(entity, model, true);
 		else
-			AnimationHelper.play(Paths.get(".", "PCM/Animations/" + name).toFile(), entity, model);
+			AnimationHelper.play(Paths.get(".", "PCM" + File.separator + "Animations" + File.separator + name).toFile(), entity, model);
 	}
 }

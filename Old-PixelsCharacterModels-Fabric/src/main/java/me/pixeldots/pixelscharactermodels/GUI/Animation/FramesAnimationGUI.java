@@ -6,9 +6,10 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -94,7 +95,8 @@ public class FramesAnimationGUI extends GuiHandler {
 		
 		int Col = 1;
 		int Row = 1;
-		for (String key : PixelsCharacterModels.client.currentStoredFrames.frames) {
+		for (int i = 0; i < PixelsCharacterModels.client.currentStoredFrames.frames.size(); i++) {
+			String key = (String) PixelsCharacterModels.client.currentStoredFrames.frames.get(i);
 			Animations.add(addButton(new ButtonWidget(200+(Row*55), 50+(Col*25), 50, 20, Text.of(key), (button) -> {
 				button.active = false;
 				SelectAnimation(key);
@@ -107,11 +109,9 @@ public class FramesAnimationGUI extends GuiHandler {
 			if (Row > maxRow) break;
 		}
 		
-		for (ButtonWidget widget : Animations) {
-			if (widget.getMessage().asString() == PixelsCharacterModels.GuiData.SelectedAnimation) {
-				widget.active = false;
-				break;
-			}
+		for (int i = 0; i < Animations.size(); i++) {
+			if (Animations.get(i).getMessage().asString() == PixelsCharacterModels.GuiData.SelectedAnimation)
+			{Animations.get(i).active = false; break;}
 		}
 	}
 	

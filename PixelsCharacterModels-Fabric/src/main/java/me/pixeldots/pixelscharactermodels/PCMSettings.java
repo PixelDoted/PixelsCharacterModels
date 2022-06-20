@@ -1,15 +1,8 @@
 package me.pixeldots.pixelscharactermodels;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
-
+import me.pixeldots.pixelscharactermodels.files.FileHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -24,31 +17,17 @@ public class PCMSettings {
 
     // loads settings from Path
     public static PCMSettings load(Path path) {
-        Gson gson = new Gson();
-        try {
-            return gson.fromJson(new FileReader(path.toFile()), PCMSettings.class);
-        } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
-        // creates a new settings file if it fails to read the settings
-        PCMSettings settings = new PCMSettings();
+        PCMSettings settings = (PCMSettings)FileHelper.read(path.toFile(), PCMSettings.class);
+        if (settings == null) settings = new PCMSettings();
+
         settings.save(path);
         return settings;
     }
 
     // saves the settings to Path
     public void save(Path path) {
-        Gson gson = new Gson();
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(path.toFile());
-            gson.toJson(this, writer);
-        } catch (JsonIOException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try { writer.close(); } catch (IOException e) {}
-        }
+        FileHelper.write(path.toFile(), this);
     }
 
 }

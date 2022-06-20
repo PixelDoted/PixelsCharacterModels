@@ -93,7 +93,7 @@ public class AnimationGui extends GuiHandler {
 
         // Left Panel
         if (selectedNode == -1) {
-            File[] files = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Animations" + path_offset).listFiles();
+            File[] files = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Animations" + path_offset).listFiles();
             for (int i = 0; i < files.length; i++) {
                 final File file = files[i];
 
@@ -117,7 +117,7 @@ public class AnimationGui extends GuiHandler {
 
             TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 5, this.height-30, 110, 10, Text.of("")));
             addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("create"), (btn) -> {
-                File file = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Animations" + path_offset + "/" + createname.getText() + ".json");
+                File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Animations" + path_offset + File.separator + createname.getText() + ".json");
                 boolean result = AnimationHelper.write(file, animation);
                 if (result == false)
                     this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be created"), false);

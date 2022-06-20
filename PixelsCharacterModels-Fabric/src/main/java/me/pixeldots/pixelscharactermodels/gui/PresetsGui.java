@@ -80,7 +80,7 @@ public class PresetsGui extends GuiHandler {
         }));
         presetButtons.add(default_preset);
 
-        File[] files = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Presets" + path_offset).listFiles();
+        File[] files = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Presets" + path_offset).listFiles();
         for (int i = 0; i < files.length; i++) {
             final File file = files[i];
             //if (!file.isDirectory()) continue;
@@ -100,7 +100,7 @@ public class PresetsGui extends GuiHandler {
 
         TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 5, this.height-30, 110, 10, Text.of("")));
         addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("create"), (btn) -> {
-            File file = new File(this.client.runDirectory.getAbsolutePath() + "/PCM/Presets" + path_offset + "/" + createname.getText());
+            File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Presets" + path_offset + File.separator + createname.getText());
             PresetHelper.write_preset(file, entity, model);
             this.client.setScreen(new PresetsGui(entity, entityViewScale));
         }));

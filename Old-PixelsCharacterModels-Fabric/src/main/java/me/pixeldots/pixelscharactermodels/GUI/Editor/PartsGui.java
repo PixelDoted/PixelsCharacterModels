@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.PlayerData;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
-import me.pixeldots.pixelscharactermodels.model.ModelPartData;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
@@ -26,7 +26,6 @@ public class PartsGui extends GuiHandler {
 	
 	public ButtonWidget Create;
 	public ButtonWidget Remove;
-	public ButtonWidget Edit;
 	public ButtonWidget BackButton;
 	
 	public List<ButtonWidget> Parts = new ArrayList<ButtonWidget>();
@@ -96,12 +95,8 @@ public class PartsGui extends GuiHandler {
 		Remove = addButton(new ButtonWidget(5, 125, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Remove), (button) -> {
 			RemovePart();
 		}));
-		/*Edit = addButton(new ButtonWidget(5, 150, 50, 20, Text.of(PixelsCharacterModels.TranslatedText.Edit), (button) -> {
-			PixelsCharacterModels.client.openScreen(new CreatePartGui(PartModelID, PartModelisMesh));
-		}));*/
 		if (PixelsCharacterModels.GuiData.SelectedPartModel != null) {
-			PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
-			ModelPartData data = playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel);
+			ModelPartData data = PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel);
 			int col = 0;
 			int row = 0;
 			for (int i = 0; i < data.cubes.size(); i++) {
@@ -129,11 +124,9 @@ public class PartsGui extends GuiHandler {
 				}
 			}
 		}
-		for (ButtonWidget widget : Parts) {
-			if (widget.getMessage().asString() == PixelsCharacterModels.GuiData.SelectedPart) {
-				widget.active = false;
-				break;
-			}
+		for (int i = 0; i < Parts.size(); i++) {
+			if (Parts.get(i).getMessage().asString() == PixelsCharacterModels.GuiData.SelectedPart)
+			{Parts.get(i).active = false; break;}
 		}
 	}
 	
@@ -149,10 +142,9 @@ public class PartsGui extends GuiHandler {
 		PartModelisMesh = isMesh;
 	}
 	public void RemovePart() {
-		PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
 		if (PartModelID == -1) return;
-		if (PartModelisMesh) playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
-		else playerdata.limbs.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
+		if (PartModelisMesh) PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).meshes.remove(PartModelID);
+		else PixelsCharacterModels.dataPackets.get(PixelsCharacterModels.GuiData.SelectedPartModel).cubes.remove(PartModelID);
 		
 		if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json"))
 			PixelsCharacterModels.client.writePreset(PixelsCharacterModels.GuiData.SelectedPresetPath, client.player, PixelsCharacterModels.PlayerDataList.get(client.player.getUuid()).model);

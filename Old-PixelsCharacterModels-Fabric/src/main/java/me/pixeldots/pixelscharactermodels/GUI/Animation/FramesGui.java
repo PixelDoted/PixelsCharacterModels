@@ -8,9 +8,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.Animation.PCMFrames;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -119,11 +120,9 @@ public class FramesGui extends GuiHandler {
 			if (Row > maxRow) break;
 		}
 		
-		for (ButtonWidget widget : FramesList) {
-			if (widget.getMessage().asString().equalsIgnoreCase(PixelsCharacterModels.GuiData.SelectedFrames)) {
-				widget.active = false;
-				break;
-			}
+		for (int i = 0; i < FramesList.size(); i++) {
+			if (FramesList.get(i).getMessage().asString().equalsIgnoreCase(PixelsCharacterModels.GuiData.SelectedFrames))
+			{FramesList.get(i).active = false; break;}
 		}
 	}
 	

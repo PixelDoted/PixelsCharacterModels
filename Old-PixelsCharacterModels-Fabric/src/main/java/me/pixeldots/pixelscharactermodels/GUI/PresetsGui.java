@@ -1,12 +1,14 @@
 package me.pixeldots.pixelscharactermodels.GUI;
 
 import java.io.File;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.AnimationGui;
 import me.pixeldots.pixelscharactermodels.GUI.Animation.FramesGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -26,14 +28,11 @@ public class PresetsGui extends GuiHandler {
 	public ButtonWidget RenamePreset;
 	public ButtonWidget DeletePreset;
 	
-	public String update;
 	public String path = "";
 	
 	public PresetsGui() { this(true); }
 	public PresetsGui(boolean checkForUpdates) {
 		super("Presets");
-		if (checkForUpdates) PixelsCharacterModels.checkForUpdate((s) -> { update = s; });
-		else update = "";
 	}
 
 	public PresetsGui(String _path) { this(_path, true); }
@@ -79,18 +78,18 @@ public class PresetsGui extends GuiHandler {
 		int row = 0;
 		int col = 0;
 		for (int i = 0; i < presets.length; i++) { //6 per col, max 24
-			File preset = presets[i];
 			int num = i;
-			String filePath = preset.getPath().replace(PixelsCharacterModels.PresetsData.PresetsPath + File.separator, "");
-			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(preset.getName().replace(".json", "")), (value) -> {
+
+			String fileName = presets[i].getName();
+			ButtonWidget b = addButton( new ButtonWidget(120 + 10 + (60*col), (15*((row + 1) + row) + 5), 50, 20, Text.of(presets[i].getName().replace(".json", "")), (value) -> {
 				if (presets[num].isDirectory()) {
-					PixelsCharacterModels.client.openScreen(new PresetsGui(filePath, false));
+					PixelsCharacterModels.client.openScreen(new PresetsGui(fileName, false));
 					return;
 				}
 
-				SelectPreset(filePath, value.getMessage().asString());
+				SelectPreset(fileName, value.getMessage().asString());
 			}));
-			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) if (filePath.equals(PixelsCharacterModels.GuiData.SelectedPresetPath)) b.active = false;
+			if (PixelsCharacterModels.GuiData.SelectedPresetPath.endsWith(".json")) if (fileName.equals(PixelsCharacterModels.GuiData.SelectedPresetPath)) b.active = false;
 			row++;
 			if (row >= 11) {
 				row = 0;
@@ -135,9 +134,6 @@ public class PresetsGui extends GuiHandler {
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		drawString(matrices, "Pixel's Character Models - Fabric, Version: " + PixelsCharacterModels.modVersion, 5, this.height-20);
-		if (update != "") {
-			drawString(matrices, update == null ? "Checking for Updates..." : "an update is available, Version: " + update, 5, this.height-30);
-		}
 		drawEntity(50, this.height/2+150, 75, (float)(50) - mouseX, (float)(this.height/2+150-125) - mouseY, PixelsCharacterModels.GuiData.entity);
 		if (PixelsCharacterModels.GuiData.model == null) 
 			PixelsCharacterModels.GuiData.model = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid()).model;

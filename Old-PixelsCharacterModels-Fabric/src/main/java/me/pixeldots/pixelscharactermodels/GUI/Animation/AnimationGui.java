@@ -3,11 +3,10 @@ package me.pixeldots.pixelscharactermodels.GUI.Animation;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.PlayerData;
-import me.pixeldots.pixelscharactermodels.GUI.GuiHandler;
 import me.pixeldots.pixelscharactermodels.GUI.PresetsGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.EditorGui;
 import me.pixeldots.pixelscharactermodels.GUI.Editor.PartsGui;
+import me.pixeldots.pixelscharactermodels.GUI.Handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -121,8 +120,7 @@ public class AnimationGui extends GuiHandler {
 	}
 	
 	public void setRotation() {
-		PlayerData playerdata = PixelsCharacterModels.PlayerDataList.get(PixelsCharacterModels.GuiData.entity.getUuid());
-		if (!playerdata.limbs.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) return;
+		if (!PixelsCharacterModels.dataPackets.containsKey(PixelsCharacterModels.GuiData.SelectedPartModel)) return;
 		if (!PixelsCharacterModels.client.currentStoredAnimation.LimbParts.contains(PixelsCharacterModels.GuiData.SelectedPartModel)) {
 			PixelsCharacterModels.client.currentStoredAnimation.LimbParts.add(PixelsCharacterModels.GuiData.SelectedPartModel);
 			PixelsCharacterModels.client.currentStoredAnimation.LimbRotations.put(PixelsCharacterModels.GuiData.SelectedPartModel, new MapVec3());

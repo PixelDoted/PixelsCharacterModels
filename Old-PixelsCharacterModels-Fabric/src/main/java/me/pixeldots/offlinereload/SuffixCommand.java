@@ -4,13 +4,17 @@ import java.io.File;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 
+import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import me.pixeldots.pixelscharactermodels.PlayerData;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 
 public class SuffixCommand {
 
+	@SuppressWarnings("resource")
 	public static void Register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		if (dispatcher == null) return;
 		dispatcher.register(CommandManager.literal("skinsuffix").executes(context -> {
@@ -28,8 +32,8 @@ public class SuffixCommand {
 			
 			File[] files = new File(PixelsCharacterModels.client.minecraft.runDirectory+"/cachedImages/skins").listFiles();
 			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("local skins >"), false);
-			for (File file : files) {
-				PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(file.getName()), false);
+			for (int i = 0; i < files.length; i++) {
+				PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText(files[i].getName()), false);
 			}
 			PixelsCharacterModels.client.minecraft.player.sendMessage(new LiteralText("< local skins"), false);
 			

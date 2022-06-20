@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
 import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
-import me.pixeldots.pixelscharactermodels.model.ModelPartData;
-import me.pixeldots.pixelscharactermodels.model.cube.ModelPartCube;
-import me.pixeldots.pixelscharactermodels.model.mesh.ModelPartMesh;
+import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;
 import me.pixeldots.pixelscharactermodels.utils.MapVec3;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -22,30 +21,28 @@ public class PresetData {
 	public float GlobalScale = 1;
 	public String skinSuffix = "";
 	
-	public void convertModelData(PlayerEntity player, PlayerEntityModel<?> model) {
-		PlayerData data = PixelsCharacterModels.PlayerDataList.get(player.getUuid());
-		partData.put("head", new PresetPartData(data.limbs.get(model.head)));
-		partData.put("body", new PresetPartData(data.limbs.get(model.body)));
-		partData.put("leftleg", new PresetPartData(data.limbs.get(model.leftLeg)));
-		partData.put("rightleg", new PresetPartData(data.limbs.get(model.rightLeg)));
-		partData.put("leftarm", new PresetPartData(data.limbs.get(model.leftArm)));
-		partData.put("rightarm", new PresetPartData(data.limbs.get(model.rightArm)));
+	public void convertModelData(PlayerEntityModel<?> model) {
+		partData.put("head", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.head)));
+		partData.put("body", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.body)));
+		partData.put("leftleg", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.leftLeg)));
+		partData.put("rightleg", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.rightLeg)));
+		partData.put("leftarm", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.leftArm)));
+		partData.put("rightarm", new PresetPartData(PixelsCharacterModels.dataPackets.get(model.rightArm)));
 	}
 	
 	public void convertToModel(PlayerEntity player, PlayerEntityModel<?> model, boolean isPacket) {
 		if (player == null) return;
 		if (isPacket == false) MainClientHandler.changePlayerScale(GlobalScale);
-		PlayerData data = PixelsCharacterModels.PlayerDataList.get(player.getUuid());
 		
 		PixelsCharacterModels.client.setSkinSuffix(player.getGameProfile().getId(), skinSuffix);
 		PixelsCharacterModels.client.ReloadSkins();
 		
-		data.getLimb(model.head, player, model).copyData(partData.get("head"), model.head);
-		data.getLimb(model.body, player, model).copyData(partData.get("body"), model.body);
-		data.getLimb(model.leftLeg, player, model).copyData(partData.get("leftleg"), model.leftLeg);
-		data.getLimb(model.rightLeg, player, model).copyData(partData.get("rightleg"), model.rightLeg);
-		data.getLimb(model.leftArm, player, model).copyData(partData.get("leftarm"), model.leftArm);
-		data.getLimb(model.rightArm, player, model).copyData(partData.get("rightarm"), model.rightArm);
+		PixelsCharacterModels.dataPackets.get(model.head).copyData(partData.get("head"), model.head);
+		PixelsCharacterModels.dataPackets.get(model.body).copyData(partData.get("body"), model.body);
+		PixelsCharacterModels.dataPackets.get(model.leftLeg).copyData(partData.get("leftleg"), model.leftLeg);
+		PixelsCharacterModels.dataPackets.get(model.rightLeg).copyData(partData.get("rightleg"), model.rightLeg);
+		PixelsCharacterModels.dataPackets.get(model.leftArm).copyData(partData.get("leftarm"), model.leftArm);
+		PixelsCharacterModels.dataPackets.get(model.rightArm).copyData(partData.get("rightarm"), model.rightArm);
 	}
 	
 	public class PresetPartData {
@@ -61,30 +58,30 @@ public class PresetData {
 			this.scale = data.scale;
 			this.pos = data.pos;
 			this.rot = data.rot;
-			for (ModelPartCube cube : data.cubes) {
-				PresetCubeData preset_cube = new PresetCubeData();
-				preset_cube.name = cube.name;
-				preset_cube.pos = cube.pos;
-				preset_cube.size = cube.size;
-				preset_cube.uvOffset = cube.uv;
+			for (int i = 0; i < data.cubes.size(); i++) {
+				PresetCubeData cube = new PresetCubeData();
+				cube.name = data.cubes.get(i).name;
+				cube.pos = data.cubes.get(i).pos;
+				cube.size = data.cubes.get(i).size;
+				cube.uvOffset = data.cubes.get(i).uv;
 
-				if (cube.textureFile != null && !cube.textureFile.equals(""))
-					preset_cube.textureID = cube.textureFile;
+				if (data.cubes.get(i).textureFile != null && !data.cubes.get(i).textureFile.equals(""))
+					cube.textureID = data.cubes.get(i).textureFile;
 
-				cubes.add(preset_cube);
+				cubes.add(cube);
 			}
-			for (ModelPartMesh mesh : data.meshes) {
-				PresetMeshData preset_mesh = new PresetMeshData();
-				preset_mesh.name = mesh.name;
-				preset_mesh.pos = mesh.pos;
-				preset_mesh.size = mesh.size;
-				preset_mesh.uvOffset = mesh.uv;
-				preset_mesh.meshID = mesh.meshID;
+			for (int i = 0; i < data.meshes.size(); i++) {
+				PresetMeshData mesh = new PresetMeshData();
+				mesh.name = data.meshes.get(i).name;
+				mesh.pos = data.meshes.get(i).pos;
+				mesh.size = data.meshes.get(i).size;
+				mesh.uvOffset = data.meshes.get(i).uv;
+				mesh.meshID = data.meshes.get(i).meshID;
 
-				if (mesh.textureFile != null && !mesh.textureFile.equals(""))
-					preset_mesh.textureID = mesh.textureFile;
+				if (data.meshes.get(i).textureFile != null && !data.meshes.get(i).textureFile.equals(""))
+					mesh.textureID = data.meshes.get(i).textureFile;
 
-				meshes.add(preset_mesh);
+				meshes.add(mesh);
 			}
 		}
 	}

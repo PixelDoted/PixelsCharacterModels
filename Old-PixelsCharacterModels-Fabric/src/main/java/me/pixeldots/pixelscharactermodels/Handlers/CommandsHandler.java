@@ -4,12 +4,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 public class CommandsHandler {
 	
+	@SuppressWarnings("resource")
 	public static void Register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(CommandManager.literal("PCM").executes((value) -> {
 			PixelsCharacterModels.GuiData.entity = PixelsCharacterModels.client.minecraft.player;

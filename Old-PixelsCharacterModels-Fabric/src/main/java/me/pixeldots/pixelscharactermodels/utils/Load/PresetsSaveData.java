@@ -22,7 +22,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public class PresetsSaveData {
 	
 	public String PresetsPath = "{mcdir}/PCM/Presets";
-	
+
 	public void Initialize() {
 		System.out.println("Checking Presets Folder");
 		PresetsPath.replace("/", File.separator);
@@ -42,7 +42,7 @@ public class PresetsSaveData {
 		File file = getPreset(path);
 		if (file == null) return false;
 		if (!file.exists()) return false;
-		
+
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
@@ -56,24 +56,27 @@ public class PresetsSaveData {
 			PixelsCharacterModels.client.sendClientMessage("An error occurred while loading that preset");
 			PixelsCharacterModels.client.sendClientMessage("This could be caused by the .json file being corrupted or invalid");
 		} finally {
-			try { reader.close(); } catch (IOException e) { }
+			try { if (reader != null) reader.close(); } catch(IOException e) { }
 		}
 		return true;
 	}
 	
 	public File[] getPresets(String path) {
 		File folder = new File(PresetsPath);
-		if (path != null && !path.equals("")) folder = new File(PresetsPath + File.separator + path);
+		if (path != null && !path.equals("")) folder = new File(path);
 		if (!folder.exists()) return new File[0];
 		return folder.listFiles();
 	}
 	
 	public File getPreset(String path) {
 		return new File(PresetsPath + File.separator + path);
+		/*File[] files = getPresets();
+		if (files.length <= id) return null;
+		return files[id];*/
 	}
 	
 	public void writePresetFile(PresetData data, String path) {
-		String file = PresetsPath + File.separator + path;
+		String file = (PresetsPath + File.separator + path);
 		Writer writer = null;
 		try {
 		    writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
@@ -82,7 +85,7 @@ public class PresetsSaveData {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
-		   try { writer.close(); } catch (IOException e) { }
+		   try { if (writer != null) writer.close(); } catch(IOException e) { }
 		}
 	}
 	

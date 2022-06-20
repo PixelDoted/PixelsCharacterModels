@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.pixeldots.pixelscharactermodels.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+  	"ModelPartMixin",
+  	"HeldItemLayerMixin",
+  	"LivingEntityRendererMixin",
+  	"ArmorFeatureRendererMixin",
+  	"CameraMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -21,7 +21,7 @@ public class LivingEntityRendererMixin {
 	public void renderHead(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
 		if (livingEntity instanceof PlayerEntity) {
 			LivingEntityRenderer<?,?> renderer = livingRenderer();
-			PixelsCharacterModels.Rendering.player.playerRenderHead((PlayerEntityModel<?>)renderer.getModel(), (PlayerEntity)livingEntity, renderer);
+			PixelsCharacterModels.Rendering.playerRenderHead((PlayerEntityModel<?>)renderer.getModel(), (PlayerEntity)livingEntity, renderer);
 			PixelsCharacterModels.Rendering.currentPlayerRendering = ((PlayerEntity)livingEntity).getGameProfile();
 		}
 	}
@@ -30,7 +30,7 @@ public class LivingEntityRendererMixin {
 	public void renderTail(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
 		if (livingEntity instanceof PlayerEntity) {
 			LivingEntityRenderer<?,?> renderer = livingRenderer();
-			PixelsCharacterModels.Rendering.player.playerRenderTail((PlayerEntityModel<?>)renderer.getModel(), (PlayerEntity)livingEntity, renderer);
+			PixelsCharacterModels.Rendering.playerRenderTail((PlayerEntityModel<?>)renderer.getModel(), (PlayerEntity)livingEntity, renderer);
 		}
 	}
 	

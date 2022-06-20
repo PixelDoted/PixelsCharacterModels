@@ -15,22 +15,22 @@ public class ModelPartMixin {
 	
 	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V", cancellable = true)
 	public void renderMainHEAD(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
-		PixelsCharacterModels.Rendering.cubioud.renderPartHead(matrices, vertices, (ModelPart)(Object)this, light, overlay, info);
+		PixelsCharacterModels.Rendering.renderPartHead(matrices, vertices, (ModelPart)(Object)this, light, overlay, info);
     }
 	
 	@Inject(at = @At("TAIL"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V", cancellable = true)
 	public void renderMainTAIL(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
-		PixelsCharacterModels.Rendering.cubioud.renderPartTail(matrices, vertices, (ModelPart)(Object)this, light, overlay, info);
+		PixelsCharacterModels.Rendering.renderPartTail(matrices, vertices, (ModelPart)(Object)this, light, overlay, info);
     }
 	
 	@Inject(at = @At("HEAD"), method = "renderCuboids(Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V", cancellable = true)
 	public void renderCuboidsHead(MatrixStack.Entry matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
-		PixelsCharacterModels.Rendering.cubioud.renderPartCubioudsHead(matrices, (ModelPart)(Object)this, vertexConsumer, light, overlay, info);
+		PixelsCharacterModels.Rendering.renderPartCubioudsHead(matrices, (ModelPart)(Object)this, vertexConsumer, light, overlay, info);
 	}
 	
 	@Inject(at = @At("TAIL"), method = "renderCuboids(Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V", cancellable = true)
 	public void renderCuboidsTail(MatrixStack.Entry matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo info) {
-		PixelsCharacterModels.Rendering.cubioud.renderPartCubioudsTail(matrices, (ModelPart)(Object)this, vertexConsumer, light, overlay, info);
+		PixelsCharacterModels.Rendering.renderPartCubioudsTail(matrices, (ModelPart)(Object)this, vertexConsumer, light, overlay, info);
 	}
 	
 }

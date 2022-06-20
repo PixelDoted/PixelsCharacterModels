@@ -20,7 +20,7 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try { fis.close(); } catch (IOException e) {}
+            try { if (fis != null) fis.close(); } catch (IOException e) {}
         }
 
         return output;
@@ -36,7 +36,7 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try { reader.close(); } catch (IOException e) {}
+            try { if (reader != null) reader.close(); } catch (IOException e) {}
         }
 
         return output;
@@ -52,7 +52,7 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try { writer.close(); } catch (IOException e) {}
+            try { if (writer != null) writer.close(); } catch (IOException e) {}
         }
         return false;
     }
@@ -67,7 +67,7 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try { writer.close(); } catch (IOException e) {}
+            try { if (writer != null) writer.close(); } catch (IOException e) {}
         }
         return false;
     }
