@@ -23,3 +23,5 @@
 + Animations
 + Skin Suffix Networking
 + New Animation GUI
++ Show NameTags Setting
++ Show Armor Setting

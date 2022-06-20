@@ -75,6 +75,15 @@ public class SettingsGui extends GuiHandler {
         addDrawableElement(new ToggleWidget(5, 60, 110, 10, "Preview Preset", PCMMain.settings.preview_preset, (val) -> {
             PCMMain.settings.preview_preset = val;
         }));
+        addDrawableElement(new ToggleWidget(5, 75, 110, 10, "Radians instead of Degress", PCMMain.settings.radians_instead_of_degress, (val) -> {
+            PCMMain.settings.radians_instead_of_degress = val;
+        }));
+        addDrawableElement(new ToggleWidget(5, 90, 110, 10, "Show NameTags", PCMMain.settings.show_nametags, (val) -> {
+            PCMMain.settings.show_nametags = val;
+        }));
+        addDrawableElement(new ToggleWidget(5, 105, 110, 10, "Show Armor", PCMMain.settings.show_armor, (val) -> {
+            PCMMain.settings.show_armor = val;
+        }));
 
         addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("Clear Entity Data"), (btn) -> {
             SkinHelper.clearSkins();

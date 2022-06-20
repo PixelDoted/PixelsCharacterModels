@@ -1,6 +1,7 @@
 package me.pixeldots.pixelscharactermodels.other;
 
 import me.pixeldots.pixelscharactermodels.gui.GuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.widgets.NumberFieldWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -57,6 +58,23 @@ public class Node {
         gui.addTextField(bX); gui.addTextField(bY); gui.addTextField(bZ);
     }
 
+    // create 3 GUI Buttons
+    public static void threeButtonRotation(GuiHandler gui, int x, int y, Node node) {
+        NumberFieldWidget bX = new NumberFieldWidget(gui.textRendererGUI, x, y, 30, 10, 0);
+        NumberFieldWidget bY = new NumberFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, 0);
+        NumberFieldWidget bZ = new NumberFieldWidget(gui.textRendererGUI, x+69, y, 30, 10, 0);
+        bX.show_decimal = true; bY.show_decimal = true; bZ.show_decimal = true;
+
+        bX.setChangedListener((s) -> { node.args[0] = PCMUtils.RadiansOrDegressToString(bX.getNumber()); node.changed = true; });
+        bY.setChangedListener((s) -> { node.args[1] = PCMUtils.RadiansOrDegressToString(bY.getNumber()); node.changed = true; });
+        bZ.setChangedListener((s) -> { node.args[2] = PCMUtils.RadiansOrDegressToString(bZ.getNumber()); node.changed = true; });
+
+        bX.setNumber(PCMUtils.RadiansOrDegress(PCMUtils.getFloat(node.args[0])));
+        bY.setNumber(PCMUtils.RadiansOrDegress(PCMUtils.getFloat(node.args[1])));
+        bZ.setNumber(PCMUtils.RadiansOrDegress(PCMUtils.getFloat(node.args[2])));
+        gui.addTextField(bX); gui.addTextField(bY); gui.addTextField(bZ);
+    }
+
     public enum NodeType {
         PARTICLE((gui, x, y, node) -> {
             TextFieldWidget type = new TextFieldWidget(gui.textRendererGUI, x, y, 100, 10, Text.of(""));
@@ -82,8 +100,8 @@ public class Node {
         }, (node) -> { return "particle " + node.argsToString(); }, 7),
         TRANSLATE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, 3),
         SCALE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, 3),
-        ROTATE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, 3),
-        ANGLE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, 3),
+        ROTATE((gui, x, y, node) -> { threeButtonRotation(gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, 3),
+        ANGLE((gui, x, y, node) -> { threeButtonRotation(gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, 3),
         VERTEX((gui, x, y, node) -> {}, (node) -> { return "vertex " + node.argsToString(); }, 12),
         CUBE((gui, x, y, node) -> {
             TextFieldWidget bU = new TextFieldWidget(gui.textRendererGUI, x, y, 30, 10, Text.of(""));

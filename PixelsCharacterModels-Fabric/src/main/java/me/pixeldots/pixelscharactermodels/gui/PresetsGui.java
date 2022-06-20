@@ -79,13 +79,14 @@ public class PresetsGui extends GuiHandler {
             defaultPreset(false);
         }));
         presetButtons.add(default_preset);
+        presets_offset += 10;
 
         File[] files = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Presets" + path_offset).listFiles();
         for (int i = 0; i < files.length; i++) {
             final File file = files[i];
-            //if (!file.isDirectory()) continue;
+            if (!file.isDirectory()) continue;
 
-            final boolean is_preset = (file.isDirectory() && containsRoot(file.listFiles())) || file.getName().endsWith(".json");
+            final boolean is_preset = file.isDirectory() && containsRoot(file.listFiles());
             ButtonWidget widget = addButton(new ButtonWidget(15, presets_offset+(i*10)+yscroll, 100, 10, Text.of((is_preset ? "" : "~") + file.getName()), (btn) -> {
                 if (is_preset) selectPreset(file, false);
                 else path_offset += "/" + file.getName();

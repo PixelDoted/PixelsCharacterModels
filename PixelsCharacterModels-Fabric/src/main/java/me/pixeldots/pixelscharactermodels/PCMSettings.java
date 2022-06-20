@@ -12,7 +12,10 @@ public class PCMSettings {
     @Environment(EnvType.CLIENT) public boolean player_faces_cursor_ui = true; // if enabled, the rendered player faces the cursor in the GUI
     @Environment(EnvType.CLIENT) public boolean keybinding_opens_editor = false; // if enabled, pressing the openGUI keybinding opens the Editor GUI
     @Environment(EnvType.CLIENT) public boolean preview_preset = true; // if enabled, to use a preset you have to press select in the Presets GUI
-    
+    @Environment(EnvType.CLIENT) public boolean radians_instead_of_degress = false; // if enabled, rotate and angle will show degress instead of radians
+    @Environment(EnvType.CLIENT) public boolean show_nametags = true; // if disabled, nametags won't be shown
+    @Environment(EnvType.CLIENT) public boolean show_armor = true; // is disabled, armor won't be shown
+
     public boolean save_entity_scripts = false; // if enabled, saves entity data to the server
 
     // loads settings from Path
