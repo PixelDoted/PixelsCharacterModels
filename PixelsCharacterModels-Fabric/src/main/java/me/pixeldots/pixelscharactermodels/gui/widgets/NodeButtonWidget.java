@@ -2,9 +2,13 @@ package me.pixeldots.pixelscharactermodels.gui.widgets;
 
 
 import me.pixeldots.pixelscharactermodels.gui.EditorGui;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 
-public class NodeButtonWidget extends AButtonWidget {
+public class NodeButtonWidget extends FlatButtonWidget {
 
     public DragAction action;
 

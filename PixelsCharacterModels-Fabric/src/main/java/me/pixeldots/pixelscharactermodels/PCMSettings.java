@@ -16,6 +16,8 @@ public class PCMSettings {
     @Environment(EnvType.CLIENT) public boolean show_nametags = true; // if disabled, nametags won't be shown
     @Environment(EnvType.CLIENT) public boolean show_armor = true; // is disabled, armor won't be shown
 
+    @Environment(EnvType.CLIENT) public String[] animations = new String[5];
+
     public boolean save_entity_scripts = false; // if enabled, saves entity data to the server
 
     // loads settings from Path

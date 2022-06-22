@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class PCMMain implements ModInitializer {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger("pcm");
 
+	public static Path SettingsPath;
 	public static PCMSettings settings; // Client and Server settings
 
 	@Environment(EnvType.SERVER) 
@@ -26,7 +28,8 @@ public class PCMMain implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		settings = PCMSettings.load(Paths.get(".", "config/PCM.json")); // load settings
+		SettingsPath = Paths.get(".", "config/PCM.json"); // set the config path
+		settings = PCMSettings.load(SettingsPath); // load settings
 		ServerNetwork.register(); // register all server receivers
 	}
 

@@ -8,10 +8,11 @@ import java.util.UUID;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
-import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NumberFieldWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.OffsetFlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
@@ -97,13 +98,13 @@ public class AnimationGui extends GuiHandler {
             for (int i = 0; i < files.length; i++) {
                 final File file = files[i];
 
-                ButtonWidget widget = addButton(new ButtonWidget(15, 15+(i*10)+yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
+                ButtonWidget widget = addButton(new FlatButtonWidget(15, 15+(i*10)+yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
                     if (file.isDirectory()) path_offset += "/" + file.getName();
                     else selectAnimation(file);
 
                     this.client.setScreen(new AnimationGui(entity, entityViewScale));
                 }));
-                ButtonWidget save_widget = addButton(new ButtonWidget(5, 15+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
+                ButtonWidget save_widget = addButton(new FlatButtonWidget(5, 15+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
                     boolean result = AnimationHelper.write(file, animation);
                     if (result == false)
                         this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be saved"), false);
@@ -116,7 +117,7 @@ public class AnimationGui extends GuiHandler {
             }
 
             TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 5, this.height-30, 110, 10, Text.of("")));
-            addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("create"), (btn) -> {
+            addButton(new FlatButtonWidget(5, this.height-15, 110, 10, Text.of("create"), (btn) -> {
                 File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Animations" + path_offset + File.separator + createname.getText() + ".json");
                 boolean result = AnimationHelper.write(file, animation);
                 if (result == false)
@@ -126,7 +127,7 @@ public class AnimationGui extends GuiHandler {
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
         } else {
-            addButton(new ButtonWidget(5, 15+yscroll, 110, 10, Text.of("Save"), (btn) -> {
+            addButton(new FlatButtonWidget(5, 15+yscroll, 110, 10, Text.of("Save"), (btn) -> {
                 boolean result = AnimationHelper.write(animation_file, animation);
                 if (result == false)
                     this.client.player.sendMessage(Text.of("File \"" + animation_file.getAbsolutePath() + "\" could not be saved"), false);
@@ -144,12 +145,12 @@ public class AnimationGui extends GuiHandler {
         framerate.setNumber(animation.framerate);
         
         NumberFieldWidget frame_index = new NumberFieldWidget(textRenderer, 125+60, this.height-65, 25, 10, frame_index_value, false); addTextField(frame_index);
-        addButton(new ButtonWidget(155+60, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
+        addButton(new FlatButtonWidget(155+60, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
             animation.frames.add(animation.frames.get(animation.frames.size()-1));
             frame_index_value = animation.frames.size()-1;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
-        addButton(new ButtonWidget(190+60, this.height-65, 50, 10, Text.of("Remove"), (btn) -> {
+        addButton(new FlatButtonWidget(190+60, this.height-65, 50, 10, Text.of("Remove"), (btn) -> {
             animation.frames.remove(frame_index_value);
             frame_index_value--;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
@@ -240,7 +241,7 @@ public class AnimationGui extends GuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity, IAnimalModelMixin model) {
-        addScrollable(new AButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
+        addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
@@ -294,7 +295,7 @@ public class AnimationGui extends GuiHandler {
 
             final int num = i;
 
-            addScrollable(new ButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+            addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
                 if (nodes.size() == 0) compile_nodes(uuid, true);
@@ -319,7 +320,7 @@ public class AnimationGui extends GuiHandler {
             }));
         }
 
-        addScrollable(new ButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
+        addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
             this.client.setScreen(new NodeSelectGui(entity, entityViewScale, true));
         }));
 
@@ -327,7 +328,7 @@ public class AnimationGui extends GuiHandler {
     }
 
     public void createSelectableModelPart(final String partName, int x, int y, int row, final int index, Text name) {
-        addScrollable(new AButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
+        addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
                 selectedPart = -1;

@@ -101,17 +101,23 @@ public class PresetHelper {
         }
 
         ModelPartItem part = getModelPart(part_id, entity, model);
+        if (part == null) return;
+        
         ClientHelper.change_script(entity.getUuid(), part.part, part.id, script);
     }
 
     // get modelpart from part_id
     private static ModelPartItem getModelPart(String part_id, LivingEntity entity, EntityModel<?> model) {
         int part_int = PostfixOperation.isNumeric(part_id) ? Integer.parseInt(part_id) : -1;
-        EntityParts parts = PCMClient.EntityPartNames.map.get(entity.getType().getUntranslatedName());
+        EntityParts parts = null;
+        String entity_name = entity.getType().getUntranslatedName();
+
+        if (PCMClient.EntityPartNames.map.containsKey(entity_name))
+            parts = PCMClient.EntityPartNames.map.get(entity_name);
         
         int index = 100;
         for (ModelPart mPart : PlatformUtils.getHeadParts(model)) {
-            if (part_int == -1 && parts.headParts.containsKey(index-100) && parts.headParts.get(index-100).equalsIgnoreCase(part_id)) 
+            if (part_int == -1 && parts != null && parts.headParts.containsKey(index-100) && parts.headParts.get(index-100).equalsIgnoreCase(part_id)) 
                 return new ModelPartItem(mPart, index);
             else if (part_int == index) return new ModelPartItem(mPart, index);
             index++;
@@ -119,7 +125,7 @@ public class PresetHelper {
 
         index = 0;
         for (ModelPart mPart : PlatformUtils.getBodyParts(model)) {
-            if (part_int == -1 && parts.bodyParts.containsKey(index) && parts.bodyParts.get(index).equalsIgnoreCase(part_id)) 
+            if (part_int == -1 && parts != null && parts.bodyParts.containsKey(index) && parts.bodyParts.get(index).equalsIgnoreCase(part_id)) 
                 return new ModelPartItem(mPart, index);
             else if (part_int == index) return new ModelPartItem(mPart, index);
             index++;

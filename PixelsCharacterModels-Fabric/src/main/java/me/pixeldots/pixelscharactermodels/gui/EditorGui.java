@@ -6,9 +6,10 @@ import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
-import me.pixeldots.pixelscharactermodels.gui.widgets.AButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.OffsetFlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
@@ -21,6 +22,7 @@ import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -51,6 +53,7 @@ public class EditorGui extends GuiHandler {
         entity = _entity;
         model = (IAnimalModelMixin)PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
+        if (!(model instanceof AnimalModel<?>)) PCMClient.minecraft.setScreen(null);
     }
 
     public EditorGui(LivingEntity _entity, float _entityViewScale) {
@@ -84,7 +87,7 @@ public class EditorGui extends GuiHandler {
         }));
 
         // Left Panel
-        addButton(new ButtonWidget(5, 15, 100, 10, Text.of("compile"), (btn) -> {
+        addButton(new FlatButtonWidget(5, 15, 100, 10, Text.of("compile"), (btn) -> {
             compile_nodes(uuid, selectedPartModel, true);
         }));
 
@@ -175,7 +178,7 @@ public class EditorGui extends GuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity, IAnimalModelMixin model) {
-        addScrollable(new AButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
+        addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
@@ -227,7 +230,7 @@ public class EditorGui extends GuiHandler {
 
             final int num = i;
 
-            addScrollable(new ButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+            addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
                 if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
@@ -252,7 +255,7 @@ public class EditorGui extends GuiHandler {
             }));
         }
 
-        addScrollable(new ButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
+        addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
             this.client.setScreen(new NodeSelectGui(entity, entityViewScale, false));
         }));
 
@@ -260,7 +263,7 @@ public class EditorGui extends GuiHandler {
     }
 
     public void createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
-        addScrollable(new AButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
+        addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
                 selectedPart = -1;

@@ -27,7 +27,7 @@ public abstract class ScreenMixin {
     @Inject(at = @At("RETURN"), method = "init(Lnet/minecraft/client/MinecraftClient;II)V")
 	private void init(MinecraftClient client, int width, int height, CallbackInfo info) {
         if ((Object)this instanceof TitleScreen) {
-            ButtonWidget widget = new ButtonWidget(5, 5, 100, 10, Text.of("Model"), (btn) -> {
+            ButtonWidget widget = new FlatButtonWidget(5, 5, 100, 10, Text.of("Model"), (btn) -> {
                 LivingEntity entity = null;
 
                 if (PCMMain.settings.keybinding_opens_editor) PCMClient.minecraft.setScreen(new EditorGui(entity));

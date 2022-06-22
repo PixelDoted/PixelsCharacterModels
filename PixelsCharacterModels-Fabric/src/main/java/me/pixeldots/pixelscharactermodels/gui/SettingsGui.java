@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
+import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.ToggleWidget;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -62,30 +63,32 @@ public class SettingsGui extends GuiHandler {
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {})).active = false;
 
-
-        addDrawableElement(new ToggleWidget(5, 15, 110, 10, "Show block under Player", PCMMain.settings.show_block_under_player_ui, (val) -> {
+        addButton(new FlatButtonWidget(5, 15, 230, 10, Text.of("Save"), (btn) -> {
+            PCMMain.settings.save(PCMMain.SettingsPath);
+        }));
+        addDrawableElement(new ToggleWidget(5, 30, 230, 10, "Show block under Player", PCMMain.settings.show_block_under_player_ui, (val) -> {
             PCMMain.settings.show_block_under_player_ui = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 30, 110, 10, "Player faces Cursor", PCMMain.settings.player_faces_cursor_ui, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 45, 230, 10, "Player faces Cursor", PCMMain.settings.player_faces_cursor_ui, (val) -> {
             PCMMain.settings.player_faces_cursor_ui = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 45, 110, 10, "Keybinding opens Editor", PCMMain.settings.keybinding_opens_editor, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 60, 230, 10, "Keybinding opens Editor", PCMMain.settings.keybinding_opens_editor, (val) -> {
             PCMMain.settings.keybinding_opens_editor = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 60, 110, 10, "Preview Preset", PCMMain.settings.preview_preset, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 75, 230, 10, "Preview Preset", PCMMain.settings.preview_preset, (val) -> {
             PCMMain.settings.preview_preset = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 75, 110, 10, "Radians instead of Degress", PCMMain.settings.radians_instead_of_degress, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 90, 230, 10, "Radians instead of Degress", PCMMain.settings.radians_instead_of_degress, (val) -> {
             PCMMain.settings.radians_instead_of_degress = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 90, 110, 10, "Show NameTags", PCMMain.settings.show_nametags, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 105, 230, 10, "Show NameTags", PCMMain.settings.show_nametags, (val) -> {
             PCMMain.settings.show_nametags = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 105, 110, 10, "Show Armor", PCMMain.settings.show_armor, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 120, 230, 10, "Show Armor", PCMMain.settings.show_armor, (val) -> {
             PCMMain.settings.show_armor = val;
         }));
 
-        addButton(new ButtonWidget(5, this.height-15, 110, 10, Text.of("Clear Entity Data"), (btn) -> {
+        addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text.of("Clear Entity Data"), (btn) -> {
             SkinHelper.clearSkins();
             PCMClient.EntityAnimationList.clear();
             ScriptedModels.EntityScript.clear();
