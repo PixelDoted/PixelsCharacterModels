@@ -26,6 +26,7 @@ public class AnimationFile {
         public String script = ""; // frame script
         public Map<String, String> parts = new HashMap<>(); // frame parts script
         public float run_frame = 0; // frames till run
+        public boolean is_filler = false; // is this frame a filler frame
     }
 
 }

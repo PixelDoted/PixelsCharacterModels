@@ -13,6 +13,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.OverlayTexture;
@@ -55,7 +56,7 @@ public class GuiHandler extends Screen {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		for (Element element : gui_elements) {
-			element.mouseClicked(mouseX, mouseY, button);
+			if (element.mouseClicked(mouseX, mouseY, button)) return true;
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
@@ -92,6 +93,7 @@ public class GuiHandler extends Screen {
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		for (Element element : gui_elements) {
+			if (element instanceof PressableWidget) continue;
 			element.keyPressed(keyCode, scanCode, modifiers);
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
@@ -156,7 +158,7 @@ public class GuiHandler extends Screen {
 		this.drawHorizontalLine(matrices, x0, x1, y, argb);
 	}
 
-	public void drawColor(MatrixStack matrices, int x, int y, int width, int height, int r, int g, int b, int a) {
+	public static void drawColor(MatrixStack matrices, int x, int y, int width, int height, int r, int g, int b, int a) {
 		int x0 = x, x1 = x + width;
 		int y0 = y, y1 = y + height;
 
@@ -168,51 +170,7 @@ public class GuiHandler extends Screen {
 		DrawableHelper.fill(matrices, x0, y0, x1, y1, argb);
     }
 
-	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
-		float f = (float)Math.atan(mouseX / 40.0f);
-        float g = (float)Math.atan(mouseY / 40.0f);
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate(x, y, 1050.0);
-        matrixStack.scale(1.0f, 1.0f, -1.0f);
-        RenderSystem.applyModelViewMatrix();
-        MatrixStack matrixStack2 = new MatrixStack();
-        matrixStack2.translate(0.0, 0.0, 1000.0);
-        matrixStack2.scale(size, size, size);
-        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f);
-        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
-        quaternion.hamiltonProduct(quaternion2);
-        matrixStack2.multiply(quaternion);
-        float h = entity.bodyYaw;
-        float i = entity.getYaw();
-        float j = entity.getPitch();
-        float k = entity.prevHeadYaw;
-        float l = entity.headYaw;
-        entity.bodyYaw = 180.0f + f * 20.0f;
-        entity.setYaw(180.0f + f * 40.0f);
-        entity.setPitch(-g * 20.0f);
-        entity.headYaw = entity.getYaw();
-        entity.prevHeadYaw = entity.getYaw();
-        DiffuseLighting.method_34742();
-        EntityRenderDispatcher entityRenderDispatcher = PCMClient.minecraft.getEntityRenderDispatcher();
-        quaternion2.conjugate();
-        entityRenderDispatcher.setRotation(quaternion2);
-        entityRenderDispatcher.setRenderShadows(false);
-        VertexConsumerProvider.Immediate immediate = PCMClient.minecraft.getBufferBuilders().getEntityVertexConsumers();
-        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0));
-        immediate.draw();
-        entityRenderDispatcher.setRenderShadows(true);
-        entity.bodyYaw = h;
-        entity.setYaw(i);
-        entity.setPitch(j);
-        entity.prevHeadYaw = k;
-        entity.headYaw = l;
-        matrixStack.pop();
-        RenderSystem.applyModelViewMatrix();
-        DiffuseLighting.enableGuiDepthLighting();
-	}
-
-	public static void drawEntityOnBlock(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
+	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity, boolean block) {
 		float f = (float)Math.atan(mouseX / 40.0f);
         float g = (float)Math.atan(mouseY / 40.0f);
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
@@ -245,9 +203,11 @@ public class GuiHandler extends Screen {
         entityRenderDispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate immediate = PCMClient.minecraft.getBufferBuilders().getEntityVertexConsumers();
         RenderSystem.runAsFancy(() -> {
-			matrixStack2.translate(-.5, -1, -.5);
-			blockRenderManager.renderBlockAsEntity(Blocks.GRASS_BLOCK.getDefaultState(), matrixStack2, immediate, 0xF000F0, OverlayTexture.DEFAULT_UV);
-			matrixStack2.translate(.5, 1, .5);
+			if (block) {
+				matrixStack2.translate(-.5, -1, -.5);
+				blockRenderManager.renderBlockAsEntity(Blocks.DARK_OAK_PLANKS.getDefaultState(), matrixStack2, immediate, 0xF000F0, OverlayTexture.DEFAULT_UV);
+				matrixStack2.translate(.5, 1, .5);
+			}
 
 			entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0);
 		});
@@ -262,4 +222,5 @@ public class GuiHandler extends Screen {
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
 	}
+	
 }

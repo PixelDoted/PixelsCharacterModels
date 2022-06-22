@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lain.mods.skins.init.fabric.FabricOfflineSkins;
 import me.pixeldots.pixelscharactermodels.PixelsCharacterModels;
-import me.pixeldots.pixelscharactermodels.PlayerData;
 import me.pixeldots.pixelscharactermodels.main.MainClientHandler;
 import me.pixeldots.pixelscharactermodels.model.part.ModelPartData;
 import me.pixeldots.pixelscharactermodels.utils.MapVec2;

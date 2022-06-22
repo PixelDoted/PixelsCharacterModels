@@ -15,7 +15,7 @@ public class ToggleWidget extends ClickableWidget {
     public String base_message;
 
     public ToggleWidget(int x, int y, int width, int height, String message, boolean _toggled,  ToggleAction _ontoggle) {
-        super(x, y, width, height, Text.of((_toggled ? "[X]" : "[ ]") + message));
+        super(x, y, width, height, Text.of((_toggled ? "[X] " : "[ ] ") + message));
         this.base_message = message;
         this.on_toggle = _ontoggle;
     }
@@ -44,7 +44,7 @@ public class ToggleWidget extends ClickableWidget {
     @Override
     public void onClick(double mouseX, double mouseY) {
         toggled = !toggled;
-        this.setMessage(Text.of((toggled ? "[X]" : "[ ]") + base_message));
+        this.setMessage(Text.of((toggled ? "[X] " : "[ ] ") + base_message));
         on_toggle.invoke(toggled);
     }
 

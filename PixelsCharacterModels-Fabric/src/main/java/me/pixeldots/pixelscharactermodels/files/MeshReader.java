@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.pixeldots.pixelscharactermodels.files.meshreaders.OBJMeshReader;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3f;

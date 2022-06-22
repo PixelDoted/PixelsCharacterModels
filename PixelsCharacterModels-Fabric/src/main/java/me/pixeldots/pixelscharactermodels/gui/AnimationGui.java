@@ -145,7 +145,7 @@ public class AnimationGui extends GuiHandler {
         
         NumberFieldWidget frame_index = new NumberFieldWidget(textRenderer, 125+60, this.height-65, 25, 10, frame_index_value, false); addTextField(frame_index);
         addButton(new ButtonWidget(155+60, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
-            animation.frames.add(new AnimationFile.Frame());
+            animation.frames.add(animation.frames.get(animation.frames.size()-1));
             frame_index_value = animation.frames.size()-1;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
@@ -189,24 +189,16 @@ public class AnimationGui extends GuiHandler {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = (float)(this.width/2);
-        float entityMouseY = (float)(this.height/2-128);
+        float entityMouseX = 0;
+        float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
-            entityMouseX -= mouseX;
-            entityMouseY -= mouseY;
-        } else {
-            entityMouseX -= this.width/2-13.5f;
-            entityMouseY -= this.height/2+80;
+            entityMouseX = (float)(this.width/2) - mouseX;
+            entityMouseY = (float)(this.height/2+37-128) - mouseY;
         }
 
-        if (entity != null) {
-            if (PCMMain.settings.show_block_under_player_ui) {
-                drawEntityOnBlock(this.width/2, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity);
-            } else {
-                drawEntity(this.width/2, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity);
-            }
-        }
+        if (entity != null)
+            drawEntity(this.width/2, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
 
         drawColor(matrices, 120, this.height-80, this.width-240, 80, 0, 4, 17, 222);
         drawHorizontalLine(matrices, 120, this.width-120, this.height-80, 0, 0, 0, 255);

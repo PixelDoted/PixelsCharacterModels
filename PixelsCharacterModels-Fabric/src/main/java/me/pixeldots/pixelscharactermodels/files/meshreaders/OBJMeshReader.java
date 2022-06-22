@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.files;
+package me.pixeldots.pixelscharactermodels.files.meshreaders;
 
 import me.pixeldots.pixelscharactermodels.files.MeshReader.Mesh;
 import me.pixeldots.pixelscharactermodels.files.MeshReader.MeshTypeReader;

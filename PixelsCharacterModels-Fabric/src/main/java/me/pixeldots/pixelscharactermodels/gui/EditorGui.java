@@ -59,6 +59,12 @@ public class EditorGui extends GuiHandler {
     }
 
     public void setScreen(GuiHandler gui) {
+        selectedPart = -1;
+        selectedPartModel = null;
+        selectedNode = -1;
+        nodes.clear();
+        yscroll = 0;
+        isDragging = false;
         this.client.setScreen(gui);
     }
 
@@ -131,24 +137,16 @@ public class EditorGui extends GuiHandler {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = (float)(this.width/2);
-        float entityMouseY = (float)(this.height/2+37-125);
+        float entityMouseX = 0;
+        float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
-            entityMouseX -= mouseX;
-            entityMouseY -= mouseY;
-        } else {
-            entityMouseX -= this.width/2-13.5f;
-            entityMouseY -= this.height/2+80;
+            entityMouseX = (float)(this.width/2) - mouseX;
+            entityMouseY = (float)(this.height/2+37-125) - mouseY;
         }
 
-        if (entity != null) {
-            if (PCMMain.settings.show_block_under_player_ui) {
-                drawEntityOnBlock(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
-            } else {
-                drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity);
-            }
-        }
+        if (entity != null)
+            drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
 
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);

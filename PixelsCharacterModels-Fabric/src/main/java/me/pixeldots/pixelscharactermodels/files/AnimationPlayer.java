@@ -20,7 +20,7 @@ public class AnimationPlayer {
     public void updateCurrent(LivingEntity entity, EntityModel<?> model) {
         boolean check = animation.frames.size() > index+1;
         if (animation.loop || check) {
-            if (!check) index = -1;
+            if (!check) index = 0;
             if (animation.frames.get(index).run_frame <= frame) {
                 AnimationHelper.stop(entity, model, false);
                 AnimationHelper.play(name, this, animation.frames.get(index+1), entity, model);
@@ -32,5 +32,5 @@ public class AnimationPlayer {
             }
         } else AnimationHelper.stop(entity, model, true);
     }
-
+    
 }

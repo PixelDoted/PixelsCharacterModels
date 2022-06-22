@@ -3,6 +3,7 @@ package me.pixeldots.pixelscharactermodels.files;
 import java.io.File;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
+import me.pixeldots.pixelscharactermodels.files.old.OldPresetData;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames.EntityParts;
@@ -57,6 +58,9 @@ public class PresetHelper {
     // Reading Preset
     // read preset
     public static void read_preset(File folder, LivingEntity entity, EntityModel<?> model) {
+        if (folder.getName().endsWith(".json"))
+            folder = OldPresetData.toNew(folder);
+
         folder.mkdirs();
         if (model == null) model = PlatformUtils.getModel(entity);
         ClientHelper.reset_entity(entity.getUuid()); // reset entity scripts
