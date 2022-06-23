@@ -8,7 +8,7 @@ import java.util.Map;
 public class AnimationFile {
     
     public boolean loop = false; // if the animations is looping
-    public float framerate = 60; // the animations framerate
+    public int framerate = 60; // the animations framerate
     public boolean lerp = true;
     public List<Frame> frames = new ArrayList<>(); // the animations frames
 
@@ -25,7 +25,7 @@ public class AnimationFile {
     public static class Frame {
         public String script = ""; // frame script
         public Map<String, String> parts = new HashMap<>(); // frame parts script
-        public float run_frame = 0; // frames till run
+        public int run_frame = 0; // frames till run
         public boolean is_filler = false; // is this frame a filler frame
     }
 

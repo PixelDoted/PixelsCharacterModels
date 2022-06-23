@@ -11,16 +11,16 @@ import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
-import me.pixeldots.pixelscharactermodels.gui.widgets.NumberFieldWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.IntFieldWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.OffsetFlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -45,12 +45,12 @@ public class AnimationGui extends GuiHandler {
     public String path_offset = "";
 
     public LivingEntity entity;
-    public IAnimalModelMixin model;
+    public EntityModel<?> model;
     
     public AnimationGui(LivingEntity _entity) {
         super("Animation");
         entity = _entity;
-        model = (IAnimalModelMixin)PlatformUtils.getModel(_entity);
+        model = PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
     }
 
@@ -128,6 +128,7 @@ public class AnimationGui extends GuiHandler {
             }));
         } else {
             addButton(new FlatButtonWidget(5, 15+yscroll, 110, 10, Text.of("Save"), (btn) -> {
+                compile_nodes(uuid, true);
                 boolean result = AnimationHelper.write(animation_file, animation);
                 if (result == false)
                     this.client.player.sendMessage(Text.of("File \"" + animation_file.getAbsolutePath() + "\" could not be saved"), false);
@@ -135,16 +136,16 @@ public class AnimationGui extends GuiHandler {
         }
 
         // Right Panel
-        listModelParts(this.width-115, 15+yscroll, entity, model);
+        listModelParts(this.width-115, 15+yscroll, entity);
 
         // Bottom Panel
-        NumberFieldWidget framerate = new NumberFieldWidget(textRenderer, 125, this.height-65, 40, 10, frame_index_value, false); addTextField(framerate);
+        IntFieldWidget framerate = new IntFieldWidget(textRenderer, 125, this.height-65, 40, 10, frame_index_value); addTextField(framerate);
         framerate.setChangedListener((s) -> {
             animation.framerate = framerate.getNumber();
         });
         framerate.setNumber(animation.framerate);
         
-        NumberFieldWidget frame_index = new NumberFieldWidget(textRenderer, 125+60, this.height-65, 25, 10, frame_index_value, false); addTextField(frame_index);
+        IntFieldWidget frame_index = new IntFieldWidget(textRenderer, 125+60, this.height-65, 25, 10, frame_index_value); addTextField(frame_index);
         addButton(new FlatButtonWidget(155+60, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
             animation.frames.add(animation.frames.get(animation.frames.size()-1));
             frame_index_value = animation.frames.size()-1;
@@ -156,7 +157,7 @@ public class AnimationGui extends GuiHandler {
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
 
-        NumberFieldWidget frame_count = new NumberFieldWidget(textRenderer, 125+60, this.height-40, 40, 10, animation.frames.get(frame_index_value).run_frame, false); addTextField(frame_count);
+        IntFieldWidget frame_count = new IntFieldWidget(textRenderer, 125+60, this.height-40, 40, 10, animation.frames.get(frame_index_value).run_frame); addTextField(frame_count);
 
         frame_index.setChangedListener((s) -> {
             frame_index_value = Math.round(frame_index.value);
@@ -240,7 +241,7 @@ public class AnimationGui extends GuiHandler {
         super.close(); 
     }
 
-    public void listModelParts(int x, int y, LivingEntity entity, IAnimalModelMixin model) {
+    public void listModelParts(int x, int y, LivingEntity entity) {
         addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
@@ -259,7 +260,7 @@ public class AnimationGui extends GuiHandler {
 
         int row = 1 + showNodes(-2, 0, x, y);
         int index = 100;
-        for (ModelPart part : model.getHeadParts()) {
+        for (ModelPart part : PlatformUtils.getHeadParts(model)) {
             boolean isSelected = selectedPart == index;
             String partName = ModelPartNames.getHeadName(entity, index-100);
             Text name = Text.of((isSelected ? "- " : "+ ") + partName);
@@ -272,7 +273,7 @@ public class AnimationGui extends GuiHandler {
         }
 
         index = 0;
-        for (ModelPart part : model.getBodyParts()) {
+        for (ModelPart part : PlatformUtils.getBodyParts(model)) {
             boolean isSelected = selectedPart == index;
             String partName = ModelPartNames.getBodyName(entity, index);
             Text name = Text.of((isSelected ? "- " : "+ ") + partName);
@@ -389,7 +390,7 @@ public class AnimationGui extends GuiHandler {
 
         String part_name = selectedPartName;
         AnimationFile.Frame frame = animation.frames.get(frame_index_value);
-        if (frame.parts.containsKey(part_name))
+        if (part_name != null)
             frame.parts.put(part_name, script);
         else frame.script = script;
     }

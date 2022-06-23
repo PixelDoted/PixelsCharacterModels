@@ -6,6 +6,7 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.old.OldPresetData;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames.EntityParts;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
@@ -14,7 +15,6 @@ import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
-import virtuoel.pehkui.api.ScaleTypes;
 
 public class PresetHelper {
     
@@ -24,7 +24,7 @@ public class PresetHelper {
 
         // add settings to the preset folder
         PresetSettings settings = new PresetSettings();
-        settings.pehkui_scale = ScaleTypes.BASE.getScaleData(entity).getBaseScale();
+        settings.pehkui_scale = PCMUtils.getPehkuiScale(entity);
         settings.skin_suffix = PCMClient.PlayerSkinList.get(entity.getUuid());
         FileHelper.write(new File(file.getAbsolutePath() + "/preset.json"), settings);
 

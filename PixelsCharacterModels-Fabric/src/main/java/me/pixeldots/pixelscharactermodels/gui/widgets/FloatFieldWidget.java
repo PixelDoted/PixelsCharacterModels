@@ -5,21 +5,15 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
-public class NumberFieldWidget extends TextFieldWidget {
+public class FloatFieldWidget extends TextFieldWidget {
 
     public float value = 0;
-    public boolean show_decimal = false;
     public boolean only_positive = true;
 
-    public NumberFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, float _value) {
+    public FloatFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, float _value) {
         super(textRenderer, x, y, width, height, Text.of(""));
         this.setText(String.valueOf(_value));
         this.value = _value;
-    }
-
-    public NumberFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, float _value, boolean _showdecimal) {
-        this(textRenderer, x, y, width, height, _value);
-        this.show_decimal = _showdecimal;
     }
 
     public float getNumber() {
@@ -33,7 +27,9 @@ public class NumberFieldWidget extends TextFieldWidget {
 
     @Override
     public void setText(String text) {
-        super.setText(!show_decimal ? text.substring(0, text.indexOf(".")) : text);
+        if (!PCMUtils.isFloat(text)) return;
+        this.value = PCMUtils.getFloat(text);
+        super.setText(text);
     }
 
     @Override
@@ -46,11 +42,11 @@ public class NumberFieldWidget extends TextFieldWidget {
 
     @Override
     public void write(String text) {
-        float v = PCMUtils.getFloat(text);
-        this.value = only_positive && v < 0 ? 0 : v;
+        String s = this.getText();
+        super.write(text);
 
-        String s = String.valueOf(this.value);
-        super.write(!show_decimal ? s.substring(0, s.indexOf(".")) : s);
+        if (!PCMUtils.isFloat(this.getText())) super.setText(s);
+        else this.value = PCMUtils.getFloat(text);
     }
     
 }

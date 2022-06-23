@@ -10,7 +10,6 @@ import me.pixeldots.pixelscharactermodels.files.FileHelper;
 import me.pixeldots.pixelscharactermodels.files.PresetSettings;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 
 @Deprecated
 public class OldPresetData {

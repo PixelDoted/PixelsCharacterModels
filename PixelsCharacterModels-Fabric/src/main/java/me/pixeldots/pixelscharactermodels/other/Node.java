@@ -1,7 +1,7 @@
 package me.pixeldots.pixelscharactermodels.other;
 
 import me.pixeldots.pixelscharactermodels.gui.GuiHandler;
-import me.pixeldots.pixelscharactermodels.gui.widgets.NumberFieldWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -46,9 +46,10 @@ public class Node {
 
     // create 3 GUI Buttons
     public static void threeButton(GuiHandler gui, int x, int y, Node node) {
-        TextFieldWidget bX = new TextFieldWidget(gui.textRendererGUI, x, y, 30, 10, Text.of(""));
-        TextFieldWidget bY = new TextFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, Text.of(""));
-        TextFieldWidget bZ = new TextFieldWidget(gui.textRendererGUI, x+69, y, 30, 10, Text.of(""));
+        FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y, 110, 10, 0);
+        FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 110, 10, 0);
+        FloatFieldWidget bZ = new FloatFieldWidget(gui.textRendererGUI, x, y+30, 110, 10, 0);
+        bX.only_positive = false; bY.only_positive = false; bZ.only_positive = false;
 
         bX.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
         bY.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
@@ -60,10 +61,10 @@ public class Node {
 
     // create 3 GUI Buttons
     public static void threeButtonRotation(GuiHandler gui, int x, int y, Node node) {
-        NumberFieldWidget bX = new NumberFieldWidget(gui.textRendererGUI, x, y, 30, 10, 0);
-        NumberFieldWidget bY = new NumberFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, 0);
-        NumberFieldWidget bZ = new NumberFieldWidget(gui.textRendererGUI, x+69, y, 30, 10, 0);
-        bX.show_decimal = true; bY.show_decimal = true; bZ.show_decimal = true;
+        FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y, 110, 10, 0);
+        FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 110, 10, 0);
+        FloatFieldWidget bZ = new FloatFieldWidget(gui.textRendererGUI, x, y+30, 110, 10, 0);
+        bX.only_positive = false; bY.only_positive = false; bZ.only_positive = false;
 
         bX.setChangedListener((s) -> { node.args[0] = PCMUtils.RadiansOrDegressToString(bX.getNumber()); node.changed = true; });
         bY.setChangedListener((s) -> { node.args[1] = PCMUtils.RadiansOrDegressToString(bY.getNumber()); node.changed = true; });

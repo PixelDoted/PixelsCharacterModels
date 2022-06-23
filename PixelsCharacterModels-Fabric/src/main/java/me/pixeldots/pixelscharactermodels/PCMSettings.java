@@ -24,9 +24,11 @@ public class PCMSettings {
     public static PCMSettings load(Path path) {
 
         PCMSettings settings = (PCMSettings)FileHelper.read(path.toFile(), PCMSettings.class);
-        if (settings == null) settings = new PCMSettings();
+        if (settings == null) { 
+            settings = new PCMSettings();
+            settings.save(path);
+        }
 
-        settings.save(path);
         return settings;
     }
 

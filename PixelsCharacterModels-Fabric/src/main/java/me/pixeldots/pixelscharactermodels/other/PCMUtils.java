@@ -2,21 +2,59 @@ package me.pixeldots.pixelscharactermodels.other;
 
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.MeshReader;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3f;
+import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleTypes;
 
 public class PCMUtils {
+
+    public static float getPehkuiScale(LivingEntity entity) {
+		return ScaleTypes.BASE.getScaleData(entity).getBaseScale();
+	}
+
+    public static void setPehkuiScale(LivingEntity entity, float scale) {
+		ScaleData data = ScaleTypes.BASE.getScaleData(entity);
+        data.setScale(scale); data.setBaseScale(scale);
+	}
+    
+    // check if a String can be converted to a Float
+    public static boolean isFloat(String s) {
+        if (s == null) return false;
+
+        try {
+            Float.parseFloat(s);
+            return true;
+        } catch (NumberFormatException e) {}
+        return false;
+    }
     
     // get Float from String
     public static float getFloat(String s) {
+        if (s == null) return 0;
+
         try {
             return Float.parseFloat(s);
         } catch (NumberFormatException e) {}
         return 0;
     }
+
+    // check if a String can be converted to a Integer
+    public static boolean isInt(String s) {
+        if (s == null) return false;
+
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {}
+        return false;
+    }
     
     // get Integer from String
     public static int getInt(String s) {
+        if (s == null) return 0;
+
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {}

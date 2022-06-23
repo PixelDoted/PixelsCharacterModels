@@ -17,17 +17,15 @@ import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import me.pixeldots.scriptedmodels.platform.mixin.IAnimalModelMixin;
 import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.AnimalModel;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleTypes;
 
 public class EditorGui extends GuiHandler {
 
@@ -46,12 +44,12 @@ public class EditorGui extends GuiHandler {
     public float entityViewScale = 75;
 
     public LivingEntity entity;
-    public IAnimalModelMixin model;
+    public EntityModel<?> model;
     
     public EditorGui(LivingEntity _entity) {
         super("Editor");
         entity = _entity;
-        model = (IAnimalModelMixin)PlatformUtils.getModel(_entity);
+        model = PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
         if (!(model instanceof AnimalModel<?>)) PCMClient.minecraft.setScreen(null);
     }
@@ -96,8 +94,7 @@ public class EditorGui extends GuiHandler {
             PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 30, 100, 10, Text.of("")));
             SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 45, 100, 10, Text.of("")));
 
-            ScaleData basedata = ScaleTypes.BASE.getScaleData(entity);
-            stored_pehkuiscale = basedata.getBaseScale();
+            stored_pehkuiscale = PCMUtils.getPehkuiScale(entity);
             PehkuiScale.setText(String.valueOf(stored_pehkuiscale));
 
             PehkuiScale.setChangedListener((v) -> {
@@ -117,7 +114,7 @@ public class EditorGui extends GuiHandler {
         }
 
         // Right Panel
-        listModelParts(this.width-115, 15+yscroll, entity, model);
+        listModelParts(this.width-115, 15+yscroll, entity);
     }
 
     @Override
@@ -177,7 +174,7 @@ public class EditorGui extends GuiHandler {
         super.close(); 
     }
 
-    public void listModelParts(int x, int y, LivingEntity entity, IAnimalModelMixin model) {
+    public void listModelParts(int x, int y, LivingEntity entity) {
         addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
@@ -196,7 +193,7 @@ public class EditorGui extends GuiHandler {
 
         int row = 1 + showNodes(-2, 0, x, y);
         int index = 100;
-        for (ModelPart part : model.getHeadParts()) {
+        for (ModelPart part : PlatformUtils.getHeadParts(model)) {
             boolean isSelected = selectedPart == index;
             Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getHeadName(entity, index-100));
 
@@ -208,7 +205,7 @@ public class EditorGui extends GuiHandler {
         }
 
         index = 0;
-        for (ModelPart part : model.getBodyParts()) {
+        for (ModelPart part : PlatformUtils.getBodyParts(model)) {
             boolean isSelected = selectedPart == index;
             Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getBodyName(entity, index));
 

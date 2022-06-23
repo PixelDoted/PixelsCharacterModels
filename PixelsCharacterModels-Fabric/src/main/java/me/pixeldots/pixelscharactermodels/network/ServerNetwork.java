@@ -3,12 +3,12 @@ package me.pixeldots.pixelscharactermodels.network;
 import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMMain;
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import virtuoel.pehkui.api.ScaleTypes;
 
 public class ServerNetwork {
     
@@ -20,7 +20,7 @@ public class ServerNetwork {
         ServerPlayNetworking.registerGlobalReceiver(scale_pehkui, (server, player, handler, buf, sender) -> {
             float scale = buf.readFloat();
             LivingEntity entity = PlatformUtils.getLivingEntity(buf.readUuid());
-            ScaleTypes.BASE.getScaleData(entity).setScale(scale);
+            PCMUtils.setPehkuiScale(entity, scale);
         });
 
         ServerPlayNetworking.registerGlobalReceiver(skin_suffix, (server, player, handler, buf, sender) -> {

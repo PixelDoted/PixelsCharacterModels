@@ -8,6 +8,7 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.files.AnimationPlayer;
+import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +18,6 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import virtuoel.pehkui.api.ScaleTypes;
 
 public class ClientNetwork {
 
@@ -57,7 +57,7 @@ public class ClientNetwork {
         buf.writeUuid(entity.getUuid());
         ClientPlayNetworking.send(ServerNetwork.scale_pehkui, buf);
 
-        ScaleTypes.BASE.getScaleData(entity).setScale(scale);
+        PCMUtils.setPehkuiScale(entity, scale);
     }
 
     // sends animation data to the server
