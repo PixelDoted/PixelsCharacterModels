@@ -24,8 +24,9 @@ public class AnimalModelMixin {
         UUID uuid = ScriptedModels.Rendering_Entity.getUuid();
         if (PCMClient.EntityAnimationList.containsKey(uuid)) { // check if the entity is playing an animation
             AnimationPlayer player = PCMClient.EntityAnimationList.get(uuid); // get the animation player
-            player.updateFrame(player.animation.getFPSDifference(((IMinecraftClientMixin)PCMClient.minecraft).getFPS())); // increase the current frame value
-            player.updateCurrent(ScriptedModels.Rendering_Entity, (EntityModel<?>)(Object)this); // update the current frame index
+
+            float frame_diff = player.animation.getFPSDifference(((IMinecraftClientMixin)PCMClient.minecraft).getFPS()); // get the next frame value
+            player.updateCurrent(frame_diff, ScriptedModels.Rendering_Entity, (EntityModel<?>)(Object)this); // update the current frame index
         }
     }
 

@@ -29,3 +29,4 @@
 + Editing Animation Keybinding in settings
 + Lerping Non static animations
 + make Lerping Animations Smoother
++ fix "java.util.ConcurrentModificationException", caused by playing an animation with the gui open

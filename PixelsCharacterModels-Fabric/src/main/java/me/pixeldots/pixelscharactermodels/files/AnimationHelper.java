@@ -16,6 +16,8 @@ import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.script.Interpreter;
 import me.pixeldots.scriptedmodels.script.ScriptedEntity;
 import me.pixeldots.scriptedmodels.script.line.Line;
+import me.pixeldots.scriptedmodels.script.line.LineType;
+import me.pixeldots.scriptedmodels.script.line.LineUtils;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
@@ -85,10 +87,7 @@ public class AnimationHelper {
         int length = f_lines.size();
         Line define = Interpreter.compile_line("define " + length + " animation " + length + " " + name);
         lines.add(define); // add the define line
-
-        for (Line line : f_lines) {
-            lines.add(line);
-        }
+        lines.addAll(f_lines); // add all animation lines
     }
 
     // get the currently playing animation
@@ -97,13 +96,9 @@ public class AnimationHelper {
         if (!ScriptedModels.EntityScript.containsKey(uuid)) return "";
 
         List<Line> lines = ScriptedModels.EntityScript.get(entity.getUuid()).global; // the entity's global scripts
-        for (String line : Interpreter.decompile(lines).split("\n")) {
-            if (line.toLowerCase().startsWith("define")) {
-                String[] define = line.split(" ");
-                if (define.length >= 4 && define[2].equalsIgnoreCase("animation")) {
-                    return define[4];
-                }
-            }
+        for (Line line : lines) {
+            if (line.type == LineType.DEFINE && line.data.length >= 4 && LineUtils.getString(line.data, 1).equalsIgnoreCase("animation"))
+                return LineUtils.getString(line.data, 3);
         }
         
         return "";
@@ -118,21 +113,21 @@ public class AnimationHelper {
 
         ScriptedEntity scripted = ScriptedModels.EntityScript.get(uuid);
         List<Line> root_lines = scripted.global;
-        String stopped_animation = clean_lines(root_lines, Interpreter.decompile(root_lines).split("\n"));
+        String stopped_animation = clean_lines(root_lines);
         scripted.global = root_lines;
 
         for (ModelPart part : PlatformUtils.getHeadParts(model)) { // clean all modelpart scripts
             if (!scripted.parts.containsKey(part)) continue;
 
             List<Line> lines = scripted.parts.get(part);
-            clean_lines(lines, Interpreter.decompile(lines).split("\n"));
+            clean_lines(lines);
             scripted.parts.put(part, lines);
         }
         for (ModelPart part : PlatformUtils.getBodyParts(model)) { // clean all modelpart scripts
             if (!scripted.parts.containsKey(part)) continue;
 
             List<Line> lines = scripted.parts.get(part);
-            clean_lines(lines, Interpreter.decompile(lines).split("\n"));
+            clean_lines(lines);
             scripted.parts.put(part, lines);
         }
 
@@ -140,28 +135,26 @@ public class AnimationHelper {
     }
 
     // cleans all the lines with the animation definition
-    private static String clean_lines(List<Line> lines, String[] s_lines) {
+    private static String clean_lines(List<Line> lines) {
         String animation = "";
         int anim_count = 0;
         int index = 0;
-
-        for (String line : s_lines) {
+        
+        for (Line line : lines) {
             if (anim_count > 0) {
                 lines.remove(index);
                 anim_count--;
-                index--;
-            } else if (line.toLowerCase().startsWith("define")) {
-                String[] define = line.split(" ");
-                if (define.length >= 4 && define[2].equalsIgnoreCase("animation")) {
+                continue;
+            } else if (line.type == LineType.DEFINE) {
+                if (line.data.length >= 4 && LineUtils.getString(line.data, 1).equalsIgnoreCase("animation")) {
                     lines.remove(index);
-                    anim_count = Math.round(PCMUtils.getFloat(define[3]));
-                    animation = define[4];
-                    index--;
+                    anim_count = Math.round(LineUtils.getFloat(line.data, 2));
+                    animation = LineUtils.getString(line.data, 3);
+                    continue;
                 }
             }
             index++;
         }
-
         return animation;
     }
 

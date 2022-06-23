@@ -18,13 +18,11 @@ public class AnimationPlayer {
         this.name = _name;
     }
 
-    public void updateFrame(float _frame) {
+    // updates the current frame index
+    public void updateCurrent(float _frame, LivingEntity entity, EntityModel<?> model) {
         last_frame = last_frame == -1f ? _frame : last_frame+(_frame-last_frame)*.0125f;
         this.frame += last_frame;
-    }
 
-    // updates the current frame index
-    public void updateCurrent(LivingEntity entity, EntityModel<?> model) {
         boolean check = animation.frames.size() > index+1;
         if (animation.loop || check) {
             if (!check) index = 0;
