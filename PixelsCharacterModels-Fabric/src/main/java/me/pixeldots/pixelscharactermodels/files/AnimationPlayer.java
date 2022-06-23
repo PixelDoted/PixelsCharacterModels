@@ -11,9 +11,16 @@ public class AnimationPlayer {
     public String name; // animation name
     public AnimationFile animation; // animation data
 
+    private float last_frame = -1;
+
     public AnimationPlayer(AnimationFile _animation, String _name) {
         this.animation = _animation;
         this.name = _name;
+    }
+
+    public void updateFrame(float _frame) {
+        last_frame = last_frame == -1f ? _frame : last_frame+(_frame-last_frame)*.0125f;
+        this.frame += last_frame;
     }
 
     // updates the current frame index

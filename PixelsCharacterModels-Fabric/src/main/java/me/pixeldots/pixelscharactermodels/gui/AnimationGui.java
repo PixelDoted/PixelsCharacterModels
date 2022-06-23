@@ -406,7 +406,7 @@ public class AnimationGui extends GuiHandler {
     }
 
     public void selectAnimation(File file) {
-        AnimationFile anim = AnimationHelper.read(file);
+        AnimationFile anim = AnimationHelper.read(file, false);
         if (anim == null)
             this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be loaded"), false);
 

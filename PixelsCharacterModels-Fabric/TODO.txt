@@ -2,10 +2,9 @@
 
 - Save Entity scripts to World (world/entity specific presets)
 
-- Lerping Non static animations
-
 - old to new Animations Converter
-- Play Animation Keybindings
+
+- add Names to Elements in GUI
 
 > old
 + Mesh to Vertices and Back
@@ -27,3 +26,6 @@
 + Show NameTags Setting
 + Show Armor Setting
 + old to new Preset Converter
++ Editing Animation Keybinding in settings
++ Lerping Non static animations
++ make Lerping Animations Smoother

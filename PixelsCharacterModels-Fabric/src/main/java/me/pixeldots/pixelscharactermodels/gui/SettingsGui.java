@@ -13,6 +13,7 @@ import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -87,6 +88,17 @@ public class SettingsGui extends GuiHandler {
         addDrawableElement(new ToggleWidget(5, 120, 230, 10, "Show Armor", PCMMain.settings.show_armor, (val) -> {
             PCMMain.settings.show_armor = val;
         }));
+
+        TextFieldWidget A = addTextField(new TextFieldWidget(textRenderer, 5, 150, 230, 10, Text.of("")));
+        A.setChangedListener((s) -> { PCMMain.settings.animations[0] = s; }); A.setText(PCMMain.settings.animations[0]);
+        TextFieldWidget B = addTextField(new TextFieldWidget(textRenderer, 5, 165, 230, 10, Text.of("")));
+        B.setChangedListener((s) -> { PCMMain.settings.animations[1] = s; }); B.setText(PCMMain.settings.animations[1]);
+        TextFieldWidget C = addTextField(new TextFieldWidget(textRenderer, 5, 180, 230, 10, Text.of(""))); 
+        C.setChangedListener((s) -> { PCMMain.settings.animations[2] = s; }); C.setText(PCMMain.settings.animations[2]);
+        TextFieldWidget D = addTextField(new TextFieldWidget(textRenderer, 5, 195, 230, 10, Text.of(""))); 
+        D.setChangedListener((s) -> { PCMMain.settings.animations[3] = s; }); D.setText(PCMMain.settings.animations[3]);
+        TextFieldWidget E = addTextField(new TextFieldWidget(textRenderer, 5, 210, 230, 10, Text.of(""))); 
+        E.setChangedListener((s) -> { PCMMain.settings.animations[4] = s; }); E.setText(PCMMain.settings.animations[4]);
 
         addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text.of("Clear Entity Data"), (btn) -> {
             SkinHelper.clearSkins();

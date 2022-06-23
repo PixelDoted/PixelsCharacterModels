@@ -11,6 +11,7 @@ public class AnimationFile {
     public int framerate = 60; // the animations framerate
     public boolean lerp = true;
     public List<Frame> frames = new ArrayList<>(); // the animations frames
+    public float version = 2;
 
     // get the frame from fps and framerate
     public float getFPSDifference(float fps) {

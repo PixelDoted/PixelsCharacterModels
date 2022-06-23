@@ -2,10 +2,13 @@ package me.pixeldots.pixelscharactermodels.files;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
+import me.pixeldots.pixelscharactermodels.files.old.OldAnimationData;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.ScriptedModels;
@@ -16,23 +19,29 @@ import me.pixeldots.scriptedmodels.script.line.Line;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.Vec3f;
 
 public class AnimationHelper {
 
     // writes the animation file to file
     public static boolean write(File file, AnimationFile animation) {
-        file.mkdirs();
+        //file.mkdir();
         return FileHelper.write(file, animation);
     }
 
     // reads an animation file from a file
-    public static AnimationFile read(File file) {
-        return (AnimationFile)FileHelper.read(file, AnimationFile.class);
+    public static AnimationFile read(File file, boolean read_filler) {
+        AnimationFile animation = null;
+        if (FileHelper.read(file).contains("name")) animation = OldAnimationData.toNew(file);
+        else animation = (AnimationFile)FileHelper.read(file, AnimationFile.class);
+
+        if (read_filler) getInbetweenFrames(animation);
+        return animation;
     }
 
     // plays an animation from file
     public static AnimationFile play(File file, LivingEntity entity, EntityModel<?> model) {
-        AnimationFile animation = read(file);
+        AnimationFile animation = read(file, true);
         if (animation == null) return null;
         if (animation.frames.size() > 1)
             PCMClient.EntityAnimationList.put(entity.getUuid(), new AnimationPlayer(animation, file.getName()));
@@ -154,6 +163,86 @@ public class AnimationHelper {
         }
 
         return animation;
+    }
+
+    public static void getInbetweenFrames(AnimationFile file) {
+        List<AnimationFile.Frame> new_frames = new ArrayList<>();
+        for (int i = 0; i < file.frames.size(); i++) {
+            AnimationFile.Frame frame = file.frames.get(i);
+            AnimationFile.Frame next = file.frames.get(i+1 >= file.frames.size() ? 0 : i+1);
+            new_frames.add(frame);
+
+            List<AnimationFile.Frame> frames = getInbetweenFrames(frame, next);
+            for (AnimationFile.Frame f : frames) {
+                new_frames.add(f);
+            }
+        }
+
+        file.frames = new_frames;
+    }
+
+    private static List<AnimationFile.Frame> getInbetweenFrames(AnimationFile.Frame A, AnimationFile.Frame B) {
+        List<String> root = getInbetweenScripts(A.script.split("\n"), B.script.split("\n"), B.run_frame);
+        Map<String, List<String>> parts = new HashMap<>();
+        for (String key : A.parts.keySet()) {
+            parts.put(key, getInbetweenScripts(A.parts.get(key).split("\n"), B.parts.get(key).split("\n"), B.run_frame));
+        }
+
+        List<AnimationFile.Frame> frames = new ArrayList<>();
+        for (int i = 0; i < root.size(); i++) {
+            AnimationFile.Frame frame = new AnimationFile.Frame();
+            frame.run_frame = i+1;
+            frame.script = root.get(i);
+            frame.is_filler = true;
+
+            for (String key : parts.keySet()) {
+                frame.parts.put(key, parts.get(key).get(i));
+            }
+            
+            frames.add(frame);
+        }
+
+        return frames;
+    }
+
+    private static List<String> getInbetweenScripts(String[] A, String[] B, int frame_difference) {
+        Map<String, List<Vec3f>> values_a = new HashMap<>();
+        for (String s : A) {
+            String[] split = s.split(" ");
+            if (split.length != 4) continue;
+
+            Vec3f value = new Vec3f(PCMUtils.getFloat(split[1]), PCMUtils.getFloat(split[2]), PCMUtils.getFloat(split[3]));
+            if (!values_a.containsKey(split[0])) values_a.put(split[0], new ArrayList<>());
+
+            values_a.get(split[0]).add(value);
+        }
+
+        List<String> scripts = new ArrayList<>();
+        for (int i = 1; i < frame_difference; i++) {
+            String script = "";
+            Map<String, Integer> value_index = new HashMap<>();
+            for (String s : B) {
+                String[] split = s.split(" ");
+                if (!value_index.containsKey(split[0])) value_index.put(split[0], 0);
+                if (split.length != 4 || !values_a.containsKey(split[0])) {
+                    script += s + "\n";
+                    continue;
+                }
+
+                Vec3f a = values_a.get(split[0]).get(value_index.get(split[0]));
+                Vec3f b = new Vec3f(PCMUtils.getFloat(split[1]), PCMUtils.getFloat(split[2]), PCMUtils.getFloat(split[3]));
+                
+                float diff = i/(float)frame_difference;
+                Vec3f v = new Vec3f(a.getX()+(b.getX()-a.getX())*diff, a.getY()+(b.getY()-a.getY())*diff, a.getZ()+(b.getZ()-a.getZ())*diff);
+
+                script += split[0] + " " + v.getX() + " " + v.getY() + " " + v.getZ() + "\n";
+                value_index.put(split[0], value_index.get(split[0])+1);
+            }
+
+            scripts.add(script);
+        }
+
+        return scripts;
     }
 
 }
