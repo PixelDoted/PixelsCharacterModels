@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
+import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
@@ -21,13 +23,11 @@ import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.AnimalModel;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
-public class EditorGui extends GuiHandler {
+public class EditorGui extends EntityGuiHandler {
 
     public TextFieldWidget PehkuiScale, SkinSuffix;
 
@@ -39,19 +39,14 @@ public class EditorGui extends GuiHandler {
     public static boolean isDragging = false;
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
-    public UUID uuid;
     public float stored_pehkuiscale = 1;
     public float entityViewScale = 75;
-
-    public LivingEntity entity;
-    public EntityModel<?> model;
     
     public EditorGui(LivingEntity _entity) {
         super("Editor");
         entity = _entity;
         model = PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
-        if (!(model instanceof AnimalModel<?>)) PCMClient.minecraft.setScreen(null);
     }
 
     public EditorGui(LivingEntity _entity, float _entityViewScale) {

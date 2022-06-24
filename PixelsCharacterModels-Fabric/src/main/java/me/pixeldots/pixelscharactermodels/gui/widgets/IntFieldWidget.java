@@ -8,6 +8,7 @@ import net.minecraft.text.Text;
 public class IntFieldWidget extends TextFieldWidget {
 
     public int value = 0;
+    public int max_value = 0;
     public boolean only_positive = true;
 
     public IntFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, int _value) {
@@ -16,20 +17,28 @@ public class IntFieldWidget extends TextFieldWidget {
         this.value = _value;
     }
 
+    public IntFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, int _value, int _maxvalue) {
+        this(textRenderer, x, y, width, height, _value);
+        max_value = _maxvalue;
+    }
+
     public int getNumber() {
         return PCMUtils.getInt(this.getText());
     }
 
     public void setNumber(int _value) {
         this.value = only_positive && _value < 0 ? 0 : _value;
-        this.setText(String.valueOf(this.value));
+        if (max_value != 0) {
+            if (this.value > max_value) this.value = max_value;
+            else if (!only_positive && this.value < -max_value) this.value = -max_value;
+        }
+        super.setText(String.valueOf(this.value));
     }
 
     @Override
     public void setText(String text) {
         if (!PCMUtils.isInt(text)) return;
-        this.value = PCMUtils.getInt(text);
-        super.setText(text);
+        setNumber(PCMUtils.getInt(text));
     }
 
     @Override
@@ -46,7 +55,13 @@ public class IntFieldWidget extends TextFieldWidget {
         super.write(text);
 
         if (!PCMUtils.isInt(this.getText())) super.setText(s);
-        else this.value = PCMUtils.getInt(text);
+        else { 
+            this.value = PCMUtils.getInt(text);
+            if (max_value == 0) return;
+            if (this.value > max_value) setNumber(max_value);
+            else if (!only_positive && this.value < -max_value) setNumber(-max_value);
+        }
     }
+    
     
 }

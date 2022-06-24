@@ -1,7 +1,10 @@
 package me.pixeldots.pixelscharactermodels.other;
 
-import me.pixeldots.pixelscharactermodels.gui.GuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.IntFieldWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.TextureWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -40,7 +43,7 @@ public class Node {
     }
 
     // Initialize the Nodes GUI
-    public void init(GuiHandler gui, int x, int y) {
+    public void init(EntityGuiHandler gui, int x, int y) {
         this.type.func.init(gui, x, y, this);
     }
 
@@ -105,33 +108,47 @@ public class Node {
         ANGLE((gui, x, y, node) -> { threeButtonRotation(gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, 3),
         VERTEX((gui, x, y, node) -> {}, (node) -> { return "vertex " + node.argsToString(); }, 12),
         CUBE((gui, x, y, node) -> {
-            TextFieldWidget bU = new TextFieldWidget(gui.textRendererGUI, x, y, 30, 10, Text.of(""));
-            TextFieldWidget bV = new TextFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, Text.of(""));
-            TextFieldWidget bW = new TextFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, Text.of(""));
-            TextFieldWidget bH = new TextFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, Text.of(""));
+            FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y, 30, 10, 0, 64);
+            FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, 0, 64);
+            FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, 64, 64);
+            FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, 64, 64);
+            TextureWidget texture = new TextureWidget(x, y+45, 110, 110, gui.entity);
+            IntFieldWidget face = new IntFieldWidget(gui.textRendererGUI, x, y+160, 110, 10, 0, 5);
 
-            bU.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
-            bV.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
-            bW.setChangedListener((s) -> { node.args[2] = s; node.changed = true; });
-            bH.setChangedListener((s) -> { node.args[3] = s; node.changed = true; });
+            bU.setChangedListener((s) -> { node.args[0+4*face.getNumber()] = String.valueOf(PCMUtils.divide(bU.getNumber(), 64f)); node.changed = true; texture.setSelectX(bU); });
+            bV.setChangedListener((s) -> { node.args[1+4*face.getNumber()] = String.valueOf(PCMUtils.divide(bV.getNumber(), 64f)); node.changed = true; texture.setSelectY(bV); });
+            bW.setChangedListener((s) -> { node.args[2+4*face.getNumber()] = String.valueOf(PCMUtils.divide(bW.getNumber(), 64f)); node.changed = true; texture.setSelectWidth(bW); });
+            bH.setChangedListener((s) -> { node.args[3+4*face.getNumber()] = String.valueOf(PCMUtils.divide(bH.getNumber(), 64f)); node.changed = true; texture.setSelectHeight(bH); });
+            
+            face.setChangedListener((s) -> {
+                int i = 4*face.getNumber();
+                bU.setNumber(PCMUtils.getFloat(node.args[0+i])*64f); bV.setNumber(PCMUtils.getFloat(node.args[1+i])*64f);
+                bW.setNumber(PCMUtils.getFloat(node.args[2+i])*64f); bH.setNumber(PCMUtils.getFloat(node.args[3+i])*64f);
+            });
 
-            bU.setText(node.args[0]); bV.setText(node.args[1]); bW.setText(node.args[2]); bH.setText(node.args[3]);
-            gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH);
-        }, (node) -> { return NodeHelper.cubeToString(node); }, 4),
+            bU.setNumber(PCMUtils.getFloat(node.args[0])*64f); bV.setNumber(PCMUtils.getFloat(node.args[1])*64f);
+            bW.setNumber(PCMUtils.getFloat(node.args[2])*64f); bH.setNumber(PCMUtils.getFloat(node.args[3])*64f);
+            gui.gui_drawables.add(texture);
+            gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH); gui.addTextField(face);
+        }, (node) -> { return NodeHelper.cubeToString(node); }, 4*6),
         MESH((gui, x, y, node) -> {
             TextFieldWidget meshID = new TextFieldWidget(gui.textRendererGUI, x, y, 100, 10, Text.of(""));
-            TextFieldWidget bU = new TextFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, Text.of(""));
-            TextFieldWidget bV = new TextFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, Text.of(""));
-            TextFieldWidget bW = new TextFieldWidget(gui.textRendererGUI, x, y+30, 30, 10, Text.of(""));
-            TextFieldWidget bH = new TextFieldWidget(gui.textRendererGUI, x+35, y+30, 30, 10, Text.of(""));
+            FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, 0, 64);
+            FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, 0, 64);
+            FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+30, 30, 10, 64, 64);
+            FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+35, y+30, 30, 10, 64, 64);
+            TextureWidget texture = new TextureWidget(x, y+45, 110, 110, gui.entity);
 
             meshID.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
-            bU.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
-            bV.setChangedListener((s) -> { node.args[2] = s; node.changed = true; });
-            bW.setChangedListener((s) -> { node.args[3] = s; node.changed = true; });
-            bH.setChangedListener((s) -> { node.args[4] = s; node.changed = true; });
-
-            meshID.setText(node.args[0]); bU.setText(node.args[1]); bV.setText(node.args[2]); bW.setText(node.args[3]); bH.setText(node.args[4]);
+            bU.setChangedListener((s) -> { node.args[1] = String.valueOf(PCMUtils.divide(bU.getNumber(), 64f)); node.changed = true; texture.setSelectX(bU); });
+            bV.setChangedListener((s) -> { node.args[2] = String.valueOf(PCMUtils.divide(bV.getNumber(), 64f)); node.changed = true; texture.setSelectY(bV); });
+            bW.setChangedListener((s) -> { node.args[3] = String.valueOf(PCMUtils.divide(bW.getNumber(), 64f)); node.changed = true; texture.setSelectWidth(bW); });
+            bH.setChangedListener((s) -> { node.args[4] = String.valueOf(PCMUtils.divide(bH.getNumber(), 64f)); node.changed = true; texture.setSelectHeight(bH); });
+            
+            meshID.setText(node.args[0]);
+            bU.setNumber(PCMUtils.getFloat(node.args[1])*64f); bV.setNumber(PCMUtils.getFloat(node.args[2])*64f);
+            bW.setNumber(PCMUtils.getFloat(node.args[3])*64f); bH.setNumber(PCMUtils.getFloat(node.args[4])*64f);
+            gui.gui_drawables.add(texture);
             gui.addTextField(meshID); gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH);
         }, (node) -> { return NodeHelper.meshToString(node); }, 5),
         CANCEL((gui, x, y, node) -> {}, (node) -> { return "cancel"; }, 0);
@@ -148,7 +165,7 @@ public class Node {
     }
 
     public interface NodeFunc {
-        void init(GuiHandler gui, int x, int y, Node node);
+        void init(EntityGuiHandler gui, int x, int y, Node node);
     }
 
     public interface ScriptFunc {

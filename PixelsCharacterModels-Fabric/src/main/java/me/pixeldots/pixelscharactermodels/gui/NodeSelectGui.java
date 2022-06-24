@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels.gui;
 
+import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.other.Node.NodeType;

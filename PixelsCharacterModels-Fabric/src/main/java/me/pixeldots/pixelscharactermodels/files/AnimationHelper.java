@@ -37,7 +37,7 @@ public class AnimationHelper {
         if (FileHelper.read(file).contains("name")) animation = OldAnimationData.toNew(file);
         else animation = (AnimationFile)FileHelper.read(file, AnimationFile.class);
 
-        if (read_filler) getInbetweenFrames(animation);
+        if (animation != null && animation.lerp && read_filler) getInbetweenFrames(animation);
         return animation;
     }
 

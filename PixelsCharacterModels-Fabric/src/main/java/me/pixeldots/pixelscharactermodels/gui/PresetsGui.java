@@ -3,11 +3,11 @@ package me.pixeldots.pixelscharactermodels.gui;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.PresetHelper;
+import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
@@ -16,19 +16,13 @@ import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.entity.model.AnimalModel;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
-public class PresetsGui extends GuiHandler {
+public class PresetsGui extends EntityGuiHandler {
 
     private int yscroll = 0;
-
-    public LivingEntity entity;
-    public EntityModel<?> model;
-    public UUID uuid;
     public float entityViewScale = 75;
 
     public String selectedPreset = "";
@@ -41,7 +35,6 @@ public class PresetsGui extends GuiHandler {
         entity = _entity;
         model = PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
-        if (!(model instanceof AnimalModel<?>)) PCMClient.minecraft.setScreen(null);
     }
 
     public PresetsGui(LivingEntity _entity, float _entityViewScale) {

@@ -28,7 +28,10 @@
   "depends": {
     "fabricloader": ">=0.13.2",
     "fabric": "*",
-    "java": ">=17"
+    "java": ">=17",
+    "scriptedmodels": "*",
+    "pehkui": "*",
+    "offlineskins": "*"
   },
   "suggests": {
     "scriptedmodels": "*",

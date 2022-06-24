@@ -8,6 +8,8 @@ import java.util.UUID;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
+import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
@@ -20,12 +22,11 @@ import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
-public class AnimationGui extends GuiHandler {
+public class AnimationGui extends EntityGuiHandler {
 
     public static AnimationFile animation;
     public static File animation_file;
@@ -39,13 +40,9 @@ public class AnimationGui extends GuiHandler {
     public static boolean isDragging = false;
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
-    public UUID uuid;
     public float stored_pehkuiscale = 1;
     public float entityViewScale = 75;
     public String path_offset = "";
-
-    public LivingEntity entity;
-    public EntityModel<?> model;
     
     public AnimationGui(LivingEntity _entity) {
         super("Animation");

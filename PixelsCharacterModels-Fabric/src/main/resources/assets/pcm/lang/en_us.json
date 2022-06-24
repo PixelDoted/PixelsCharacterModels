@@ -1,5 +1,11 @@
 {
     "category.pixelscharactermodels": "Pixel's Character Models",
     "key.pixelscharactermodels.opengui": "Open GUI",
-    "key.pixelscharactermodels.reload": "Reload Skins"
+    "key.pixelscharactermodels.reload": "Reload Skins",
+
+    "key.pixelscharactermodels.anim1": "Animation 1",
+    "key.pixelscharactermodels.anim2": "Animation 2",
+    "key.pixelscharactermodels.anim3": "Animation 3",
+    "key.pixelscharactermodels.anim4": "Animation 4",
+    "key.pixelscharactermodels.anim5": "Animation 5"
 }

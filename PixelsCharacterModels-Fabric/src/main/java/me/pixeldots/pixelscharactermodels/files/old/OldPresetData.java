@@ -78,7 +78,11 @@ public class OldPresetData {
 			if (pos != null) script.append("translate " + (pos.X/16) + " " + (pos.Y/16) + " " + (pos.Z/16) + "\n");
 			if (size != null) script.append("scale " + (size.X/8) + " " + (size.Y/8) + " " + (size.Z/8) + "\n");
 
-			script.append(PCMUtils.cubeToString(String.valueOf(uvOffset.X/64), String.valueOf(uvOffset.Y/64), "1", "1"));
+			String[][] uvs = new String[6][];
+			for (int i = 0; i < uvs.length; i++) {
+				uvs[i] = new String[] {String.valueOf(uvOffset.X/64), String.valueOf(uvOffset.Y/64), "1", "1"};
+			}
+			script.append(PCMUtils.cubeToString(uvs));
 
 			if (size != null) script.append("scale " + (1/(size.X/8)) + " " + (1/(size.Y/8)) + " " + (1/(size.Z/8)) + "\n");
 			if (pos != null) script.append("translate " + -(pos.X/16) + " " + -(pos.Y/16) + " " + -(pos.Z/16) + "\n");

@@ -5,6 +5,8 @@
 - old to new Animations Converter
 
 - add Names to Elements in GUI
+- vertex gui Node
+- defualt node args
 
 > old
 + Mesh to Vertices and Back
@@ -29,4 +31,6 @@
 + Editing Animation Keybinding in settings
 + Lerping Non static animations
 + make Lerping Animations Smoother
-+ fix "java.util.ConcurrentModificationException", caused by playing an animation with the gui open
++ fix "java.util.ConcurrentModificationException"
++ fix Cube UVs
++ show Entity Skin while editing uv's (Mesh/Cube Node)

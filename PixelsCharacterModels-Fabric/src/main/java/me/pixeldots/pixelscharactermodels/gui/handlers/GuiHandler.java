@@ -1,4 +1,4 @@
-package me.pixeldots.pixelscharactermodels.gui;
+package me.pixeldots.pixelscharactermodels.gui.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,10 +110,6 @@ public class GuiHandler extends Screen {
 	@Override
 	public boolean shouldPause() {
 		return false;
-	}
-	
-	@Override
-	public void tick() {
 	}
 	
 	public TextFieldWidget addTextField(TextFieldWidget TextField) {

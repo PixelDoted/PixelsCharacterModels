@@ -2,10 +2,11 @@ package me.pixeldots.pixelscharactermodels.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
+import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.ToggleWidget;
@@ -14,16 +15,12 @@ import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
-public class SettingsGui extends GuiHandler {
+public class SettingsGui extends EntityGuiHandler {
 
-    public LivingEntity entity;
-    public EntityModel<?> model;
-    public UUID uuid;
     public float entityViewScale = 75;
 
     public String selectedPreset = "";
