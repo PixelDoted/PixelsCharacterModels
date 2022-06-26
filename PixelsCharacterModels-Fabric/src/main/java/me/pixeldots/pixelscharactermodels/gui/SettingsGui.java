@@ -86,15 +86,15 @@ public class SettingsGui extends EntityGuiHandler {
             PCMMain.settings.show_armor = val;
         }));
 
-        TextFieldWidget A = addTextField(new TextFieldWidget(textRenderer, 5, 150, 230, 10, Text.of("")));
+        TextFieldWidget A = addTextField(new TextFieldWidget(textRenderer, 5+60, 150, 170, 10, Text.of("")));
         A.setChangedListener((s) -> { PCMMain.settings.animations[0] = s; }); A.setText(PCMMain.settings.animations[0]);
-        TextFieldWidget B = addTextField(new TextFieldWidget(textRenderer, 5, 165, 230, 10, Text.of("")));
+        TextFieldWidget B = addTextField(new TextFieldWidget(textRenderer, 5+60, 165, 170, 10, Text.of("")));
         B.setChangedListener((s) -> { PCMMain.settings.animations[1] = s; }); B.setText(PCMMain.settings.animations[1]);
-        TextFieldWidget C = addTextField(new TextFieldWidget(textRenderer, 5, 180, 230, 10, Text.of(""))); 
+        TextFieldWidget C = addTextField(new TextFieldWidget(textRenderer, 5+60, 180, 170, 10, Text.of(""))); 
         C.setChangedListener((s) -> { PCMMain.settings.animations[2] = s; }); C.setText(PCMMain.settings.animations[2]);
-        TextFieldWidget D = addTextField(new TextFieldWidget(textRenderer, 5, 195, 230, 10, Text.of(""))); 
+        TextFieldWidget D = addTextField(new TextFieldWidget(textRenderer, 5+60, 195, 170, 10, Text.of(""))); 
         D.setChangedListener((s) -> { PCMMain.settings.animations[3] = s; }); D.setText(PCMMain.settings.animations[3]);
-        TextFieldWidget E = addTextField(new TextFieldWidget(textRenderer, 5, 210, 230, 10, Text.of(""))); 
+        TextFieldWidget E = addTextField(new TextFieldWidget(textRenderer, 5+60, 210, 170, 10, Text.of(""))); 
         E.setChangedListener((s) -> { PCMMain.settings.animations[4] = s; }); E.setText(PCMMain.settings.animations[4]);
 
         addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text.of("Clear Entity Data"), (btn) -> {
@@ -131,6 +131,12 @@ public class SettingsGui extends EntityGuiHandler {
         drawVerticalLine(matrices, 239, -1, this.height, 0, 0, 0, 255);
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
+
+        drawString(matrices, "Animation 1", 5, 145);
+        drawString(matrices, "Animation 2", 5, 160);
+        drawString(matrices, "Animation 3", 5, 175);
+        drawString(matrices, "Animation 4", 5, 190);
+        drawString(matrices, "Animation 5", 5, 205);
         super.render(matrices, mouseX, mouseY, delta);
     }
 

@@ -25,12 +25,15 @@ public class OldAnimationData {
 		anim.lerp = false;
 		anim.loop = false;
 		AnimationFile.Frame frame = anim.frames.get(0);
-		frame.script = "translate " + data.playerTransform.X + " " + data.playerTransform.Y + " " + data.playerTransform.Z;
+		frame.script = data.playerTransform != null ? ("translate " + data.playerTransform.X + " -" + data.playerTransform.Y + " " + data.playerTransform.Z) : "";
 
 		for (int i = 0; i < data.LimbIDs.size(); i++) {
 			OldMapVec3 rot = data.LimbRotations.size() > i ? data.LimbRotations.get(i) : new OldMapVec3();
 			OldMapVec3 pos = data.LimbPivots.size() > i ? data.LimbPivots.get(i) : new OldMapVec3();
-			String script = "translate " + pos.X + " " + pos.Y + " " + pos.Z + "\nangle " + rot.X + " " + rot.Y + " " + rot.Z;
+
+			String script = pos != null ? ("translate " + pos.X + " -" + pos.Y + " " + pos.Z + "\n") : "";
+			if (rot != null) script += "angle " + rot.X + " " + rot.Y + " " + rot.Z;
+
 			frame.parts.put(data.LimbIDs.get(i).toLowerCase(), script);
 		}
 

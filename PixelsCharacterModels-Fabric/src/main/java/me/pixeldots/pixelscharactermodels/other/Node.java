@@ -4,6 +4,7 @@ import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.IntFieldWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.TextWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.TextureWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
@@ -16,7 +17,7 @@ public class Node {
 
     public Node(NodeType t) {
         type = t;
-        args = new String[t.argument_count];
+        args = t.arguments;
     }
         
     public Node(String _type, String[] _args, int args_index) {
@@ -48,10 +49,11 @@ public class Node {
     }
 
     // create 3 GUI Buttons
-    public static void threeButton(GuiHandler gui, int x, int y, Node node) {
-        FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y, 110, 10, 0);
-        FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 110, 10, 0);
-        FloatFieldWidget bZ = new FloatFieldWidget(gui.textRendererGUI, x, y+30, 110, 10, 0);
+    public static void threeButton(String name, GuiHandler gui, int x, int y, Node node) {
+        gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, name, 0xFFFFFFFF));
+        FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y+8, 110, 10, 0);
+        FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+24, 110, 10, 0);
+        FloatFieldWidget bZ = new FloatFieldWidget(gui.textRendererGUI, x, y+40, 110, 10, 0);
         bX.only_positive = false; bY.only_positive = false; bZ.only_positive = false;
 
         bX.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
@@ -63,10 +65,11 @@ public class Node {
     }
 
     // create 3 GUI Buttons
-    public static void threeButtonRotation(GuiHandler gui, int x, int y, Node node) {
-        FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y, 110, 10, 0);
-        FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 110, 10, 0);
-        FloatFieldWidget bZ = new FloatFieldWidget(gui.textRendererGUI, x, y+30, 110, 10, 0);
+    public static void threeButtonRotation(String name, GuiHandler gui, int x, int y, Node node) {
+        gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, name, 0xFFFFFFFF));
+        FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y+8, 110, 10, 0);
+        FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+24, 110, 10, 0);
+        FloatFieldWidget bZ = new FloatFieldWidget(gui.textRendererGUI, x, y+40, 110, 10, 0);
         bX.only_positive = false; bY.only_positive = false; bZ.only_positive = false;
 
         bX.setChangedListener((s) -> { node.args[0] = PCMUtils.RadiansOrDegressToString(bX.getNumber()); node.changed = true; });
@@ -81,13 +84,18 @@ public class Node {
 
     public enum NodeType {
         PARTICLE((gui, x, y, node) -> {
-            TextFieldWidget type = new TextFieldWidget(gui.textRendererGUI, x, y, 100, 10, Text.of(""));
-            TextFieldWidget bx = new TextFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, Text.of(""));
-            TextFieldWidget by = new TextFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, Text.of(""));
-            TextFieldWidget bz = new TextFieldWidget(gui.textRendererGUI, x+69, y+15, 30, 10, Text.of(""));
-            TextFieldWidget vx = new TextFieldWidget(gui.textRendererGUI, x, y+30, 30, 10, Text.of(""));
-            TextFieldWidget vy = new TextFieldWidget(gui.textRendererGUI, x+35, y+30, 30, 10, Text.of(""));
-            TextFieldWidget vz = new TextFieldWidget(gui.textRendererGUI, x+69, y+30, 30, 10, Text.of(""));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Type", 0xFFFFFFFF));
+            TextFieldWidget type = new TextFieldWidget(gui.textRendererGUI, x, y+8, 100, 10, Text.of(""));
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "Position", 0xFFFFFFFF));
+            TextFieldWidget bx = new TextFieldWidget(gui.textRendererGUI, x, y+31, 30, 10, Text.of(""));
+            TextFieldWidget by = new TextFieldWidget(gui.textRendererGUI, x+35, y+31, 30, 10, Text.of(""));
+            TextFieldWidget bz = new TextFieldWidget(gui.textRendererGUI, x+69, y+31, 30, 10, Text.of(""));
+           
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "Velocity", 0xFFFFFFFF));
+            TextFieldWidget vx = new TextFieldWidget(gui.textRendererGUI, x, y+54, 30, 10, Text.of(""));
+            TextFieldWidget vy = new TextFieldWidget(gui.textRendererGUI, x+35, y+54, 30, 10, Text.of(""));
+            TextFieldWidget vz = new TextFieldWidget(gui.textRendererGUI, x+69, y+54, 30, 10, Text.of(""));
 
             type.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
             bx.setChangedListener((s) -> { node.args[1] = s; node.changed = true; });
@@ -101,19 +109,62 @@ public class Node {
             vx.setText(node.args[4]); vy.setText(node.args[5]); vz.setText(node.args[6]);
             gui.addTextField(type); gui.addTextField(bx); gui.addTextField(by); gui.addTextField(bz); 
             gui.addTextField(vx); gui.addTextField(vy); gui.addTextField(vz);
-        }, (node) -> { return "particle " + node.argsToString(); }, 7),
-        TRANSLATE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, 3),
-        SCALE((gui, x, y, node) -> { threeButton(gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, 3),
-        ROTATE((gui, x, y, node) -> { threeButtonRotation(gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, 3),
-        ANGLE((gui, x, y, node) -> { threeButtonRotation(gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, 3),
-        VERTEX((gui, x, y, node) -> {}, (node) -> { return "vertex " + node.argsToString(); }, 12),
+        }, (node) -> { return "particle " + node.argsToString(); }, new String[] { "minecraft:flame", "0", "0", "0", "0", "0", "0" }),
+        TRANSLATE((gui, x, y, node) -> { threeButton("Position", gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        SCALE((gui, x, y, node) -> { threeButton("Scale", gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        ROTATE((gui, x, y, node) -> { threeButtonRotation("Rotate", gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        ANGLE((gui, x, y, node) -> { threeButtonRotation("Angle", gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        VERTEX((gui, x, y, node) -> {
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Position", 0xFFFFFFFF));
+            FloatFieldWidget fX = new FloatFieldWidget(gui.textRendererGUI, x, y+8, 32, 10, 0); fX.only_positive = false;
+            FloatFieldWidget fY = new FloatFieldWidget(gui.textRendererGUI, x+37, y+8, 32, 10, 0); fY.only_positive = false;
+            FloatFieldWidget fZ = new FloatFieldWidget(gui.textRendererGUI, x+75, y+8, 32, 10, 0); fZ.only_positive = false;
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "Normal", 0xFFFFFFFF));
+            FloatFieldWidget fNX = new FloatFieldWidget(gui.textRendererGUI, x, y+31, 32, 10, 0); fNX.only_positive = false;
+            FloatFieldWidget fNY = new FloatFieldWidget(gui.textRendererGUI, x+37, y+31, 32, 10, 0); fNY.only_positive = false;
+            FloatFieldWidget fNZ = new FloatFieldWidget(gui.textRendererGUI, x+75, y+31, 32, 10, 0); fNZ.only_positive = false;
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "UV", 0xFFFFFFFF));
+            FloatFieldWidget fU = new FloatFieldWidget(gui.textRendererGUI, x, y+54, 51, 10, 0);
+            FloatFieldWidget fV = new FloatFieldWidget(gui.textRendererGUI, x+56, y+54, 51, 10, 0);
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+67, "Color", 0xFFFFFFFF));
+            IntFieldWidget fR = new IntFieldWidget(gui.textRendererGUI, x, y+77, 27, 10, 255, 255);
+            IntFieldWidget fG = new IntFieldWidget(gui.textRendererGUI, x+27, y+77, 27, 10, 255, 255);
+            IntFieldWidget fB = new IntFieldWidget(gui.textRendererGUI, x+54, y+77, 27, 10, 255, 255);
+            IntFieldWidget fA = new IntFieldWidget(gui.textRendererGUI, x+81, y+77, 27, 10, 255, 255);
+
+            fX.setChangedListener((s) -> { node.args[0] = s; });
+            fY.setChangedListener((s) -> { node.args[1] = s; });
+            fZ.setChangedListener((s) -> { node.args[2] = s; });
+            fNX.setChangedListener((s) -> { node.args[3] = s; });
+            fNY.setChangedListener((s) -> { node.args[4] = s; });
+            fNZ.setChangedListener((s) -> { node.args[5] = s; });
+            fU.setChangedListener((s) -> { node.args[6] = s; });
+            fV.setChangedListener((s) -> { node.args[7] = s; });
+            fR.setChangedListener((s) -> { node.args[8] = s; });
+            fG.setChangedListener((s) -> { node.args[9] = s; });
+            fB.setChangedListener((s) -> { node.args[10] = s; });
+            fA.setChangedListener((s) -> { node.args[11] = s; });
+            
+            gui.addTextField(fX); gui.addTextField(fY); gui.addTextField(fZ);
+            gui.addTextField(fNX); gui.addTextField(fNY); gui.addTextField(fNZ);
+            gui.addTextField(fU); gui.addTextField(fV);
+            gui.addTextField(fR); gui.addTextField(fG); gui.addTextField(fB); gui.addTextField(fA);
+        }, (node) -> { return "vertex " + node.argsToString(); }, new String[] { "0", "0", "0", "0", "0", "0", "0", "0", "255", "255", "255", "255" }),
         CUBE((gui, x, y, node) -> {
-            FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y, 30, 10, 0, 64);
-            FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+35, y, 30, 10, 0, 64);
-            FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, 64, 64);
-            FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, 64, 64);
-            TextureWidget texture = new TextureWidget(x, y+45, 110, 110, gui.entity);
-            IntFieldWidget face = new IntFieldWidget(gui.textRendererGUI, x, y+160, 110, 10, 0, 5);
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Face", 0xFFFFFFFF));
+            IntFieldWidget face = new IntFieldWidget(gui.textRendererGUI, x, y+8, 109, 10, 0, 5);
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "UVs", 0xFFFFFFFF));
+            FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y+31, 52, 10, 0, 64);
+            FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+57, y+31, 52, 10, 0, 64);
+
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "Width, Height", 0xFFFFFFFF));
+            FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+54, 52, 10, 64, 64);
+            FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+57, y+54, 52, 10, 64, 64);
+            TextureWidget texture = new TextureWidget(x, y+67, 110, 110, gui.entity);
 
             bU.setChangedListener((s) -> { node.args[0+4*face.getNumber()] = String.valueOf(PCMUtils.divide(bU.getNumber(), 64f)); node.changed = true; texture.setSelectX(bU); });
             bV.setChangedListener((s) -> { node.args[1+4*face.getNumber()] = String.valueOf(PCMUtils.divide(bV.getNumber(), 64f)); node.changed = true; texture.setSelectY(bV); });
@@ -130,14 +181,19 @@ public class Node {
             bW.setNumber(PCMUtils.getFloat(node.args[2])*64f); bH.setNumber(PCMUtils.getFloat(node.args[3])*64f);
             gui.gui_drawables.add(texture);
             gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH); gui.addTextField(face);
-        }, (node) -> { return NodeHelper.cubeToString(node); }, 4*6),
+        }, (node) -> { return NodeHelper.cubeToString(node); }, new String[] { "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1" }),
         MESH((gui, x, y, node) -> {
-            TextFieldWidget meshID = new TextFieldWidget(gui.textRendererGUI, x, y, 100, 10, Text.of(""));
-            FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y+15, 30, 10, 0, 64);
-            FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+35, y+15, 30, 10, 0, 64);
-            FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+30, 30, 10, 64, 64);
-            FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+35, y+30, 30, 10, 64, 64);
-            TextureWidget texture = new TextureWidget(x, y+45, 110, 110, gui.entity);
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Mesh File Name", 0xFFFFFFFF));
+            TextFieldWidget meshID = new TextFieldWidget(gui.textRendererGUI, x, y+8, 109, 10, Text.of(""));
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "UVs", 0xFFFFFFFF));
+            FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y+31, 30, 10, 0, 64);
+            FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+35, y+31, 30, 10, 0, 64);
+            
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "Width, Height", 0xFFFFFFFF));
+            FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+54, 30, 10, 64, 64);
+            FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+35, y+54, 30, 10, 64, 64);
+            TextureWidget texture = new TextureWidget(x, y+67, 110, 110, gui.entity);
 
             meshID.setChangedListener((s) -> { node.args[0] = s; node.changed = true; });
             bU.setChangedListener((s) -> { node.args[1] = String.valueOf(PCMUtils.divide(bU.getNumber(), 64f)); node.changed = true; texture.setSelectX(bU); });
@@ -150,17 +206,17 @@ public class Node {
             bW.setNumber(PCMUtils.getFloat(node.args[3])*64f); bH.setNumber(PCMUtils.getFloat(node.args[4])*64f);
             gui.gui_drawables.add(texture);
             gui.addTextField(meshID); gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH);
-        }, (node) -> { return NodeHelper.meshToString(node); }, 5),
-        CANCEL((gui, x, y, node) -> {}, (node) -> { return "cancel"; }, 0);
+        }, (node) -> { return NodeHelper.meshToString(node); }, new String[] { "", "0", "0", "1", "1" }),
+        CANCEL((gui, x, y, node) -> {}, (node) -> { return "cancel"; }, new String[] {});
 
         NodeFunc func;
         ScriptFunc tofunc;
-        public int argument_count;
+        public String[] arguments;
 
-        private NodeType(NodeFunc _func, ScriptFunc _tofunc, int _argumentcount) {
+        private NodeType(NodeFunc _func, ScriptFunc _tofunc, String[] _arguments) {
             this.func = _func;
             this.tofunc = _tofunc;
-            this.argument_count = _argumentcount;
+            this.arguments = _arguments;
         }
     }
 

@@ -2,12 +2,6 @@
 
 - Save Entity scripts to World (world/entity specific presets)
 
-- old to new Animations Converter
-
-- add Names to Elements in GUI
-- vertex gui Node
-- defualt node args
-
 > old
 + Mesh to Vertices and Back
 + Cube to Vertices and Back
@@ -34,3 +28,8 @@
 + fix "java.util.ConcurrentModificationException"
 + fix Cube UVs
 + show Entity Skin while editing uv's (Mesh/Cube Node)
++ vertex gui Node
++ add Names to Elements in GUI
++ defualt node args
++ old to new Animations Converter
++ fix editing entity parts animation

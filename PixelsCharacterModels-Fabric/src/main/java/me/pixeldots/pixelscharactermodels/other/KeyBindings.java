@@ -17,6 +17,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
 
 public class KeyBindings {
 	
@@ -65,8 +66,8 @@ public class KeyBindings {
 		EntityModel<?> model = PlatformUtils.getModel(entity);
 		String current = AnimationHelper.get_current(entity, model);
 
-		if (current.equals(name)) AnimationHelper.stop(entity, model, true);
-		else
-			AnimationHelper.play(Paths.get(".", "PCM" + File.separator + "Animations" + File.separator + name).toFile(), entity, model);
+		File file = Paths.get(".", "PCM" + File.separator + "Animations" + File.separator + name).toFile();
+		if (!current.equals("")) AnimationHelper.stop(entity, model, true);
+		if (!current.equals(file.getName())) AnimationHelper.play(file, entity, model);
 	}
 }

@@ -38,11 +38,11 @@ public class AnimationGui extends EntityGuiHandler {
     public static List<Node> nodes = new ArrayList<>();
     public static int yscroll = 0;
     public static boolean isDragging = false;
+    public static String path_offset = "";
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
     public float stored_pehkuiscale = 1;
     public float entityViewScale = 75;
-    public String path_offset = "";
     
     public AnimationGui(LivingEntity _entity) {
         super("Animation");
@@ -62,8 +62,9 @@ public class AnimationGui extends EntityGuiHandler {
         yscroll = 0;
         selectedPart = -1;
         selectedNode = -1;
-        selectedPartName = null;
+        selectedPartName = "";
         nodes.clear();
+        path_offset = "";
         AnimationGui.isDragging = false;
 
         animation = null;
@@ -227,7 +228,7 @@ public class AnimationGui extends EntityGuiHandler {
         yscroll = 0;
         selectedPart = -1;
         selectedNode = -1;
-        selectedPartName = null;
+        selectedPartName = "";
         nodes.clear();
         AnimationGui.isDragging = false;
 
@@ -242,14 +243,14 @@ public class AnimationGui extends EntityGuiHandler {
         addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
-                selectedPart = -1;
-                selectedPartName = null;
                 compile_nodes(uuid, false);
+                selectedPart = -1;
+                selectedPartName = "";
                 nodes.clear();
             } else {
                 selectedPart = -2;
-                selectedPartName = null;
-                decompile_script(null);
+                selectedPartName = "";
+                decompile_script();
             }
 
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
@@ -329,27 +330,28 @@ public class AnimationGui extends EntityGuiHandler {
         addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
-                selectedPart = -1;
-                selectedPartName = null;
                 compile_nodes(uuid, false);
+                selectedPart = -1;
+                selectedPartName = "";
                 nodes.clear();
             } else {
                 selectedPart = index;
                 selectedPartName = partName.toLowerCase();
-                decompile_script(selectedPartName);
+                decompile_script();
             }
 
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
     }
 
-    public void decompile_script(String part_name) {
+    public void decompile_script() {
         nodes.clear();
 
         String[] s;
         AnimationFile.Frame frame = animation.frames.get(frame_index_value);
-        if (part_name == null) s = frame.script.split("\n");
-        else if (frame.parts.containsKey(part_name)) s = frame.parts.get(part_name).split("\n");
+        if (selectedPartName.equals("")) s = frame.script.split("\n");
+        else if (frame.parts.containsKey(selectedPartName)) 
+            s = frame.parts.get(selectedPartName).split("\n");
         else return;
 
         int ignore_lines = 0;
@@ -385,10 +387,8 @@ public class AnimationGui extends EntityGuiHandler {
 
         if (changed == false) return;
 
-        String part_name = selectedPartName;
         AnimationFile.Frame frame = animation.frames.get(frame_index_value);
-        if (part_name != null)
-            frame.parts.put(part_name, script);
+        if (!selectedPartName.equals("")) frame.parts.put(selectedPartName, script);
         else frame.script = script;
     }
 

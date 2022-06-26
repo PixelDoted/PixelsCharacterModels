@@ -2,6 +2,7 @@ package me.pixeldots.pixelscharactermodels.files;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.old.OldAnimationData;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
+import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.script.Interpreter;
@@ -113,21 +115,21 @@ public class AnimationHelper {
 
         ScriptedEntity scripted = ScriptedModels.EntityScript.get(uuid);
         List<Line> root_lines = scripted.global;
-        String stopped_animation = clean_lines(root_lines);
+        String stopped_animation = clean_lines(root_lines, true);
         scripted.global = root_lines;
 
         for (ModelPart part : PlatformUtils.getHeadParts(model)) { // clean all modelpart scripts
             if (!scripted.parts.containsKey(part)) continue;
 
             List<Line> lines = scripted.parts.get(part);
-            clean_lines(lines);
+            clean_lines(lines, true);
             scripted.parts.put(part, lines);
         }
         for (ModelPart part : PlatformUtils.getBodyParts(model)) { // clean all modelpart scripts
             if (!scripted.parts.containsKey(part)) continue;
 
             List<Line> lines = scripted.parts.get(part);
-            clean_lines(lines);
+            clean_lines(lines, true);
             scripted.parts.put(part, lines);
         }
 
@@ -135,27 +137,36 @@ public class AnimationHelper {
     }
 
     // cleans all the lines with the animation definition
-    private static String clean_lines(List<Line> lines) {
-        String animation = "";
-        int anim_count = 0;
-        int index = 0;
-        
-        for (Line line : lines) {
-            if (anim_count > 0) {
-                lines.remove(index);
-                anim_count--;
-                continue;
-            } else if (line.type == LineType.DEFINE) {
-                if (line.data.length >= 4 && LineUtils.getString(line.data, 1).equalsIgnoreCase("animation")) {
+    private static String clean_lines(List<Line> lines, boolean retry_concurrent) {
+        try {
+            String animation = "";
+            int anim_count = 0;
+            int index = 0;
+            int line_count = lines.size();
+
+            for (int i = 0; i < line_count; i++) {
+                Line line = lines.size() > index ? lines.get(index) : null;
+
+                if (anim_count > 0) {
                     lines.remove(index);
-                    anim_count = Math.round(LineUtils.getFloat(line.data, 2));
-                    animation = LineUtils.getString(line.data, 3);
+                    anim_count--;
                     continue;
+                } else if (line != null && line.type == LineType.DEFINE) {
+                    if (line.data.length >= 4 && LineUtils.getString(line.data, 1).equalsIgnoreCase("animation")) {
+                        lines.remove(index);
+                        anim_count = Math.round(LineUtils.getFloat(line.data, 2));
+                        animation = LineUtils.getString(line.data, 3);
+                        continue;
+                    }
                 }
+                index++;
             }
-            index++;
+            return animation;
+        } catch (ConcurrentModificationException ex) {
+            ex.printStackTrace();
+            if (retry_concurrent) clean_lines(lines, false);
         }
-        return animation;
+        return "";
     }
 
     public static void getInbetweenFrames(AnimationFile file) {

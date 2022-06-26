@@ -12,6 +12,7 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.OffsetFlatButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.TextWidget;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
@@ -80,14 +81,17 @@ public class EditorGui extends EntityGuiHandler {
         }));
 
         // Left Panel
-        addButton(new FlatButtonWidget(5, 15, 100, 10, Text.of("compile"), (btn) -> {
+        addButton(new FlatButtonWidget(5, 15, 110, 10, Text.of("compile"), (btn) -> {
             compile_nodes(uuid, selectedPartModel, true);
         }));
 
         if (selectedNode == -1) {
             // Pehkui Scale
-            PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 30, 100, 10, Text.of("")));
-            SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 45, 100, 10, Text.of("")));
+            this.gui_drawables.add(new TextWidget(textRenderer, 5, 29, "Entity Scale", 0xFFFFFFFF));
+            PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 39, 110, 10, Text.of("")));
+            
+            this.gui_drawables.add(new TextWidget(textRenderer, 5, 54, "Skin Suffix", 0xFFFFFFFF));
+            SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 63, 110, 10, Text.of("")));
 
             stored_pehkuiscale = PCMUtils.getPehkuiScale(entity);
             PehkuiScale.setText(String.valueOf(stored_pehkuiscale));

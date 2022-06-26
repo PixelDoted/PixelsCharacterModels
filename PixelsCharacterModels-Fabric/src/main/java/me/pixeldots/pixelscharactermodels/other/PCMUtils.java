@@ -106,16 +106,18 @@ public class PCMUtils {
         MeshReader.Mesh mesh = MeshReader.readMesh(meshID);
         String output = "";
         int line_count = 0;
-        for (MeshReader.Point[] points : mesh.faces) {
-            for (MeshReader.Point point : points) {
-                Vec3f vertex = mesh.vertices.get(point.vertex-1);
-                Vec2f uv = mesh.uvs.get(point.uv-1);
-                Vec3f normal = mesh.normals.get(point.normal-1);
+        if (mesh != null) {
+            for (MeshReader.Point[] points : mesh.faces) {
+                for (MeshReader.Point point : points) {
+                    Vec3f vertex = mesh.vertices.get(point.vertex-1);
+                    Vec2f uv = mesh.uvs.get(point.uv-1);
+                    Vec3f normal = mesh.normals.get(point.normal-1);
 
-                output += "vertex " + vertex.getX() + " " + vertex.getY() + " " + vertex.getZ() + " ";
-                output += normal.getX() + " " + normal.getY() + " " + normal.getZ() + " ";
-                output += uv.x + " " + uv.y + " 255 255 255 255\n";
-                line_count++;
+                    output += "vertex " + vertex.getX() + " " + vertex.getY() + " " + vertex.getZ() + " ";
+                    output += normal.getX() + " " + normal.getY() + " " + normal.getZ() + " ";
+                    output += uv.x + " " + uv.y + " 255 255 255 255\n";
+                    line_count++;
+                }
             }
         }
 

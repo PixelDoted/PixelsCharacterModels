@@ -3,12 +3,12 @@ package me.pixeldots.pixelscharactermodels.files;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.meshreaders.OBJMeshReader;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import net.minecraft.util.math.Vec2f;
@@ -26,16 +26,19 @@ public class MeshReader {
     }
 
     // read mesh from path
-    public static Mesh readMesh(String path) {
-        return readMesh(Paths.get("." + File.separator + "PCM" + File.separator + "Models", path).toFile());
+    public static Mesh readMesh(String file) {
+        String path = PCMClient.minecraft.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Models" + File.separator + file;
+        return readMesh(new File(path));
     }
 
     // read mesh from file
-    public static Mesh readMesh(File path) {
+    public static Mesh readMesh(File file) {
+        if (!file.exists()) return null;
+
         FileInputStream reader = null;
         try {
-            reader = new FileInputStream(path);
-            return meshReaders.get(getFileExtension(path.getName())).run(reader.readAllBytes());
+            reader = new FileInputStream(file);
+            return meshReaders.get(getFileExtension(file.getName())).run(reader.readAllBytes());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
