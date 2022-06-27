@@ -1,7 +1,4 @@
-+ fix TextFieldWidget's not being deselected when selecting another TextFieldWidget
-+ improve GUI node dragging
-+ fix saving nodes to root when editing another part in the editor
-+ fix entity texture disappearing in cube/mesh node
+
 
 - request_entitys not getting the joined player's scripts
 
@@ -37,3 +34,7 @@
 + old to new Animations Converter
 + fix editing entity parts animation
 + Save Entity scripts to World (World saved presets)
++ fix TextFieldWidget's not being deselected when selecting another TextFieldWidget
++ improve GUI node dragging
++ fix saving nodes to root when editing another part in the editor
++ fix entity texture disappearing in cube/mesh node
