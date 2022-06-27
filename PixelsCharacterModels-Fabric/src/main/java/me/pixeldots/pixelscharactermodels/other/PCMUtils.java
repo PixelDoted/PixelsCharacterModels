@@ -17,8 +17,8 @@ public class PCMUtils {
 	}
 
     public static void setPehkuiScale(LivingEntity entity, float scale) {
-		ScaleData data = ScaleTypes.BASE.getScaleData(entity);
-        data.setScale(scale); data.setBaseScale(scale);
+        final ScaleData base_scale = ScaleTypes.BASE.getScaleData(entity);
+		base_scale.setScale(scale);
 	}
     
     public static float divide(float a, float b) {

@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import me.pixeldots.pixelscharactermodels.files.AnimationPlayer;
 import me.pixeldots.pixelscharactermodels.gui.EditorGui;
 import me.pixeldots.pixelscharactermodels.gui.PresetsGui;
@@ -25,7 +22,6 @@ import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 
 public class PCMClient implements ClientModInitializer {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger("pcm");
 	public static MinecraftClient minecraft;
 
 	public static Map<UUID, String> PlayerSkinList = new HashMap<>(); // A map of all Player Skin Suffix's
@@ -50,7 +46,7 @@ public class PCMClient implements ClientModInitializer {
 				EntityAnimationList.clear();
 			} else world = c.world;
 		});
-		LOGGER.info("Pixel's Character Models Initialized");
+		PCMMain.LOGGER.info("Pixel's Character Models Initialized");
 	}
 
 	public static void OpenGUI() {

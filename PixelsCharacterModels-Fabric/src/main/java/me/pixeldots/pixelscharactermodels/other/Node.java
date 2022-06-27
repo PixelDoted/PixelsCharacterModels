@@ -111,7 +111,7 @@ public class Node {
             gui.addTextField(vx); gui.addTextField(vy); gui.addTextField(vz);
         }, (node) -> { return "particle " + node.argsToString(); }, new String[] { "minecraft:flame", "0", "0", "0", "0", "0", "0" }),
         TRANSLATE((gui, x, y, node) -> { threeButton("Position", gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
-        SCALE((gui, x, y, node) -> { threeButton("Scale", gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        SCALE((gui, x, y, node) -> { threeButton("Scale", gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, new String[] { "1", "1", "1" }),
         ROTATE((gui, x, y, node) -> { threeButtonRotation("Rotate", gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
         ANGLE((gui, x, y, node) -> { threeButtonRotation("Angle", gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, new String[] { "0", "0", "0" }),
         VERTEX((gui, x, y, node) -> {

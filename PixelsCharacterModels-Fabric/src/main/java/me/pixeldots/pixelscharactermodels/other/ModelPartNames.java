@@ -9,13 +9,17 @@ import net.minecraft.entity.EntityType;
 
 public class ModelPartNames {
 
-    public Map<String, EntityParts> map = new HashMap<>(); // the modelpart name mapping
+    public Map<String, EntityParts> map = new HashMap<>(); // the modelpart name mappings
 
     public ModelPartNames() {
         EntityParts data = new EntityParts(); // create player mappings
         data.addHead(0, "Head"); data.addBody(0, "Body");
         data.addBody(1, "RightArm"); data.addBody(2, "LeftArm");
         data.addBody(3, "RightLeg"); data.addBody(4, "LeftLeg");
+
+        data.addBody(5, "Hat"); data.addBody(6, "Jacket");
+        data.addBody(7, "RightSleeve"); data.addBody(8, "LeftSleeve");
+        data.addBody(9, "RightPantsLeg"); data.addBody(10, "LeftPantsLeg");
         map.put(EntityType.PLAYER.getUntranslatedName(), data);
     }
 

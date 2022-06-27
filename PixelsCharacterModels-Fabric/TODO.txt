@@ -1,6 +1,6 @@
 
 
-- Save Entity scripts to World (world/entity specific presets)
+- fix TextFieldWidget's not being deselect when selecting another TextFieldWidget
 
 > old
 + Mesh to Vertices and Back
@@ -33,3 +33,4 @@
 + defualt node args
 + old to new Animations Converter
 + fix editing entity parts animation
++ Save Entity scripts to World (World saved presets)

@@ -17,7 +17,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
 
 public class KeyBindings {
 	

@@ -9,8 +9,8 @@
     "PixelDots"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/mod/pixels-character-models",
+    "sources": "https://github.com/PixelDoted/PixelsCharacterModels"
   },
 
   "license": "LGPL-3",
@@ -30,8 +30,7 @@
     "fabric": "*",
     "java": ">=17",
     "scriptedmodels": "*",
-    "pehkui": "*",
-    "offlineskins": "*"
+    "pehkui": "*"
   },
   "suggests": {
     "scriptedmodels": "*",

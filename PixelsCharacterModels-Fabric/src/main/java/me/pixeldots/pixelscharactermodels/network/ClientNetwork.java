@@ -8,7 +8,6 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.files.AnimationPlayer;
-import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -56,8 +55,6 @@ public class ClientNetwork {
         buf.writeFloat(scale);
         buf.writeUuid(entity.getUuid());
         ClientPlayNetworking.send(ServerNetwork.scale_pehkui, buf);
-
-        PCMUtils.setPehkuiScale(entity, scale);
     }
 
     // sends animation data to the server

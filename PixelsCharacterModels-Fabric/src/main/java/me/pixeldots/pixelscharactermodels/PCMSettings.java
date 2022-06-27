@@ -1,5 +1,6 @@
 package me.pixeldots.pixelscharactermodels;
 
+import java.io.File;
 import java.nio.file.Path;
 
 import me.pixeldots.pixelscharactermodels.files.FileHelper;
@@ -18,12 +19,14 @@ public class PCMSettings {
 
     @Environment(EnvType.CLIENT) public String[] animations = new String[5];
 
-    public boolean save_entity_scripts = false; // if enabled, saves entity data to the server
+    public boolean save_entity_scripts = true; // if enabled, saves entity data to the server
 
     // loads settings from Path
     public static PCMSettings load(Path path) {
+        File file = path.toFile();
+        if (!file.exists()) return new PCMSettings();
 
-        PCMSettings settings = (PCMSettings)FileHelper.read(path.toFile(), PCMSettings.class);
+        PCMSettings settings = (PCMSettings)FileHelper.read(file, PCMSettings.class);
         if (settings == null) { 
             settings = new PCMSettings();
             settings.save(path);

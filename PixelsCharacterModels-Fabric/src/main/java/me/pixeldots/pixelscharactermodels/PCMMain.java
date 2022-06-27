@@ -19,6 +19,7 @@ public class PCMMain implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("pcm");
 
 	public static Path SettingsPath;
+	public static Path EntityDataPath;
 	public static PCMSettings settings; // Client and Server settings
 
 	@Environment(EnvType.SERVER) 
