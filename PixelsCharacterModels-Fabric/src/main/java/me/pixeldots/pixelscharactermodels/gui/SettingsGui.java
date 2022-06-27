@@ -13,6 +13,7 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.ToggleWidget;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
+import me.pixeldots.scriptedmodels.platform.network.ClientNetwork;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -97,6 +98,10 @@ public class SettingsGui extends EntityGuiHandler {
         TextFieldWidget E = addTextField(new TextFieldWidget(textRenderer, 5+60, 210, 170, 10, Text.of(""))); 
         E.setChangedListener((s) -> { PCMMain.settings.animations[4] = s; }); E.setText(PCMMain.settings.animations[4]);
 
+
+        addButton(new FlatButtonWidget(5, this.height-30, 230, 10, Text.of("Request Entity Data"), (btn) -> {
+            ClientNetwork.request_entitys();
+        }));
         addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text.of("Clear Entity Data"), (btn) -> {
             SkinHelper.clearSkins();
             PCMClient.EntityAnimationList.clear();

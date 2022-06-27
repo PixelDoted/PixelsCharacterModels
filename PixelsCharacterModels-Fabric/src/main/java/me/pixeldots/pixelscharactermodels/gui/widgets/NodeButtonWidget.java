@@ -2,6 +2,7 @@ package me.pixeldots.pixelscharactermodels.gui.widgets;
 
 
 import me.pixeldots.pixelscharactermodels.gui.EditorGui;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class NodeButtonWidget extends FlatButtonWidget {
@@ -18,13 +19,27 @@ public class NodeButtonWidget extends FlatButtonWidget {
     }
 
     @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (isDragging) {
+            int d = -(int)Math.round(lastScroll/15d);
+            int move = ((int)Math.round(DragDistance) + d)*(height+1);
+            this.drawHorizontalLine(matrices, x-11, x+width, y-1+move, 0xFFFFFFFF);
+            this.drawHorizontalLine(matrices, x-11, x+width, y+height+move, 0xFFFFFFFF);
+            this.drawVerticalLine(matrices, x-11, y-1+move, y+height+move, 0xFFFFFFFF);
+            this.drawVerticalLine(matrices, x+width, y-1+move, y+height+move, 0xFFFFFFFF);
+        }
+        
+        super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (isDragging) {
-            DragDistance += deltaY/(this.height+5d);
+            DragDistance += deltaY/(this.height+1);
         } else if (!EditorGui.isDragging && this.clicked(mouseX, mouseY)) {
             isDragging = true;
             EditorGui.isDragging = true;
-            DragDistance = deltaY/(this.height+5d);
+            DragDistance = deltaY/(this.height+1);
             lastScroll = EditorGui.yscroll;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);

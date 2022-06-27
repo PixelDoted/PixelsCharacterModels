@@ -1,6 +1,9 @@
++ fix TextFieldWidget's not being deselected when selecting another TextFieldWidget
++ improve GUI node dragging
++ fix saving nodes to root when editing another part in the editor
++ fix entity texture disappearing in cube/mesh node
 
-
-- fix TextFieldWidget's not being deselect when selecting another TextFieldWidget
+- request_entitys not getting the joined player's scripts
 
 > old
 + Mesh to Vertices and Back

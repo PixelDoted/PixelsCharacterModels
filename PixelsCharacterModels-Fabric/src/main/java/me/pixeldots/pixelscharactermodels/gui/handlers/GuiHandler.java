@@ -52,11 +52,11 @@ public class GuiHandler extends Screen {
 		}
 		super.render(matrices, mouseX, mouseY, delta);
 	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		for (Element element : gui_elements) {
-			if (element.mouseClicked(mouseX, mouseY, button)) return true;
+			element.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}

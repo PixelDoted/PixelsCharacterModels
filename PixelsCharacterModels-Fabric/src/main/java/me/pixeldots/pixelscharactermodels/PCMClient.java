@@ -44,7 +44,12 @@ public class PCMClient implements ClientModInitializer {
 				world = null;
 				PlayerSkinList.clear();
 				EntityAnimationList.clear();
-			} else world = c.world;
+				PCMMain.skinsuffix_data.clear();
+				PCMMain.animation_data.clear();
+			} else if (c.world != null && world == null) { 
+				world = c.world;
+				ClientNetwork.request_skinsuffixs();
+			}
 		});
 		PCMMain.LOGGER.info("Pixel's Character Models Initialized");
 	}

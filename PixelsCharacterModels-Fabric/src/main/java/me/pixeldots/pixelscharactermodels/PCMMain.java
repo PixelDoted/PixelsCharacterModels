@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import me.pixeldots.pixelscharactermodels.network.ServerNetwork;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 
 public class PCMMain implements ModInitializer {
@@ -22,9 +20,7 @@ public class PCMMain implements ModInitializer {
 	public static Path EntityDataPath;
 	public static PCMSettings settings; // Client and Server settings
 
-	@Environment(EnvType.SERVER) 
 	public static Map<UUID, String> animation_data = new HashMap<>(); // the stored animation data
-	@Environment(EnvType.SERVER) 
 	public static Map<UUID, String> skinsuffix_data = new HashMap<>(); // the stored skin suffix data
 
 	@Override

@@ -198,6 +198,7 @@ public class PresetsGui extends EntityGuiHandler {
 
             ClientNetwork.send_pehkui_scale(entity, 1);
 
+            ClientNetwork.send_skin_suffix(uuid, "");
             SkinHelper.setSkinSuffix(uuid, "");
             SkinHelper.reloadSkins();
         }

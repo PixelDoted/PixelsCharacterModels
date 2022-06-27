@@ -309,7 +309,7 @@ public class AnimationGui extends EntityGuiHandler {
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }, (dragged, scroll) -> {
                 int d = -(int)Math.round(scroll/15d);
-                int move = dragged + d;
+                int move = (dragged + d)+num;
                 move = (move <= -1 ? move = 0 : (move >= nodes.size() ? move = nodes.size()-1 : move));
 
                 nodes.add(move, nodes.remove(num));

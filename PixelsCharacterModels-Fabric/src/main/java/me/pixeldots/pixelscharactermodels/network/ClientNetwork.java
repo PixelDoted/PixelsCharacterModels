@@ -8,6 +8,7 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.files.AnimationPlayer;
+import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,10 +24,16 @@ public class ClientNetwork {
     public static Identifier receive_skinsuffix = new Identifier("receive_skinsuffix");
     public static Identifier receive_animation = new Identifier("receive_animation");
 
+    public static Identifier request_skinsuffixs = new Identifier("request_skinsuffixs");
+
     @Environment(EnvType.CLIENT)
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(receive_skinsuffix, (client, handler, buf, sender) -> {
-            PCMClient.PlayerSkinList.put(buf.readUuid(), buf.readString());
+            UUID uuid = buf.readUuid();
+            String suffix = buf.readString();
+
+            SkinHelper.setSkinSuffix(uuid, suffix);
+            SkinHelper.reloadSkins();
         });
 
         ClientPlayNetworking.registerGlobalReceiver(receive_animation, (client, handler, buf, sender) -> {
@@ -44,6 +51,18 @@ public class ClientNetwork {
                 LivingEntity entity = PlatformUtils.getLivingEntity(uuid);
                 EntityModel<?> model = PlatformUtils.getModel(entity);
                 AnimationHelper.stop(entity, model, true);
+            }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(request_skinsuffixs, (client, handler, buf, sender) -> {
+            int count = buf.readInt();
+            for (int i = 0; i < count; i++) {
+                UUID uuid = buf.readUuid();
+                String suffix = buf.readString();
+
+                PCMClient.PlayerSkinList.clear();
+                SkinHelper.setSkinSuffix(uuid, suffix);
+                SkinHelper.reloadSkins();
             }
         });
     }
@@ -80,6 +99,11 @@ public class ClientNetwork {
         buf.writeUuid(uuid);
         buf.writeString(suffix);
         ClientPlayNetworking.send(ServerNetwork.skin_suffix, buf);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void request_skinsuffixs() {
+        ClientPlayNetworking.send(request_skinsuffixs, PacketByteBufs.empty());
     }
 
 }

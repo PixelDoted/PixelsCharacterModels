@@ -20,7 +20,11 @@ public class TextureWidget implements Drawable {
     public int x, y;
     public int width, height;
 
+    private LivingEntity m_entity;
+    private int m_frame = 0;
+
     public TextureWidget(int x, int y, int width, int height, LivingEntity entity) {
+        m_entity = entity;
         this.texture = PCMUtils.getEntityTexture(entity);
         this.x = x; this.y = y;
         this.width = width; this.height = height;
@@ -45,12 +49,19 @@ public class TextureWidget implements Drawable {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        DrawableHelper.fill(matrices, x, y, x+width, y+height, 0xFF000000);
+        
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.texture);
         RenderSystem.enableDepthTest();
-        DrawableHelper.fill(matrices, x, y, x+width, y+height, 0xFF000000);
         DrawableHelper.drawTexture(matrices, x, y, 0, 0, width, height, textureWidth, textureHeight);
         drawSelection(matrices, mouseX, mouseY, delta);
+
+        if (m_frame >= 240) {
+            this.texture = PCMUtils.getEntityTexture(m_entity);
+            m_frame = 0;
+        }
+        m_frame++;
     }
 
     public void drawSelection(MatrixStack matrices, int mouseX, int mouseY, float delta) {

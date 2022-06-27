@@ -1,6 +1,7 @@
 package me.pixeldots.pixelscharactermodels.files;
 
 import java.io.File;
+import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.files.old.OldPresetData;
@@ -89,7 +90,9 @@ public class PresetHelper {
         
         ClientNetwork.send_pehkui_scale(entity, settings.pehkui_scale); // set pehkui sccale
 
-        SkinHelper.setSkinSuffix(entity.getUuid(), settings.skin_suffix); // set skin suffix
+        UUID uuid = entity.getUuid();
+        ClientNetwork.send_skin_suffix(uuid, settings.skin_suffix);
+        SkinHelper.setSkinSuffix(uuid, settings.skin_suffix); // set skin suffix
         SkinHelper.reloadSkins(); // reload all skins
     }
 

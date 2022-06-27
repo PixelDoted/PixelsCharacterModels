@@ -5,8 +5,10 @@ import java.util.UUID;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -24,7 +26,10 @@ public class ServerNetwork {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(skin_suffix, (server, player, handler, buf, sender) -> {
-            PCMMain.skinsuffix_data.put(buf.readUuid(), buf.readString());
+            UUID uuid = buf.readUuid();
+            String suffix = buf.readString();
+            if (suffix.equals("")) PCMMain.skinsuffix_data.remove(uuid);
+            else PCMMain.skinsuffix_data.put(uuid, suffix);
 
             for (ServerPlayerEntity receiver : server.getPlayerManager().getPlayerList()) {
                 if (receiver == player) continue;
@@ -45,6 +50,17 @@ public class ServerNetwork {
                 if (receiver == player) continue;
                 ServerPlayNetworking.send(receiver, ClientNetwork.receive_animation, buf);
             }
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(ClientNetwork.request_skinsuffixs, (server, player, handler, buf, sender) -> {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeInt(PCMMain.skinsuffix_data.size());
+            for (UUID uuid : PCMMain.skinsuffix_data.keySet()) {
+                buffer.writeUuid(uuid);
+                buffer.writeString(PCMMain.skinsuffix_data.get(uuid));
+            }
+
+            ServerPlayNetworking.send(player, ClientNetwork.request_skinsuffixs, buffer);
         });
     }
 

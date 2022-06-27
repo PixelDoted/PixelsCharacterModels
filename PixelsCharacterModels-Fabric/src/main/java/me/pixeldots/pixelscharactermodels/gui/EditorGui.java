@@ -107,6 +107,7 @@ public class EditorGui extends EntityGuiHandler {
                 SkinSuffix.setText(PCMClient.PlayerSkinList.get(uuid));
             
             SkinSuffix.setChangedListener((v) -> {
+                ClientNetwork.send_skin_suffix(uuid, v);
                 SkinHelper.setSkinSuffix(uuid, v);
                 SkinHelper.reloadSkins();
             });
@@ -241,7 +242,7 @@ public class EditorGui extends EntityGuiHandler {
                 this.client.setScreen(new EditorGui(entity, entityViewScale));
             }, (dragged, scroll) -> {
                 int d = -(int)Math.round(scroll/15d);
-                int move = dragged + d;
+                int move = (dragged + d)+num;
                 move = (move <= -1 ? move = 0 : (move >= nodes.size() ? move = nodes.size()-1 : move));
 
                 nodes.add(move, nodes.remove(num));
@@ -262,9 +263,9 @@ public class EditorGui extends EntityGuiHandler {
         addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
+                compile_nodes(uuid, part, false);
                 selectedPart = -1;
                 selectedPartModel = null;
-                compile_nodes(uuid, part, false);
                 nodes.clear();
             } else {
                 selectedPart = index;
