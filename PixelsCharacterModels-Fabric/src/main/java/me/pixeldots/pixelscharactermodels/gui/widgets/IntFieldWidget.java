@@ -54,13 +54,15 @@ public class IntFieldWidget extends TextFieldWidget {
         String s = this.getText();
         super.write(text);
 
-        if (!PCMUtils.isInt(this.getText())) super.setText(s);
+        String current = this.getText();
+        if (current.equals("") || current.equals("-")) this.value = 0;
+        else if (!PCMUtils.isInt(current)) super.setText(s);
         else { 
             this.value = PCMUtils.getInt(text);
             if (max_value == 0) return;
             if (this.value > max_value) setNumber(max_value);
             else if (!only_positive && this.value < -max_value) setNumber(-max_value);
-        }
+        } 
     }
     
     

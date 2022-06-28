@@ -15,7 +15,7 @@ public class PCMSettings {
     @Environment(EnvType.CLIENT) public boolean preview_preset = true; // if enabled, to use a preset you have to press select in the Presets GUI
     @Environment(EnvType.CLIENT) public boolean radians_instead_of_degress = false; // if enabled, rotate and angle will show degress instead of radians
     @Environment(EnvType.CLIENT) public boolean show_nametags = true; // if disabled, nametags won't be shown
-    @Environment(EnvType.CLIENT) public boolean show_armor = true; // is disabled, armor won't be shown
+    @Environment(EnvType.CLIENT) public boolean show_armor = true; // if disabled, armor won't be shown
 
     @Environment(EnvType.CLIENT) public String[] animations = new String[5];
 

@@ -9,6 +9,7 @@ import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.OffsetFlatButtonWidget;
@@ -20,7 +21,6 @@ import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import me.pixeldots.scriptedmodels.script.PostfixOperation;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
@@ -30,7 +30,8 @@ import net.minecraft.text.Text;
 
 public class EditorGui extends EntityGuiHandler {
 
-    public TextFieldWidget PehkuiScale, SkinSuffix;
+    public FloatFieldWidget PehkuiScale;
+    public TextFieldWidget SkinSuffix;
 
     public static int selectedPart = -1;
     public static ModelPart selectedPartModel = null;
@@ -88,19 +89,17 @@ public class EditorGui extends EntityGuiHandler {
         if (selectedNode == -1) {
             // Pehkui Scale
             this.gui_drawables.add(new TextWidget(textRenderer, 5, 29, "Entity Scale", 0xFFFFFFFF));
-            PehkuiScale = addTextField(new TextFieldWidget(textRenderer, 5, 39, 110, 10, Text.of("")));
+            PehkuiScale = (FloatFieldWidget)addTextField(new FloatFieldWidget(textRenderer, 5, 39, 110, 10, 1));
             
             this.gui_drawables.add(new TextWidget(textRenderer, 5, 54, "Skin Suffix", 0xFFFFFFFF));
             SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 63, 110, 10, Text.of("")));
 
             stored_pehkuiscale = PCMUtils.getPehkuiScale(entity);
-            PehkuiScale.setText(String.valueOf(stored_pehkuiscale));
+            PehkuiScale.setNumber(stored_pehkuiscale);
 
             PehkuiScale.setChangedListener((v) -> {
-                if (PostfixOperation.isNumeric(v)) {
-                    stored_pehkuiscale = PCMUtils.getFloat(v);
-                    ClientNetwork.send_pehkui_scale(entity, stored_pehkuiscale);
-                }
+                stored_pehkuiscale = PehkuiScale.getNumber();
+                ClientNetwork.send_pehkui_scale(entity, stored_pehkuiscale);
             });
 
             if (PCMClient.PlayerSkinList.containsKey(uuid))
@@ -125,6 +124,7 @@ public class EditorGui extends EntityGuiHandler {
             else {
                 for (ButtonWidget widget : scrollable_widgets) {
                     widget.y += amount*10;
+                    widget.visible = !(widget.y < 0);
                 }
             }
         } else if (mouseX >= 120 && mouseX < this.width-120) {
@@ -175,7 +175,7 @@ public class EditorGui extends EntityGuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity) {
-        addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
+        ButtonWidget btn_widget = addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
@@ -190,6 +190,7 @@ public class EditorGui extends EntityGuiHandler {
 
             this.client.setScreen(new EditorGui(entity, entityViewScale));
         }));
+        btn_widget.visible = !(btn_widget.y < 0);
 
         int row = 1 + showNodes(-2, 0, x, y);
         int index = 100;
@@ -197,8 +198,9 @@ public class EditorGui extends EntityGuiHandler {
             boolean isSelected = selectedPart == index;
             Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getHeadName(entity, index-100));
 
-            createSelectableModelPart(part, x, y, row, index, name);
+            ButtonWidget widget = createSelectableModelPart(part, x, y, row, index, name);
             row += showNodes(index, row, x, y);
+            widget.visible = !(widget.y < 0);
 
             index++;
             row++;
@@ -209,8 +211,9 @@ public class EditorGui extends EntityGuiHandler {
             boolean isSelected = selectedPart == index;
             Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getBodyName(entity, index));
 
-            createSelectableModelPart(part, x, y, row, index, name);
+            ButtonWidget widget = createSelectableModelPart(part, x, y, row, index, name);
             row += showNodes(index, row, x, y);
+            widget.visible = !(widget.y < 0);
 
             index++;
             row++;
@@ -227,15 +230,16 @@ public class EditorGui extends EntityGuiHandler {
 
             final int num = i;
 
-            addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+            ButtonWidget A = addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
                 if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
                 else nodes.get(0).changed = true;
                 this.client.setScreen(new EditorGui(entity, entityViewScale));
             }));
+            A.visible = !(A.y < 0);
 
-            addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
+            ButtonWidget B = addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
@@ -250,17 +254,19 @@ public class EditorGui extends EntityGuiHandler {
                 
                 this.client.setScreen(new EditorGui(entity, entityViewScale));
             }));
+            B.visible = !(B.y < 0);
         }
 
-        addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
+        ButtonWidget widget = addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
             this.client.setScreen(new NodeSelectGui(entity, entityViewScale, false));
         }));
+        widget.visible = !(widget.y < 0);
 
         return nodes.size()+1;
     }
 
-    public void createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
-        addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
+    public ButtonWidget createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
+        return addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
                 compile_nodes(uuid, part, false);

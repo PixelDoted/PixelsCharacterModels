@@ -2,6 +2,7 @@ package me.pixeldots.pixelscharactermodels.gui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,10 +38,12 @@ public class AnimationGui extends EntityGuiHandler {
     public static int selectedNode = -1;
     public static List<Node> nodes = new ArrayList<>();
     public static int yscroll = 0;
+    public static int animation_yscroll = 0;
     public static boolean isDragging = false;
     public static String path_offset = "";
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
+    public List<ButtonWidget> animation_widgets = new ArrayList<>();
     public float stored_pehkuiscale = 1;
     public float entityViewScale = 75;
     
@@ -96,26 +99,25 @@ public class AnimationGui extends EntityGuiHandler {
             for (int i = 0; i < files.length; i++) {
                 final File file = files[i];
 
-                ButtonWidget widget = addButton(new FlatButtonWidget(15, 15+(i*10)+yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
+                ButtonWidget widget = addButton(new FlatButtonWidget(15, 15+(i*10)+animation_yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
                     if (file.isDirectory()) path_offset += "/" + file.getName();
                     else selectAnimation(file);
 
                     this.client.setScreen(new AnimationGui(entity, entityViewScale));
                 }));
-                ButtonWidget save_widget = addButton(new FlatButtonWidget(5, 15+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
+                ButtonWidget save_widget = addButton(new FlatButtonWidget(5, 15+(i*10)+animation_yscroll, 10, 10, Text.of("S"), (btn) -> {
                     boolean result = AnimationHelper.write(file, animation);
                     if (result == false)
                         this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be saved"), false);
-                }));
+                }, this, Arrays.asList(Text.of("Save")) ));
 
                 widget.visible = !(widget.y < 10);
                 save_widget.visible = !(save_widget.y < 10);
-                //addButton(widget); addButton(save_widget);
-                //presetButtons.add(widget); presetButtons.add(save_widget);
+                animation_widgets.add(widget); animation_widgets.add(save_widget);
             }
 
-            TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 5, this.height-30, 110, 10, Text.of("")));
-            addButton(new FlatButtonWidget(5, this.height-15, 110, 10, Text.of("create"), (btn) -> {
+            TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 125, 60, 55, 10, Text.of("")));
+            addButton(new FlatButtonWidget(125, 45, 55, 10, Text.of("create"), (btn) -> {
                 File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Animations" + path_offset + File.separator + createname.getText() + ".json");
                 boolean result = AnimationHelper.write(file, animation);
                 if (result == false)
@@ -124,8 +126,26 @@ public class AnimationGui extends EntityGuiHandler {
                 animation_file = file;
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
+            addButton(new FlatButtonWidget(125, 35, 55, 10, Text.of("rename"), (btn) -> {
+                if (animation_file != null && !animation_file.exists()) return;
+                String new_name = createname.getText();
+                String new_path = animation_file.getAbsolutePath().replace(animation_file.getName(), new_name + (!new_name.endsWith(".json") ? ".json" : ""));
+    
+                File new_file = new File(new_path);
+                animation_file.renameTo(new_file);
+                animation_file = new_file;
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
+            }));
+    
+            addButton(new FlatButtonWidget(125, 15, 55, 10, Text.of("remove"), (btn) -> {
+                if (animation_file != null && !animation_file.exists()) return;
+                animation_file.delete();
+                
+                animation_file = null;
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
+            }));
         } else {
-            addButton(new FlatButtonWidget(5, 15+yscroll, 110, 10, Text.of("Save"), (btn) -> {
+            addButton(new FlatButtonWidget(5, 15, 110, 10, Text.of("Save"), (btn) -> {
                 compile_nodes(uuid, true);
                 boolean result = AnimationHelper.write(animation_file, animation);
                 if (result == false)
@@ -137,25 +157,25 @@ public class AnimationGui extends EntityGuiHandler {
         listModelParts(this.width-115, 15+yscroll, entity);
 
         // Bottom Panel
-        IntFieldWidget framerate = new IntFieldWidget(textRenderer, 125, this.height-65, 40, 10, frame_index_value); addTextField(framerate);
+        IntFieldWidget framerate = new IntFieldWidget(textRenderer, 190, this.height-65, 40, 10, frame_index_value); addTextField(framerate);
         framerate.setChangedListener((s) -> {
             animation.framerate = framerate.getNumber();
         });
         framerate.setNumber(animation.framerate);
         
-        IntFieldWidget frame_index = new IntFieldWidget(textRenderer, 125+60, this.height-65, 25, 10, frame_index_value); addTextField(frame_index);
-        addButton(new FlatButtonWidget(155+60, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
+        IntFieldWidget frame_index = new IntFieldWidget(textRenderer, 125+125, this.height-65, 25, 10, frame_index_value); addTextField(frame_index);
+        addButton(new FlatButtonWidget(155+125, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
             animation.frames.add(animation.frames.get(animation.frames.size()-1));
             frame_index_value = animation.frames.size()-1;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
-        addButton(new FlatButtonWidget(190+60, this.height-65, 50, 10, Text.of("Remove"), (btn) -> {
+        addButton(new FlatButtonWidget(190+125, this.height-65, 50, 10, Text.of("Remove"), (btn) -> {
             animation.frames.remove(frame_index_value);
             frame_index_value--;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
 
-        IntFieldWidget frame_count = new IntFieldWidget(textRenderer, 125+60, this.height-40, 40, 10, animation.frames.get(frame_index_value).run_frame); addTextField(frame_count);
+        IntFieldWidget frame_count = new IntFieldWidget(textRenderer, 125+125, this.height-40, 40, 10, animation.frames.get(frame_index_value).run_frame); addTextField(frame_count);
 
         frame_index.setChangedListener((s) -> {
             frame_index_value = Math.round(frame_index.value);
@@ -177,9 +197,19 @@ public class AnimationGui extends EntityGuiHandler {
             else {
                 for (ButtonWidget widget : scrollable_widgets) {
                     widget.y += amount*10;
+                    widget.visible = !(widget.y < 0);
                 }
             }
-        } else if (mouseX >= 120 && mouseX < this.width-120 && mouseY < this.height-80) {
+        } else if (mouseX <= 120) {
+            animation_yscroll += amount*10;
+            if (animation_yscroll > 0) animation_yscroll = 0;
+            else {
+                for (ButtonWidget widget : animation_widgets) {
+                    widget.y += amount*10;
+                    widget.visible = !(widget.y < 10);
+                }
+            }
+        } else if (mouseX >= 185 && mouseX < this.width-120 && mouseY < this.height-80) {
             entityViewScale += amount*10;
             if (entityViewScale < 1) entityViewScale = 1;
         }
@@ -193,20 +223,22 @@ public class AnimationGui extends EntityGuiHandler {
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
-            entityMouseX = (float)(this.width/2) - mouseX;
+            entityMouseX = (float)(this.width/2+32) - mouseX;
             entityMouseY = (float)(this.height/2+37-128) - mouseY;
         }
 
         if (entity != null)
-            drawEntity(this.width/2, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
+            drawEntity(this.width/2+32, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
 
-        drawColor(matrices, 120, this.height-80, this.width-240, 80, 0, 4, 17, 222);
-        drawHorizontalLine(matrices, 120, this.width-120, this.height-80, 0, 0, 0, 255);
-        drawHorizontalLine(matrices, 120, this.width-120, this.height-79, 0, 0, 0, 255);
+        drawColor(matrices, 185, this.height-80, this.width-240, 80, 0, 4, 17, 222);
+        drawHorizontalLine(matrices, 185, this.width-120, this.height-80, 0, 0, 0, 255);
+        drawHorizontalLine(matrices, 185, this.width-120, this.height-79, 0, 0, 0, 255);
 
-        drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
-        drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
-        drawVerticalLine(matrices, 119, -1, this.height, 0, 0, 0, 255);
+        drawColor(matrices, 0, 0, 185, this.height, 0, 4, 17, 222);
+        drawVerticalLine(matrices, 185, -1, this.height, 0, 0, 0, 255);
+        drawVerticalLine(matrices, 184, -1, this.height, 0, 0, 0, 255);
+        drawVerticalLine(matrices, 119, 15, this.height-6, 0, 0, 0, 188);
+        drawVerticalLine(matrices, 120, 15, this.height-6, 0, 0, 0, 188);
 
         drawColor(matrices, this.width-120, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, this.width-120, -1, this.height, 0, 0, 0, 255);
@@ -214,9 +246,9 @@ public class AnimationGui extends EntityGuiHandler {
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
 
-        drawString(matrices, "Framerate", 125, this.height-80);
-        drawString(matrices, "Frame Index", 125+60, this.height-80);
-        drawString(matrices, "Delay Frames", 125+60, this.height-55);
+        drawString(matrices, "Framerate", 190, this.height-80);
+        drawString(matrices, "Frame Index", 250, this.height-80);
+        drawString(matrices, "Delay Frames", 250, this.height-55);
 
         super.render(matrices, mouseX, mouseY, delta);
         drawColor(matrices, this.width-120, 0, this.width, 10, 0, 0, 0, 255);

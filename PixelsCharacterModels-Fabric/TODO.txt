@@ -1,5 +1,6 @@
 
 
+- auto save
 - request_entitys not getting the joined player's scripts
 
 > old
@@ -39,3 +40,4 @@
 + fix saving nodes to root when editing another part in the editor
 + fix entity texture disappearing in cube/mesh node
 + updated NodeSelectGui
++ updated Animation file menu

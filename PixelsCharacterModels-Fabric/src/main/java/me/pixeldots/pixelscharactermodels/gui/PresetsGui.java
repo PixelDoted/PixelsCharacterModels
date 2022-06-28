@@ -2,6 +2,7 @@ package me.pixeldots.pixelscharactermodels.gui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.pixeldots.pixelscharactermodels.PCMMain;
@@ -97,7 +98,7 @@ public class PresetsGui extends EntityGuiHandler {
             }));
             ButtonWidget save_widget = addButton(new FlatButtonWidget(5, presets_offset+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
                 PresetHelper.write_preset(file, entity, model);
-            }));
+            }, this, Arrays.asList(Text.of("Save")) ));
 
             widget.visible = !((PCMMain.settings.preview_preset && widget.y < 35) || widget.y < 10);
             presetButtons.add(widget); presetButtons.add(save_widget);

@@ -32,7 +32,7 @@ public class OldAnimationData {
 			OldMapVec3 pos = data.LimbPivots.size() > i ? data.LimbPivots.get(i) : new OldMapVec3();
 
 			String script = pos != null ? ("translate " + pos.X + " -" + pos.Y + " " + pos.Z + "\n") : "";
-			if (rot != null) script += "angle " + rot.X + " " + rot.Y + " " + rot.Z;
+			if (rot != null) script += "angle " + Math.toRadians(rot.X) + " " + Math.toRadians(rot.Y) + " " + Math.toRadians(rot.Z);
 
 			frame.parts.put(data.LimbIDs.get(i).toLowerCase(), script);
 		}

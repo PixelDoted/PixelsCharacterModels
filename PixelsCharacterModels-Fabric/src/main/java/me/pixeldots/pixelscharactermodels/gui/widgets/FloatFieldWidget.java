@@ -54,7 +54,9 @@ public class FloatFieldWidget extends TextFieldWidget {
         String s = this.getText();
         super.write(text);
 
-        if (!PCMUtils.isFloat(this.getText())) super.setText(s);
+        String current = this.getText();
+        if (current.equals("") || current.equals("-") || current.equals(".") || current.equals("-.")) this.value = 0;
+        else if (!PCMUtils.isFloat(current)) super.setText(s);
         else { 
             this.value = PCMUtils.getFloat(text);
             if (max_value == 0) return;
