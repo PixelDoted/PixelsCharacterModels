@@ -4,6 +4,7 @@ import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.other.Node.NodeType;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
@@ -29,7 +30,7 @@ public class NodeSelectGui extends GuiHandler {
     public void init() {
         super.init();
 
-        addButton(new FlatButtonWidget(5, 5, 100, 10, Text.of("Cancel"), (btn) -> {
+        addButton(new FlatButtonWidget(5, 5, 110, 10, Text.of("Cancel"), (btn) -> {
             if (is_animation) this.client.setScreen(new AnimationGui(entity, entityViewScale));
             else this.client.setScreen(new EditorGui(entity, entityViewScale));
         }));
@@ -41,7 +42,7 @@ public class NodeSelectGui extends GuiHandler {
                 row = 1;
             }
 
-            addButton(new FlatButtonWidget(5+(col*105), 10+(row*15), 100, 10, Text.of(t.name().toLowerCase()), (btn) -> {
+            addButton(new FlatButtonWidget(5+(col*105), 10+(row*15), 110, 10, Text.of(t.name().toLowerCase()), (btn) -> {
                 Node node = new Node(t);
                 node.changed = true;
                 if (is_animation) {
@@ -55,6 +56,19 @@ public class NodeSelectGui extends GuiHandler {
 
             row++;
         }
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
+
+        drawHorizontalLine(matrices, 5, 113, 19, 0, 0, 0, 188);
+        drawHorizontalLine(matrices, 5, 113, 20, 0, 0, 0, 188);
+
+        drawVerticalLine(matrices, 119, -1, this.height, 0, 0, 0, 255);
+        drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
+
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
 }

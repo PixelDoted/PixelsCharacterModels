@@ -163,8 +163,8 @@ public class PresetsGui extends EntityGuiHandler {
         drawColor(matrices, 0, 0, 185, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 185, 9, this.height, 0, 0, 0, 255);
         drawVerticalLine(matrices, 184, 9, this.height, 0, 0, 0, 255);
-        drawVerticalLine(matrices, 119, 15, this.height-6, 0, 0, 0, 66);
-        drawVerticalLine(matrices, 120, 15, this.height-6, 0, 0, 0, 66);
+        drawVerticalLine(matrices, 119, 15, this.height-6, 0, 0, 0, 188);
+        drawVerticalLine(matrices, 120, 15, this.height-6, 0, 0, 0, 188);
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
 

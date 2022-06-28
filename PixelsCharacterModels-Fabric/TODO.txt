@@ -38,3 +38,4 @@
 + improve GUI node dragging
 + fix saving nodes to root when editing another part in the editor
 + fix entity texture disappearing in cube/mesh node
++ updated NodeSelectGui
