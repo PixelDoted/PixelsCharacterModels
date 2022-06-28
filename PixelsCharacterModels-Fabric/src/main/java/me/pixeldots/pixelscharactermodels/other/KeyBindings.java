@@ -21,33 +21,33 @@ import net.minecraft.entity.LivingEntity;
 public class KeyBindings {
 	
 	private static KeyBinding openGUI = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-		"key.pixelscharactermodels.opengui", // The translation key of the keybinding's name
+		"pcm.key.opengui", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_R, // The keycode of the key
-		"category.pixelscharactermodels" // The translation key of the keybinding's category.
+		"pcm.category" // The translation key of the keybinding's category.
 	));
-	private static KeyBinding reloadKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-		"key.pixelscharactermodels.reload", // The translation key of the keybinding's name
+	private static KeyBinding reloadSkins = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		"pcm.key.reload_skins", // The translation key of the keybinding's name
 		InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
 		GLFW.GLFW_KEY_KP_1, // The keycode of the key
-		"category.pixelscharactermodels" // The translation key of the keybinding's category.
+		"pcm.category" // The translation key of the keybinding's category.
 	));
 	
 	private static KeyBinding Anim1 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pixelscharactermodels.anim1", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_1, "category.PixelsCharacterModels"));
+			new KeyBinding("pcm.key.anim1", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_1, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim2 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pixelscharactermodels.anim2", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_2, "category.PixelsCharacterModels"));
+			new KeyBinding("pcm.key.anim2", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_2, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim3 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pixelscharactermodels.anim3", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_3, "category.PixelsCharacterModels"));
+			new KeyBinding("pcm.key.anim3", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_3, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim4 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pixelscharactermodels.anim4", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_4, "category.PixelsCharacterModels"));
+			new KeyBinding("pcm.key.anim4", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_4, "category.PixelsCharacterModels"));
 	private static KeyBinding Anim5 = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.pixelscharactermodels.anim5", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_5, "category.PixelsCharacterModels"));
+			new KeyBinding("pcm.key.anim5", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_5, "category.PixelsCharacterModels"));
 	
 	public static void registerKeyBindings() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 		    if (openGUI.wasPressed()) PCMClient.OpenGUI();
-			if (reloadKey.wasPressed()) SkinHelper.reloadSkins();
+			if (reloadSkins.wasPressed()) SkinHelper.reloadSkins();
 		    
 		    if (Anim1.wasPressed()) setAnimation(PCMMain.settings.animations[0], client);
 			if (Anim2.wasPressed()) setAnimation(PCMMain.settings.animations[1], client);

@@ -2,7 +2,6 @@ package me.pixeldots.pixelscharactermodels.gui;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import me.pixeldots.pixelscharactermodels.PCMMain;
@@ -53,27 +52,27 @@ public class PresetsGui extends EntityGuiHandler {
         super.init();
 
         // Top Bar
-        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {})).active = false;
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {})).active = false;
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {
             setScreen(new EditorGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
             setScreen(new AnimationGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
 
         int presets_offset = 15;
         if (PCMMain.settings.preview_preset) {
             presets_offset = 35;
-            addButton(new FlatButtonWidget(5, 15, 110, 10, Text.of("Select"), (btn) -> {
+            addButton(new FlatButtonWidget(5, 15, 110, 10, Text("pcm.gui.Select"), (btn) -> {
                 if (selectedPreset.equals("default")) defaultPreset(true);
                 else selectPreset(new File(selectedPreset), true);
             }));
         }
 
-        ButtonWidget default_preset = addButton(new FlatButtonWidget(5, presets_offset+yscroll, 110, 10, Text.of(path_offset == "" ? "default" : "back"), (btn) -> {
+        ButtonWidget default_preset = addButton(new FlatButtonWidget(5, presets_offset+yscroll, 110, 10, Text(path_offset == "" ? "pcm.gui.Default" : "pcm.gui.Back"), (btn) -> {
             if (path_offset == "") defaultPreset(false);
             else {
                 path_offset = path_offset.substring(0, path_offset.lastIndexOf(File.separator));
@@ -98,19 +97,19 @@ public class PresetsGui extends EntityGuiHandler {
             }));
             ButtonWidget save_widget = addButton(new FlatButtonWidget(5, presets_offset+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
                 PresetHelper.write_preset(file, entity, model);
-            }, this, Arrays.asList(Text.of("Save")) ));
+            }, this, TextArray("pcm.gui.Save") ));
 
             widget.visible = !((PCMMain.settings.preview_preset && widget.y < 35) || widget.y < 10);
             presetButtons.add(widget); presetButtons.add(save_widget);
         }
 
         TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 125, 60, 55, 10, Text.of("")));
-        addButton(new FlatButtonWidget(125, 45, 55, 10, Text.of("create"), (btn) -> {
+        addButton(new FlatButtonWidget(125, 45, 55, 10, Text("pcm.gui.Create"), (btn) -> {
             File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Presets" + path_offset + File.separator + createname.getText());
             PresetHelper.write_preset(file, entity, model);
             this.client.setScreen(new PresetsGui(entity, entityViewScale));
         }));
-        addButton(new FlatButtonWidget(125, 35, 55, 10, Text.of("rename"), (btn) -> {
+        addButton(new FlatButtonWidget(125, 35, 55, 10, Text("pcm.gui.Rename"), (btn) -> {
             File file = new File(selectedPreset);
             if (!file.exists() || selectedPreset.equals("default")) return;
             String new_path = selectedPreset.replace(file.getName(), createname.getText());
@@ -120,7 +119,7 @@ public class PresetsGui extends EntityGuiHandler {
             this.client.setScreen(new PresetsGui(entity, entityViewScale));
         }));
 
-        addButton(new FlatButtonWidget(125, 15, 55, 10, Text.of("remove"), (btn) -> {
+        addButton(new FlatButtonWidget(125, 15, 55, 10, Text("pcm.gui.Delete"), (btn) -> {
             File file = new File(selectedPreset);
             if (!file.exists() || selectedPreset.equals("default")) return;
             file.delete();

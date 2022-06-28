@@ -20,6 +20,7 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -134,6 +135,24 @@ public class GuiHandler extends Screen {
 	
 	public void drawString(MatrixStack matrices, String text, int x, int y) {
 		drawCenteredText(matrices, textRendererGUI, text, x+textRendererGUI.getWidth(text)/2, y+5, 16777215);
+	}
+
+	public void drawString(MatrixStack matrices, Text text, int x, int y) {
+		drawCenteredText(matrices, textRendererGUI, text, x+textRendererGUI.getWidth(text)/2, y+5, 16777215);
+	}
+
+	public static String String(String text) {
+		return I18n.hasTranslation(text) ? I18n.translate(text, "") : text;
+	}
+	public static Text Text(String text) {
+		return Text.of(String(text));
+	}
+	public static List<Text> TextArray(String... text) {
+		List<Text> list = new ArrayList<>();
+		for (int i = 0; i < text.length; i++) {
+			list.add(Text(text[i]));
+		}
+		return list;
 	}
 
 	public void drawVerticalLine(MatrixStack matrices, int x, int y0, int y1, int r, int g, int b, int a) {

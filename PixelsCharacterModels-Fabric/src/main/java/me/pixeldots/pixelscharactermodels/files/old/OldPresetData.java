@@ -19,8 +19,6 @@ public class OldPresetData {
 	public String skinSuffix = "";
 	
 	public static File toNew(File path) {
-		Text warning_text = Text.of("Warning: Converting from Old Preset's can be inaccurate");
-		PCMClient.minecraft.player.sendMessage(warning_text, false);
 		OldPresetData data = (OldPresetData)FileHelper.read(path, OldPresetData.class);
 
 		String absolute_path = path.getAbsolutePath();

@@ -49,7 +49,7 @@ public class Node {
     }
 
     // create 3 GUI Buttons
-    public static void threeButton(String name, GuiHandler gui, int x, int y, Node node) {
+    public static void threeButton(Text name, GuiHandler gui, int x, int y, Node node) {
         gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, name, 0xFFFFFFFF));
         FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y+8, 110, 10, 0);
         FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+24, 110, 10, 0);
@@ -65,7 +65,7 @@ public class Node {
     }
 
     // create 3 GUI Buttons
-    public static void threeButtonRotation(String name, GuiHandler gui, int x, int y, Node node) {
+    public static void threeButtonRotation(Text name, GuiHandler gui, int x, int y, Node node) {
         gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, name, 0xFFFFFFFF));
         FloatFieldWidget bX = new FloatFieldWidget(gui.textRendererGUI, x, y+8, 110, 10, 0);
         FloatFieldWidget bY = new FloatFieldWidget(gui.textRendererGUI, x, y+24, 110, 10, 0);
@@ -84,15 +84,15 @@ public class Node {
 
     public enum NodeType {
         PARTICLE((gui, x, y, node) -> {
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Type", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, GuiHandler.Text("pcm.node.Type"), 0xFFFFFFFF));
             TextFieldWidget type = new TextFieldWidget(gui.textRendererGUI, x, y+8, 100, 10, Text.of(""));
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "Position", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, GuiHandler.Text("pcm.node.Position"), 0xFFFFFFFF));
             TextFieldWidget bx = new TextFieldWidget(gui.textRendererGUI, x, y+31, 30, 10, Text.of(""));
             TextFieldWidget by = new TextFieldWidget(gui.textRendererGUI, x+35, y+31, 30, 10, Text.of(""));
             TextFieldWidget bz = new TextFieldWidget(gui.textRendererGUI, x+69, y+31, 30, 10, Text.of(""));
            
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "Velocity", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, GuiHandler.Text("pcm.node.Velocity"), 0xFFFFFFFF));
             TextFieldWidget vx = new TextFieldWidget(gui.textRendererGUI, x, y+54, 30, 10, Text.of(""));
             TextFieldWidget vy = new TextFieldWidget(gui.textRendererGUI, x+35, y+54, 30, 10, Text.of(""));
             TextFieldWidget vz = new TextFieldWidget(gui.textRendererGUI, x+69, y+54, 30, 10, Text.of(""));
@@ -110,26 +110,26 @@ public class Node {
             gui.addTextField(type); gui.addTextField(bx); gui.addTextField(by); gui.addTextField(bz); 
             gui.addTextField(vx); gui.addTextField(vy); gui.addTextField(vz);
         }, (node) -> { return "particle " + node.argsToString(); }, new String[] { "minecraft:flame", "0", "0", "0", "0", "0", "0" }),
-        TRANSLATE((gui, x, y, node) -> { threeButton("Position", gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
-        SCALE((gui, x, y, node) -> { threeButton("Scale", gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, new String[] { "1", "1", "1" }),
-        ROTATE((gui, x, y, node) -> { threeButtonRotation("Rotate", gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
-        ANGLE((gui, x, y, node) -> { threeButtonRotation("Angle", gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        TRANSLATE((gui, x, y, node) -> { threeButton(GuiHandler.Text("pcm.node.Position"), gui, x, y, node); }, (node) -> { return "translate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        SCALE((gui, x, y, node) -> { threeButton(GuiHandler.Text("pcm.node.Scale"), gui, x, y, node); }, (node) -> { return "scale " + node.argsToString(); }, new String[] { "1", "1", "1" }),
+        ROTATE((gui, x, y, node) -> { threeButtonRotation(GuiHandler.Text("pcm.node.Rotate"), gui, x, y, node); }, (node) -> { return "rotate " + node.argsToString(); }, new String[] { "0", "0", "0" }),
+        ANGLE((gui, x, y, node) -> { threeButtonRotation(GuiHandler.Text("pcm.node.Angle"), gui, x, y, node); }, (node) -> { return "angle " + node.argsToString(); }, new String[] { "0", "0", "0" }),
         VERTEX((gui, x, y, node) -> {
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Position", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, GuiHandler.Text("pcm.node.Position"), 0xFFFFFFFF));
             FloatFieldWidget fX = new FloatFieldWidget(gui.textRendererGUI, x, y+8, 32, 10, 0); fX.only_positive = false;
             FloatFieldWidget fY = new FloatFieldWidget(gui.textRendererGUI, x+37, y+8, 32, 10, 0); fY.only_positive = false;
             FloatFieldWidget fZ = new FloatFieldWidget(gui.textRendererGUI, x+75, y+8, 32, 10, 0); fZ.only_positive = false;
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "Normal", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, GuiHandler.Text("pcm.node.Normal"), 0xFFFFFFFF));
             FloatFieldWidget fNX = new FloatFieldWidget(gui.textRendererGUI, x, y+31, 32, 10, 0); fNX.only_positive = false;
             FloatFieldWidget fNY = new FloatFieldWidget(gui.textRendererGUI, x+37, y+31, 32, 10, 0); fNY.only_positive = false;
             FloatFieldWidget fNZ = new FloatFieldWidget(gui.textRendererGUI, x+75, y+31, 32, 10, 0); fNZ.only_positive = false;
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "UV", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, GuiHandler.Text("pcm.node.UV"), 0xFFFFFFFF));
             FloatFieldWidget fU = new FloatFieldWidget(gui.textRendererGUI, x, y+54, 51, 10, 0);
             FloatFieldWidget fV = new FloatFieldWidget(gui.textRendererGUI, x+56, y+54, 51, 10, 0);
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+67, "Color", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+67, GuiHandler.Text("pcm.node.Color"), 0xFFFFFFFF));
             IntFieldWidget fR = new IntFieldWidget(gui.textRendererGUI, x, y+77, 27, 10, 255, 255);
             IntFieldWidget fG = new IntFieldWidget(gui.textRendererGUI, x+27, y+77, 27, 10, 255, 255);
             IntFieldWidget fB = new IntFieldWidget(gui.textRendererGUI, x+54, y+77, 27, 10, 255, 255);
@@ -154,14 +154,14 @@ public class Node {
             gui.addTextField(fR); gui.addTextField(fG); gui.addTextField(fB); gui.addTextField(fA);
         }, (node) -> { return "vertex " + node.argsToString(); }, new String[] { "0", "0", "0", "0", "0", "0", "0", "0", "255", "255", "255", "255" }),
         CUBE((gui, x, y, node) -> {
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Face", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, GuiHandler.Text("pcm.node.Face"), 0xFFFFFFFF));
             IntFieldWidget face = new IntFieldWidget(gui.textRendererGUI, x, y+8, 109, 10, 0, 5);
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "UVs", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, GuiHandler.Text("pcm.node.UV"), 0xFFFFFFFF));
             FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y+31, 52, 10, 0, 64);
             FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+57, y+31, 52, 10, 0, 64);
 
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "Width, Height", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, GuiHandler.Text("pcm.node.WidthHeight"), 0xFFFFFFFF));
             FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+54, 52, 10, 64, 64);
             FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+57, y+54, 52, 10, 64, 64);
             TextureWidget texture = new TextureWidget(x, y+67, 110, 110, gui.entity);
@@ -183,14 +183,14 @@ public class Node {
             gui.addTextField(bU); gui.addTextField(bV); gui.addTextField(bW); gui.addTextField(bH); gui.addTextField(face);
         }, (node) -> { return NodeHelper.cubeToString(node); }, new String[] { "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1", "0", "0", "1", "1" }),
         MESH((gui, x, y, node) -> {
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, "Mesh File Name", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y-2, GuiHandler.Text("pcm.node.MeshFileName"), 0xFFFFFFFF));
             TextFieldWidget meshID = new TextFieldWidget(gui.textRendererGUI, x, y+8, 109, 10, Text.of(""));
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, "UVs", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+21, GuiHandler.Text("pcm.node.UV"), 0xFFFFFFFF));
             FloatFieldWidget bU = new FloatFieldWidget(gui.textRendererGUI, x, y+31, 30, 10, 0, 64);
             FloatFieldWidget bV = new FloatFieldWidget(gui.textRendererGUI, x+35, y+31, 30, 10, 0, 64);
             
-            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, "Width, Height", 0xFFFFFFFF));
+            gui.gui_drawables.add(new TextWidget(gui.textRendererGUI, x, y+45, GuiHandler.Text("pcm.node.WidthHeight"), 0xFFFFFFFF));
             FloatFieldWidget bW = new FloatFieldWidget(gui.textRendererGUI, x, y+54, 30, 10, 64, 64);
             FloatFieldWidget bH = new FloatFieldWidget(gui.textRendererGUI, x+35, y+54, 30, 10, 64, 64);
             TextureWidget texture = new TextureWidget(x, y+67, 110, 110, gui.entity);

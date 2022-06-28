@@ -51,39 +51,39 @@ public class SettingsGui extends EntityGuiHandler {
         super.init();
 
         // Top Bar
-        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {
             setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {
             setScreen(new EditorGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
             setScreen(new AnimationGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {})).active = false;
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {})).active = false;
 
-        addButton(new FlatButtonWidget(5, 15, 230, 10, Text.of("Save"), (btn) -> {
+        addButton(new FlatButtonWidget(5, 15, 230, 10, Text("pcm.gui.Save"), (btn) -> {
             PCMMain.settings.save(PCMMain.SettingsPath);
         }));
-        addDrawableElement(new ToggleWidget(5, 30, 230, 10, "Show block under Player", PCMMain.settings.show_block_under_player_ui, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 30, 230, 10, String("pcm.setting.ShowBlockUnderPlayer"), PCMMain.settings.show_block_under_player_ui, (val) -> {
             PCMMain.settings.show_block_under_player_ui = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 45, 230, 10, "Player faces Cursor", PCMMain.settings.player_faces_cursor_ui, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 45, 230, 10, String("pcm.setting.PlayerFacesCursor"), PCMMain.settings.player_faces_cursor_ui, (val) -> {
             PCMMain.settings.player_faces_cursor_ui = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 60, 230, 10, "Keybinding opens Editor", PCMMain.settings.keybinding_opens_editor, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 60, 230, 10, String("pcm.setting.KeybindingOpensEditor"), PCMMain.settings.keybinding_opens_editor, (val) -> {
             PCMMain.settings.keybinding_opens_editor = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 75, 230, 10, "Preview Preset", PCMMain.settings.preview_preset, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 75, 230, 10, String("pcm.setting.PreviewPreset"), PCMMain.settings.preview_preset, (val) -> {
             PCMMain.settings.preview_preset = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 90, 230, 10, "Radians instead of Degress", PCMMain.settings.radians_instead_of_degress, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 90, 230, 10, String("pcm.setting.RadiansInsteadOfDegress"), PCMMain.settings.radians_instead_of_degress, (val) -> {
             PCMMain.settings.radians_instead_of_degress = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 105, 230, 10, "Show NameTags", PCMMain.settings.show_nametags, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 105, 230, 10, String("pcm.setting.ShowNameTags"), PCMMain.settings.show_nametags, (val) -> {
             PCMMain.settings.show_nametags = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 120, 230, 10, "Show Armor", PCMMain.settings.show_armor, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 120, 230, 10, String("pcm.setting.ShowArmor"), PCMMain.settings.show_armor, (val) -> {
             PCMMain.settings.show_armor = val;
         }));
 
@@ -99,10 +99,10 @@ public class SettingsGui extends EntityGuiHandler {
         E.setChangedListener((s) -> { PCMMain.settings.animations[4] = s; }); E.setText(PCMMain.settings.animations[4]);
 
 
-        addButton(new FlatButtonWidget(5, this.height-30, 230, 10, Text.of("Request Entity Data"), (btn) -> {
+        addButton(new FlatButtonWidget(5, this.height-30, 230, 10, Text("pcm.gui.RequestEntityData"), (btn) -> {
             ClientNetwork.request_entitys();
         }));
-        addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text.of("Clear Entity Data"), (btn) -> {
+        addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text("pcm.gui.ClearEntityData"), (btn) -> {
             SkinHelper.clearSkins();
             PCMClient.EntityAnimationList.clear();
             ScriptedModels.EntityScript.clear();

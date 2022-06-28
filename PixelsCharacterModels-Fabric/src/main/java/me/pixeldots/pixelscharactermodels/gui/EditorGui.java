@@ -70,28 +70,28 @@ public class EditorGui extends EntityGuiHandler {
     public void init() {
         super.init();
         // Top Bar
-        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {
             setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {})).active = false;
-        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {})).active = false;
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
             setScreen(new AnimationGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
 
         // Left Panel
-        addButton(new FlatButtonWidget(5, 15, 110, 10, Text.of("compile"), (btn) -> {
+        addButton(new FlatButtonWidget(5, 15, 110, 10, Text("pcm.gui.Compile"), (btn) -> {
             compile_nodes(uuid, selectedPartModel, true);
         }));
 
         if (selectedNode == -1) {
             // Pehkui Scale
-            this.gui_drawables.add(new TextWidget(textRenderer, 5, 29, "Entity Scale", 0xFFFFFFFF));
+            this.gui_drawables.add(new TextWidget(textRenderer, 5, 29, Text("pcm.gui.EntityScale"), 0xFFFFFFFF));
             PehkuiScale = (FloatFieldWidget)addTextField(new FloatFieldWidget(textRenderer, 5, 39, 110, 10, 1));
             
-            this.gui_drawables.add(new TextWidget(textRenderer, 5, 54, "Skin Suffix", 0xFFFFFFFF));
+            this.gui_drawables.add(new TextWidget(textRenderer, 5, 54, Text("pcm.gui.SkinSuffix"), 0xFFFFFFFF));
             SkinSuffix = addTextField(new TextFieldWidget(textRenderer, 5, 63, 110, 10, Text.of("")));
 
             stored_pehkuiscale = PCMUtils.getPehkuiScale(entity);
@@ -175,7 +175,7 @@ public class EditorGui extends EntityGuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity) {
-        ButtonWidget btn_widget = addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
+        ButtonWidget btn_widget = addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + String("pcm.entity.Root")), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
@@ -196,7 +196,7 @@ public class EditorGui extends EntityGuiHandler {
         int index = 100;
         for (ModelPart part : PlatformUtils.getHeadParts(model)) {
             boolean isSelected = selectedPart == index;
-            Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getHeadName(entity, index-100));
+            Text name = Text.of((isSelected ? "- " : "+ ") + String("pcm.entity." + ModelPartNames.getHeadName(entity, index-100)));
 
             ButtonWidget widget = createSelectableModelPart(part, x, y, row, index, name);
             row += showNodes(index, row, x, y);
@@ -209,7 +209,7 @@ public class EditorGui extends EntityGuiHandler {
         index = 0;
         for (ModelPart part : PlatformUtils.getBodyParts(model)) {
             boolean isSelected = selectedPart == index;
-            Text name = Text.of((isSelected ? "- " : "+ ") + ModelPartNames.getBodyName(entity, index));
+            Text name = Text.of((isSelected ? "- " : "+ ") + String("pcm.entity." + ModelPartNames.getBodyName(entity, index)));
 
             ButtonWidget widget = createSelectableModelPart(part, x, y, row, index, name);
             row += showNodes(index, row, x, y);

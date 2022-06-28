@@ -1,6 +1,5 @@
 
 
-- auto save
 - request_entitys not getting the joined player's scripts
 
 > old

@@ -82,14 +82,14 @@ public class AnimationGui extends EntityGuiHandler {
         super.init();
         
         // Top Bar
-        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text.of("Presets"), (btn) -> {
+        addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {
             setScreen(new PresetsGui(entity, this.entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text.of("Editor"), (btn) -> {
+        addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {
             setScreen(new EditorGui(entity, entityViewScale));
         }));
-        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text.of("Animation"), (btn) -> {})).active = false;
-        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text.of("Settings"), (btn) -> {
+        addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {})).active = false;
+        addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
         }));
 
@@ -109,7 +109,7 @@ public class AnimationGui extends EntityGuiHandler {
                     boolean result = AnimationHelper.write(file, animation);
                     if (result == false)
                         this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be saved"), false);
-                }, this, Arrays.asList(Text.of("Save")) ));
+                }, this, Arrays.asList(Text("pcm.gui.Save")) ));
 
                 widget.visible = !(widget.y < 10);
                 save_widget.visible = !(save_widget.y < 10);
@@ -117,7 +117,7 @@ public class AnimationGui extends EntityGuiHandler {
             }
 
             TextFieldWidget createname = addTextField(new TextFieldWidget(textRenderer, 125, 60, 55, 10, Text.of("")));
-            addButton(new FlatButtonWidget(125, 45, 55, 10, Text.of("create"), (btn) -> {
+            addButton(new FlatButtonWidget(125, 45, 55, 10, Text("pcm.gui.Create"), (btn) -> {
                 File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + "PCM" + File.separator + "Animations" + path_offset + File.separator + createname.getText() + ".json");
                 boolean result = AnimationHelper.write(file, animation);
                 if (result == false)
@@ -126,7 +126,7 @@ public class AnimationGui extends EntityGuiHandler {
                 animation_file = file;
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
-            addButton(new FlatButtonWidget(125, 35, 55, 10, Text.of("rename"), (btn) -> {
+            addButton(new FlatButtonWidget(125, 35, 55, 10, Text("pcm.gui.Rename"), (btn) -> {
                 if (animation_file != null && !animation_file.exists()) return;
                 String new_name = createname.getText();
                 String new_path = animation_file.getAbsolutePath().replace(animation_file.getName(), new_name + (!new_name.endsWith(".json") ? ".json" : ""));
@@ -137,7 +137,7 @@ public class AnimationGui extends EntityGuiHandler {
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
     
-            addButton(new FlatButtonWidget(125, 15, 55, 10, Text.of("remove"), (btn) -> {
+            addButton(new FlatButtonWidget(125, 15, 55, 10, Text("pcm.gui.Delete"), (btn) -> {
                 if (animation_file != null && !animation_file.exists()) return;
                 animation_file.delete();
                 
@@ -145,7 +145,7 @@ public class AnimationGui extends EntityGuiHandler {
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
         } else {
-            addButton(new FlatButtonWidget(5, 15, 110, 10, Text.of("Save"), (btn) -> {
+            addButton(new FlatButtonWidget(5, 15, 110, 10, Text("pcm.gui.Save"), (btn) -> {
                 compile_nodes(uuid, true);
                 boolean result = AnimationHelper.write(animation_file, animation);
                 if (result == false)
@@ -164,12 +164,12 @@ public class AnimationGui extends EntityGuiHandler {
         framerate.setNumber(animation.framerate);
         
         IntFieldWidget frame_index = new IntFieldWidget(textRenderer, 125+125, this.height-65, 25, 10, frame_index_value); addTextField(frame_index);
-        addButton(new FlatButtonWidget(155+125, this.height-65, 30, 10, Text.of("Add"), (btn) -> {
+        addButton(new FlatButtonWidget(155+125, this.height-65, 30, 10, Text("pcm.gui.Add"), (btn) -> {
             animation.frames.add(animation.frames.get(animation.frames.size()-1));
             frame_index_value = animation.frames.size()-1;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
         }));
-        addButton(new FlatButtonWidget(190+125, this.height-65, 50, 10, Text.of("Remove"), (btn) -> {
+        addButton(new FlatButtonWidget(190+125, this.height-65, 50, 10, Text("pcm.gui.Remove"), (btn) -> {
             animation.frames.remove(frame_index_value);
             frame_index_value--;
             this.client.setScreen(new AnimationGui(entity, entityViewScale));
@@ -246,9 +246,9 @@ public class AnimationGui extends EntityGuiHandler {
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
 
-        drawString(matrices, "Framerate", 190, this.height-80);
-        drawString(matrices, "Frame Index", 250, this.height-80);
-        drawString(matrices, "Delay Frames", 250, this.height-55);
+        drawString(matrices, Text("pcm.gui.Framerate"), 190, this.height-80);
+        drawString(matrices, Text("Frame Index"), 250, this.height-80);
+        drawString(matrices, Text("Delay Frames"), 250, this.height-55);
 
         super.render(matrices, mouseX, mouseY, delta);
         drawColor(matrices, this.width-120, 0, this.width, 10, 0, 0, 0, 255);
@@ -272,7 +272,7 @@ public class AnimationGui extends EntityGuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity) {
-        addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + "Root"), (btn) -> {
+        addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + String("pcm.entity.Root")), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 compile_nodes(uuid, false);
@@ -293,7 +293,7 @@ public class AnimationGui extends EntityGuiHandler {
         for (ModelPart part : PlatformUtils.getHeadParts(model)) {
             boolean isSelected = selectedPart == index;
             String partName = ModelPartNames.getHeadName(entity, index-100);
-            Text name = Text.of((isSelected ? "- " : "+ ") + partName);
+            Text name = Text.of((isSelected ? "- " : "+ ") + String("pcm.entity." + partName));
 
             createSelectableModelPart(partName, x, y, row, index, name);
             row += showNodes(index, row, x, y);
@@ -306,7 +306,7 @@ public class AnimationGui extends EntityGuiHandler {
         for (ModelPart part : PlatformUtils.getBodyParts(model)) {
             boolean isSelected = selectedPart == index;
             String partName = ModelPartNames.getBodyName(entity, index);
-            Text name = Text.of((isSelected ? "- " : "+ ") + partName);
+            Text name = Text.of((isSelected ? "- " : "+ ") + String("pcm.entity." + partName));
 
             createSelectableModelPart(partName, x, y, row, index, name);
             row += showNodes(index, row, x, y);
