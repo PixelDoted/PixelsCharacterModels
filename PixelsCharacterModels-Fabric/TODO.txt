@@ -1,6 +1,6 @@
 
 
-- request_entitys not getting the joined player's scripts
+
 
 > old
 + Mesh to Vertices and Back
@@ -40,3 +40,4 @@
 + fix entity texture disappearing in cube/mesh node
 + updated NodeSelectGui
 + updated Animation file menu
++ now gets the client players script data

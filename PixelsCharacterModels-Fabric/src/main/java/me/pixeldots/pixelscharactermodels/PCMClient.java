@@ -29,6 +29,7 @@ public class PCMClient implements ClientModInitializer {
 	public static ModelPartNames EntityPartNames; // Nme mappings for Entity Modelparts
 
 	public static ClientWorld world;
+	public static int WorldTickCount = 0;
 	
 	@Override
 	public void onInitializeClient() {
@@ -46,6 +47,7 @@ public class PCMClient implements ClientModInitializer {
 				EntityAnimationList.clear();
 				PCMMain.skinsuffix_data.clear();
 				PCMMain.animation_data.clear();
+				WorldTickCount = 0;
 			} else if (c.world != null && world == null) { 
 				world = c.world;
 				ClientNetwork.request_skinsuffixs();

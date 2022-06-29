@@ -10,7 +10,8 @@
     "AnimalModelMixin",
     "ArmorFeatureRendererMixin",
     "EntityRendererMixin",
-    "IMinecraftClientMixin"
+    "IMinecraftClientMixin",
+    "ClientWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
