@@ -325,16 +325,7 @@ public class AnimationGui extends EntityGuiHandler {
             if (i == selectedNode) node.init(this, 5, 30);
 
             final int num = i;
-
-            addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
-                nodes.remove(num);
-
-                if (nodes.size() == 0) compile_nodes(uuid, true);
-                else nodes.get(0).changed = true;
-                this.client.setScreen(new AnimationGui(entity, entityViewScale));
-            }));
-
-            addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
+            ButtonWidget B = addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
@@ -349,6 +340,16 @@ public class AnimationGui extends EntityGuiHandler {
                 
                 this.client.setScreen(new AnimationGui(entity, entityViewScale));
             }));
+            B.visible = !(B.y < 0);
+
+            ButtonWidget A = addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+                nodes.remove(num);
+
+                if (nodes.size() == 0) compile_nodes(uuid, true);
+                else nodes.get(0).changed = true;
+                this.client.setScreen(new AnimationGui(entity, entityViewScale));
+            }, this, TextArray("pcm.gui.Remove")));
+            A.visible = !(A.y < 0);
         }
 
         addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
