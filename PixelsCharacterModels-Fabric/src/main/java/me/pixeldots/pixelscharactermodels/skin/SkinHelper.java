@@ -10,6 +10,7 @@ public class SkinHelper {
     
     // register skin providers
     public static void registerProviders(boolean reload) {
+        if (!PCMClient.offlineskins_loaded) return;
         SkinProviderAPI.SKIN.clearProviders();
         SkinProviderAPI.CAPE.clearProviders();
         

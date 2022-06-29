@@ -21,9 +21,7 @@
     "client": [ "me.pixeldots.pixelscharactermodels.PCMClient" ],
     "main": [ "me.pixeldots.pixelscharactermodels.PCMMain" ]
   },
-  "mixins": [
-    "pcm.mixins.json"
-  ],
+  "mixins": [ "pcm.mixins.json" ],
 
   "depends": {
     "fabricloader": ">=0.13.2",

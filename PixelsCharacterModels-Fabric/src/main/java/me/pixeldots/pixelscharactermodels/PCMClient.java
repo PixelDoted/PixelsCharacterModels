@@ -2,6 +2,7 @@ package me.pixeldots.pixelscharactermodels;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
@@ -30,6 +31,7 @@ public class PCMClient implements ClientModInitializer {
 
 	public static ClientWorld world;
 	public static int WorldTickCount = 0;
+	public static boolean offlineskins_loaded;
 	
 	@Override
 	public void onInitializeClient() {
@@ -37,7 +39,8 @@ public class PCMClient implements ClientModInitializer {
 		EntityPartNames = new ModelPartNames(); // initialize ModelPart name mappings
 		KeyBindings.registerKeyBindings(); // register all key bindings
 
-		SkinHelper.registerProviders(false); // register custom skin providers
+		offlineskins_loaded = FabricLoader.getInstance().isModLoaded("offlineskins");
+		if (offlineskins_loaded) SkinHelper.registerProviders(false); // register custom skin providers
 		ClientNetwork.register(); // register all client receivers
 
 		ClientTickEvents.END_CLIENT_TICK.register((c) -> { // Clear Entity data when Leaving a world
