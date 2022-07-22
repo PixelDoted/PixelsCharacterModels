@@ -11,9 +11,10 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.ToggleWidget;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
-import me.pixeldots.scriptedmodels.ScriptedModels;
+import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.platform.network.ClientNetwork;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -29,11 +30,14 @@ public class SettingsGui extends EntityGuiHandler {
 
     public static String path_offset = "";
 
+    private String version = "";
+
     public SettingsGui(LivingEntity _entity) {
         super("Settings");
         entity = _entity;
         model = PlatformUtils.getModel(_entity);
         uuid = _entity.getUuid();
+        version = FabricLoader.getInstance().getModContainer("pcm").get().getMetadata().getVersion().getFriendlyString();
     }
 
     public SettingsGui(LivingEntity _entity, float _entityViewScale) {
@@ -105,7 +109,7 @@ public class SettingsGui extends EntityGuiHandler {
         addButton(new FlatButtonWidget(5, this.height-15, 230, 10, Text("pcm.gui.ClearEntityData"), (btn) -> {
             SkinHelper.clearSkins();
             PCMClient.EntityAnimationList.clear();
-            ScriptedModels.EntityScript.clear();
+            ClientHelper.reset_entity(this.uuid);
         }));
     }
 
@@ -142,6 +146,8 @@ public class SettingsGui extends EntityGuiHandler {
         drawString(matrices, "Animation 3", 5, 175);
         drawString(matrices, "Animation 4", 5, 190);
         drawString(matrices, "Animation 5", 5, 205);
+        
+        drawTextWithShadow(matrices, textRenderer, Text.of("Version: " + version), 250, this.height-15, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 

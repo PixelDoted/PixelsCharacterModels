@@ -1,9 +1,14 @@
 package me.pixeldots.pixelscharactermodels.gui;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
+import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.PresetHelper;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
@@ -13,7 +18,10 @@ import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
+import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
+import net.minecraft.client.RunArgs.Directories;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -122,7 +130,9 @@ public class PresetsGui extends EntityGuiHandler {
         addButton(new FlatButtonWidget(125, 15, 55, 10, Text("pcm.gui.Delete"), (btn) -> {
             File file = new File(selectedPreset);
             if (!file.exists() || selectedPreset.equals("default")) return;
-            file.delete();
+            try {
+                FileUtils.deleteDirectory(file);
+            } catch (IOException e) {}
             
             selectedPreset = "";
             this.client.setScreen(new PresetsGui(entity, entityViewScale));
@@ -167,8 +177,12 @@ public class PresetsGui extends EntityGuiHandler {
         drawVerticalLine(matrices, 120, 15, this.height-6, 0, 0, 0, 188);
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
+        
+        String preset_id = PresetHelper.get_preset_id(this.uuid);
+        if (preset_id != null) {
+            drawTextWithShadow(matrices, textRenderer, Text.of(preset_id), 195, 15, 0xFFFFFF);
+        }
 
-        drawCenteredText(matrices, textRenderer, Text.of(""), 60, this.height-60, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 
@@ -188,7 +202,7 @@ public class PresetsGui extends EntityGuiHandler {
     public void selectPreset(File file, boolean force_load) {
         selectedPreset = file.getAbsolutePath();
         if (force_load || !PCMMain.settings.preview_preset)
-            PresetHelper.read_preset(file, entity, model);
+            PresetHelper.read_preset(file.getName(), file, entity, model);
     }
 
     public void defaultPreset(boolean force_load) {
