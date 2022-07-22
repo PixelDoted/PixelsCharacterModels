@@ -1,6 +1,7 @@
 package me.pixeldots.pixelscharactermodels.files;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
@@ -11,14 +12,31 @@ import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.pixelscharactermodels.other.ModelPartNames.EntityParts;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
+import me.pixeldots.scriptedmodels.ScriptedModels;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.script.PostfixOperation;
+import me.pixeldots.scriptedmodels.script.line.Line;
+import me.pixeldots.scriptedmodels.script.line.LineType;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 
 public class PresetHelper {
     
+    public static String get_preset_id(UUID uuid) {
+        if (ScriptedModels.EntityScript.containsKey(uuid)) {
+            List<Line> lines = ScriptedModels.EntityScript.get(uuid).global;
+            if (lines.size() > 0) {
+                Line line = lines.get(0);
+                if (line.type == LineType.DEFINE && ((String)line.data[1]).equals("preset")) {
+                    return (String)line.data[2];
+                }
+            }
+        }
+
+        return null;
+    }
+
     // Writing Preset
     public static void write_preset(File file, LivingEntity entity, EntityModel<?> model) {
         file.mkdirs(); // create preset folder
@@ -31,7 +49,14 @@ public class PresetHelper {
 
         // add scripts to the preset folder
         String root = ClientHelper.decompile_script(entity.getUuid(), null);
-        if (!root.trim().equals("")) FileHelper.write(new File(file.getAbsolutePath() + "/root.sm"), root);
+        if (!root.trim().equals("")) {
+            String zero = root.trim().split("\n")[0];
+            if (zero.startsWith("define 0 preset")) {
+                root = root.replaceFirst(zero, "");
+            }
+            
+            FileHelper.write(new File(file.getAbsolutePath() + "/root.sm"), root);
+        }
 
         int index = 0;
         for (ModelPart part : PlatformUtils.getHeadParts(model)) { // decompile modelparts
@@ -58,7 +83,7 @@ public class PresetHelper {
 
     // Reading Preset
     // read preset
-    public static void read_preset(File folder, LivingEntity entity, EntityModel<?> model) {
+    public static void read_preset(String preset_id, File folder, LivingEntity entity, EntityModel<?> model) {
         if (folder.getName().endsWith(".json"))
             folder = OldPresetData.toNew(folder);
 
@@ -67,6 +92,7 @@ public class PresetHelper {
         ClientHelper.reset_entity(entity.getUuid()); // reset entity scripts
         
         File[] files = folder.listFiles();
+        boolean has_root = false;
         for (File file : files) {
             String name = file.getName();
 
@@ -79,8 +105,16 @@ public class PresetHelper {
                 name = name.substring(0, name.length()-3);
                 String s = FileHelper.read(file);
 
-                attach_script(name, s, entity, model);
+                attach_script(preset_id, name, s, entity, model);
             }
+
+            if (name.equals("root")) {
+                has_root = true;
+            }
+        }
+
+        if (!has_root) {
+            ClientHelper.change_script(entity.getUuid(), null, -1, "define 0 preset " + preset_id + "\n");
         }
     }
 
@@ -97,9 +131,9 @@ public class PresetHelper {
     }
 
     // attach script to entity
-    private static void attach_script(String part_id, String script, LivingEntity entity, EntityModel<?> model) {
+    private static void attach_script(String preset_id, String part_id, String script, LivingEntity entity, EntityModel<?> model) {
         if (part_id.equalsIgnoreCase("root")) {
-            ClientHelper.change_script(entity.getUuid(), null, -1, script);
+            ClientHelper.change_script(entity.getUuid(), null, -1, "define 0 preset " + preset_id + "\n" + script);
             return;
         }
 

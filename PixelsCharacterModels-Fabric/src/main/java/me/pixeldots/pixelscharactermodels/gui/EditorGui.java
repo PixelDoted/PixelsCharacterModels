@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
+import me.pixeldots.pixelscharactermodels.files.PresetHelper;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
@@ -145,9 +146,10 @@ public class EditorGui extends EntityGuiHandler {
             entityMouseY = (float)(this.height/2+37-125) - mouseY;
         }
 
-        if (entity != null)
+        if (entity != null) {
             drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
-
+        }
+        
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
         drawVerticalLine(matrices, 119, -1, this.height, 0, 0, 0, 255);
