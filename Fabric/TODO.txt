@@ -1,0 +1,47 @@
+- add the abillity to rotate the player in the editor
+
++ fixed Cannot read the array length because "files" is null
+
+> old
++ Mesh to Vertices and Back
++ Cube to Vertices and Back
++ Pehkui Support
++ OfflineSkins Support
++ New Editor GUI
++ Presets
++ Save/Load Presets
++ Compile Preset to Script
++ New Presets GUI
++ Settings GUI
++ Static Animations
++ Animation Networking
++ Pehkui Scale Networking
++ Animations
++ Skin Suffix Networking
++ New Animation GUI
++ Show NameTags Setting
++ Show Armor Setting
++ old to new Preset Converter
++ Editing Animation Keybinding in settings
++ Lerping Non static animations
++ make Lerping Animations Smoother
++ fix "java.util.ConcurrentModificationException"
++ fix Cube UVs
++ show Entity Skin while editing uv's (Mesh/Cube Node)
++ vertex gui Node
++ add Names to Elements in GUI
++ defualt node args
++ old to new Animations Converter
++ fix editing entity parts animation
++ Save Entity scripts to World (World saved presets)
++ fix TextFieldWidget's not being deselected when selecting another TextFieldWidget
++ improve GUI node dragging
++ fix saving nodes to root when editing another part in the editor
++ fix entity texture disappearing in cube/mesh node
++ updated NodeSelectGui
++ updated Animation file menu
++ now gets the client players script data
++ "clear entity data" now clear's your entity data on the server
++ entity data now contains preset info
++ added PCM Version to Settings Gui
++ the delete button now deletes the selected presets

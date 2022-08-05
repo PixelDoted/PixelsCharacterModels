@@ -23,8 +23,4 @@ load last used preset on world join
 fix frames animation using framerate to update  
   
 ## Other
-<<<<<<< HEAD
 (Forge V0.2+) Requires [Obfuscate](https://www.curseforge.com/minecraft/mc-mods/obfuscate)
-=======
-(Forge V0.2+) Requires [Obfuscate](https://www.curseforge.com/minecraft/mc-mods/obfuscate)
->>>>>>> d57d6a00ddfa97ab056c58977363d2fbfbfc6f76
