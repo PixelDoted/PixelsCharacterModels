@@ -118,7 +118,7 @@ mixin {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-	maven { 
+	/*maven { 
 		url = "https://jitpack.io"
 	}
 	maven {
@@ -133,16 +133,19 @@ repositories {
 		content {
 			includeGroup "maven.modrinth"
 		}
-	}
+	}*/
+    flatDir {
+        dir 'libs'
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.1-42.0.0'
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf("maven.modrinth:scripted-models:0.7.2F")
-    implementation fg.deobf("com.github.Virtuoel:Pehkui:3.3.3-1.19-forge")
-	implementation fg.deobf("curse.maven:offlineskins-241420:3903779")
+    implementation fg.deobf("blank:scriptedmodels:0.7.2F")//fg.deobf("maven.modrinth:scripted-models:0.7.2F")
+    implementation fg.deobf("blank:pehkui:3.3.3+1.19-forge")//fg.deobf("com.github.Virtuoel:Pehkui:3.3.3-1.19-forge")
+	implementation fg.deobf("blank:offlineskins-1.19.1:v1")//fg.deobf("curse.maven:offlineskins-241420:3903779")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

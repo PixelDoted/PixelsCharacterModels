@@ -39,7 +39,6 @@ public class PCMClient {
 
 		//offlineskins_loaded = MinecraftForge. FabricLoader.getInstance().isModLoaded("offlineskins");
 		if (offlineskins_loaded) SkinHelper.registerProviders(false); // register custom skin providers
-		ClientNetwork.register(); // register all client receivers
 
 		PCMMain.LOGGER.info("Pixel's Character Models Initialized");
 	}

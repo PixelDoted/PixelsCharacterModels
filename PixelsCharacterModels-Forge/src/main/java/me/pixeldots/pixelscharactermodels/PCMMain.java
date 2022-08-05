@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.network.ServerNetwork;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,6 +29,8 @@ public class PCMMain {
 	public static Map<UUID, String> animation_data = new HashMap<>(); // the stored animation data
 	public static Map<UUID, String> skinsuffix_data = new HashMap<>(); // the stored skin suffix data
 
+	public static String ProVer = "1"; // Protocol_Version
+
 	public PCMMain() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::commonSetup);
@@ -40,7 +43,8 @@ public class PCMMain {
 	public void commonSetup(final FMLCommonSetupEvent event) {
 		SettingsPath = Paths.get(".", "config/PCM.json"); // set the config path
 		settings = PCMSettings.load(SettingsPath); // load settings
-		ServerNetwork.register(); // register all server receivers
+		ServerNetwork.register(0); // register all server receivers
+		ClientNetwork.register(4); // register all client receivers
 	}
 
 }
