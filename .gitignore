@@ -1,37 +1,44 @@
-# gradle
 
-.gradle/
-build/
-out/
-classes/
+## Fabric
+# gradle
+Fabric/classes/
+
+## Forge
+# vscode
+Forge-*/.metadata
+Forge-*/eclipse
+
+# ForgeMDK
+Forge-*/forge*changelog.txt
+
+## Global
+# PixelDots
+*/*.jar
+
+# loader
+*/run/
 
 # eclipse
-
-*.launch
-
-# idea
-
-.idea/
-*.iml
-*.ipr
-*.iws
+*/*.launch
 
 # vscode
+*/.settings/
+*/.vscode/
+*/bin/
+*/.classpath
+*/.project
 
-.settings/
-.vscode/
-bin/
-.classpath
-.project
+# gradle
+*/.gradle/
+*/build/
+*/out/
 
-# macos
+# idea
+*/.idea/
+*/*.iml
+*/*.ipr
+*/*.iws
 
-*.DS_Store
-
-# fabric
-
-run/
-
-# PixelDots
-
-PixelsCharacterModels-Fabric/*.jar
+# other
+*/libs/*
+*/*.DS_Store
