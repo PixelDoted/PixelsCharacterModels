@@ -1,6 +1,6 @@
-- add the abillity to rotate the player in the editor
++
 
-+ fixed Cannot read the array length because "files" is null
+-
 
 > old
 + Mesh to Vertices and Back
@@ -45,3 +45,5 @@
 + entity data now contains preset info
 + added PCM Version to Settings Gui
 + the delete button now deletes the selected presets
++ add the abillity to rotate the player in the editor
++ fixed Cannot read the array length because "files" is null

@@ -7,7 +7,6 @@ import java.util.UUID;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
-import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
@@ -76,7 +75,7 @@ public class EditorGui extends EntityGuiHandler {
         }));
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {})).active = false;
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
-            setScreen(new AnimationGui(entity, this.entityViewScale));
+            setScreen(new AnimationGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
@@ -140,17 +139,15 @@ public class EditorGui extends EntityGuiHandler {
     
     @Override
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = 0;
+        /*float entityMouseX = 0;
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX = (float)(this.width/2) - mouseX;
             entityMouseY = (float)(this.height/2+37-125) - mouseY;
-        }
+        }*/
 
-        if (entity != null) {
-            drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
-        }
+        drawEntity(this.width/2, this.height/2+37, 0, 0);
         
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
@@ -261,7 +258,7 @@ public class EditorGui extends EntityGuiHandler {
         }
 
         Button widget = addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Component.literal("+"), (btn) -> {
-            this.minecraft.setScreen(new NodeSelectGui(entity, entityViewScale, false));
+            this.minecraft.setScreen(new NodeSelectGui(entity, entityViewScale, this.entityRotation, false));
         }));
         widget.visible = !(widget.y < 0);
 

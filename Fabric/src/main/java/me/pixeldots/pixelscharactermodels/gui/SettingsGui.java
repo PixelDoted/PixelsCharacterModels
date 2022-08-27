@@ -8,6 +8,7 @@ import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
+import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.ToggleWidget;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
@@ -20,10 +21,9 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3f;
 
 public class SettingsGui extends EntityGuiHandler {
-
-    public float entityViewScale = 75;
 
     public String selectedPreset = "";
     public List<ButtonWidget> presetButtons = new ArrayList<>();
@@ -40,9 +40,10 @@ public class SettingsGui extends EntityGuiHandler {
         version = FabricLoader.getInstance().getModContainer("pcm").get().getMetadata().getVersion().getFriendlyString();
     }
 
-    public SettingsGui(LivingEntity _entity, float _entityViewScale) {
+    public SettingsGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
         this(_entity);
-        entityViewScale = _entityViewScale;
+        this.entityViewScale = _entityViewScale;
+        this.entityRotation = _entityRotation;
     }
 
     public void setScreen(GuiHandler gui) {
@@ -56,13 +57,13 @@ public class SettingsGui extends EntityGuiHandler {
 
         // Top Bar
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {
-            setScreen(new PresetsGui(entity, this.entityViewScale));
+            setScreen(new PresetsGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {
-            setScreen(new EditorGui(entity, this.entityViewScale));
+            setScreen(new EditorGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
-            setScreen(new AnimationGui(entity, this.entityViewScale));
+            setScreen(new AnimationGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {})).active = false;
 
@@ -72,24 +73,27 @@ public class SettingsGui extends EntityGuiHandler {
         addDrawableElement(new ToggleWidget(5, 30, 230, 10, String("pcm.setting.ShowBlockUnderPlayer"), PCMMain.settings.show_block_under_player_ui, (val) -> {
             PCMMain.settings.show_block_under_player_ui = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 45, 230, 10, String("pcm.setting.PlayerFacesCursor"), PCMMain.settings.player_faces_cursor_ui, (val) -> {
-            PCMMain.settings.player_faces_cursor_ui = val;
-        }));
-        addDrawableElement(new ToggleWidget(5, 60, 230, 10, String("pcm.setting.KeybindingOpensEditor"), PCMMain.settings.keybinding_opens_editor, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 45, 230, 10, String("pcm.setting.KeybindingOpensEditor"), PCMMain.settings.keybinding_opens_editor, (val) -> {
             PCMMain.settings.keybinding_opens_editor = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 75, 230, 10, String("pcm.setting.PreviewPreset"), PCMMain.settings.preview_preset, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 60, 230, 10, String("pcm.setting.PreviewPreset"), PCMMain.settings.preview_preset, (val) -> {
             PCMMain.settings.preview_preset = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 90, 230, 10, String("pcm.setting.RadiansInsteadOfDegress"), PCMMain.settings.radians_instead_of_degress, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 75, 230, 10, String("pcm.setting.RadiansInsteadOfDegress"), PCMMain.settings.radians_instead_of_degress, (val) -> {
             PCMMain.settings.radians_instead_of_degress = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 105, 230, 10, String("pcm.setting.ShowNameTags"), PCMMain.settings.show_nametags, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 90, 230, 10, String("pcm.setting.ShowNameTags"), PCMMain.settings.show_nametags, (val) -> {
             PCMMain.settings.show_nametags = val;
         }));
-        addDrawableElement(new ToggleWidget(5, 120, 230, 10, String("pcm.setting.ShowArmor"), PCMMain.settings.show_armor, (val) -> {
+        addDrawableElement(new ToggleWidget(5, 105, 230, 10, String("pcm.setting.ShowArmor"), PCMMain.settings.show_armor, (val) -> {
             PCMMain.settings.show_armor = val;
         }));
+
+        FloatFieldWidget RotationSensitivity = (FloatFieldWidget)addTextField(new FloatFieldWidget(textRenderer, 5+100, 130, 130, 10, 0, 1000));
+        RotationSensitivity.setChangedListener((s) -> {
+            PCMMain.settings.player_rotation_sensitivity = RotationSensitivity.getNumber()/100f;
+        });
+        RotationSensitivity.setNumber(PCMMain.settings.player_rotation_sensitivity*100f);
 
         TextFieldWidget A = addTextField(new TextFieldWidget(textRenderer, 5+60, 150, 170, 10, Text.of("")));
         A.setChangedListener((s) -> { PCMMain.settings.animations[0] = s; }); A.setText(PCMMain.settings.animations[0]);
@@ -124,16 +128,15 @@ public class SettingsGui extends EntityGuiHandler {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = 0;
+        /*float entityMouseX = 0;
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX = (float)(this.width/2)+120 - mouseX;
             entityMouseY = (float)(this.height/2+37-125) - mouseY;
-        }
+        }*/
 
-        if (entity != null)
-            drawEntity(this.width/2+120, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
+        drawEntity(this.width/2+120, this.height/2+37, 0, 0);
 
         drawColor(matrices, 0, 0, 240, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 240, -1, this.height, 0, 0, 0, 255);
@@ -141,6 +144,7 @@ public class SettingsGui extends EntityGuiHandler {
 
         drawColor(matrices, 0, 0, this.width, 10, 0, 0, 0, 255);
 
+        drawString(matrices, "Rotation Sensitivity", 5, 125);
         drawString(matrices, "Animation 1", 5, 145);
         drawString(matrices, "Animation 2", 5, 160);
         drawString(matrices, "Animation 3", 5, 175);

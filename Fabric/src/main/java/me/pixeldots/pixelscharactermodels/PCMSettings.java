@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 public class PCMSettings {
     
     @Environment(EnvType.CLIENT) public boolean show_block_under_player_ui = true; // if enabled, render a block under the player in the GUI
-    @Environment(EnvType.CLIENT) public boolean player_faces_cursor_ui = true; // if enabled, the rendered player faces the cursor in the GUI
+    @Environment(EnvType.CLIENT) public float player_rotation_sensitivity = 2f; // the sensitivity for the player rotation in the GUI
     @Environment(EnvType.CLIENT) public boolean keybinding_opens_editor = false; // if enabled, pressing the openGUI keybinding opens the Editor GUI
     @Environment(EnvType.CLIENT) public boolean preview_preset = true; // if enabled, to use a preset you have to press select in the Presets GUI
     @Environment(EnvType.CLIENT) public boolean radians_instead_of_degress = false; // if enabled, rotate and angle will show degress instead of radians

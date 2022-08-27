@@ -185,7 +185,62 @@ public class GuiHandler extends Screen {
 		DrawableHelper.fill(matrices, x0, y0, x1, y1, argb);
     }
 
-	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity, boolean block) {
+	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, Vec3f rotation, LivingEntity entity, boolean block) {
+		/*float f = (float)Math.atan(mouseX / 40.0f);
+        float g = (float)Math.atan(mouseY / 40.0f);*/
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(x, y, 1050.0);
+        matrixStack.scale(1.0f, 1.0f, -1.0f);
+        RenderSystem.applyModelViewMatrix();
+        MatrixStack matrixStack2 = new MatrixStack();
+        matrixStack2.translate(0.0, 0.0, 1000.0);
+        matrixStack2.scale(size, size, size);
+		Vec3f quaternion_rotation = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f).toEulerXyz();
+		quaternion_rotation.add(rotation);
+        Quaternion quaternion = Quaternion.fromEulerXyz(quaternion_rotation);
+        Quaternion quaternion2 = Quaternion.IDENTITY;//Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
+        quaternion.hamiltonProduct(quaternion2);
+        matrixStack2.multiply(quaternion);
+        float h = entity.bodyYaw;
+        float i = entity.getYaw();
+        float j = entity.getPitch();
+        float k = entity.prevHeadYaw;
+        float l = entity.headYaw;
+        entity.bodyYaw = 180.0f; //entity.bodyYaw = 180.0f + f * 20.0f;
+        entity.setYaw(180.0f); //entity.setYaw(180.0f + f * 40.0f);
+        entity.setPitch(0); //entity.setPitch(-g * 20.0f);
+        entity.headYaw = entity.getYaw();
+        entity.prevHeadYaw = entity.getYaw();
+        DiffuseLighting.method_34742();
+		BlockRenderManager blockRenderManager = PCMClient.minecraft.getBlockRenderManager();
+        EntityRenderDispatcher entityRenderDispatcher = PCMClient.minecraft.getEntityRenderDispatcher();
+        quaternion2.conjugate();
+        entityRenderDispatcher.setRotation(quaternion2);
+        entityRenderDispatcher.setRenderShadows(false);
+        VertexConsumerProvider.Immediate immediate = PCMClient.minecraft.getBufferBuilders().getEntityVertexConsumers();
+        RenderSystem.runAsFancy(() -> {
+			if (block) {
+				matrixStack2.translate(-.5, -1, -.5);
+				blockRenderManager.renderBlockAsEntity(Blocks.DARK_OAK_PLANKS.getDefaultState(), matrixStack2, immediate, 0xF000F0, OverlayTexture.DEFAULT_UV);
+				matrixStack2.translate(.5, 1, .5);
+			}
+
+			entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0);
+		});
+        immediate.draw();
+        entityRenderDispatcher.setRenderShadows(true);
+        entity.bodyYaw = h;
+        entity.setYaw(i);
+        entity.setPitch(j);
+        entity.prevHeadYaw = k;
+        entity.headYaw = l;
+        matrixStack.pop();
+        RenderSystem.applyModelViewMatrix();
+        DiffuseLighting.enableGuiDepthLighting();
+	}
+
+	/*public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity, boolean block) {
 		float f = (float)Math.atan(mouseX / 40.0f);
         float g = (float)Math.atan(mouseY / 40.0f);
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
@@ -236,6 +291,6 @@ public class GuiHandler extends Screen {
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
-	}
+	}*/
 	
 }

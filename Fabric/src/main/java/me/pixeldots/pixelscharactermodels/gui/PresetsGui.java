@@ -23,11 +23,11 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3f;
 
 public class PresetsGui extends EntityGuiHandler {
 
     private int yscroll = 0;
-    public float entityViewScale = 75;
 
     public String selectedPreset = "";
     public List<ButtonWidget> presetButtons = new ArrayList<>();
@@ -41,9 +41,10 @@ public class PresetsGui extends EntityGuiHandler {
         uuid = _entity.getUuid();
     }
 
-    public PresetsGui(LivingEntity _entity, float _entityViewScale) {
+    public PresetsGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
         this(_entity);
-        entityViewScale = _entityViewScale;
+        this.entityViewScale = _entityViewScale;
+        this.entityRotation = _entityRotation;
     }
 
     public void setScreen(GuiHandler gui) {
@@ -58,13 +59,13 @@ public class PresetsGui extends EntityGuiHandler {
         // Top Bar
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {})).active = false;
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {
-            setScreen(new EditorGui(entity, this.entityViewScale));
+            setScreen(new EditorGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
-            setScreen(new AnimationGui(entity, this.entityViewScale));
+            setScreen(new AnimationGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
-            setScreen(new SettingsGui(entity, this.entityViewScale));
+            setScreen(new SettingsGui(entity, this.entityViewScale, this.entityRotation));
         }));
 
         int presets_offset = 15;
@@ -80,7 +81,7 @@ public class PresetsGui extends EntityGuiHandler {
             if (path_offset == "") defaultPreset(false);
             else {
                 path_offset = path_offset.substring(0, path_offset.lastIndexOf(File.separator));
-                this.client.setScreen(new PresetsGui(entity, entityViewScale));
+                this.client.setScreen(new PresetsGui(entity, entityViewScale, this.entityRotation));
             }
         }));
         presetButtons.add(default_preset);
@@ -96,7 +97,7 @@ public class PresetsGui extends EntityGuiHandler {
                 if (is_preset) selectPreset(file, false);
                 else { 
                     path_offset += "/" + file.getName();
-                    this.client.setScreen(new PresetsGui(entity, entityViewScale));
+                    this.client.setScreen(new PresetsGui(entity, entityViewScale, this.entityRotation));
                 }
             }));
             ButtonWidget save_widget = addButton(new FlatButtonWidget(5, presets_offset+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
@@ -111,7 +112,7 @@ public class PresetsGui extends EntityGuiHandler {
         addButton(new FlatButtonWidget(125, 45, 55, 10, Text("pcm.gui.Create"), (btn) -> {
             File file = new File(this.client.runDirectory.getAbsolutePath() + File.separator + PCMFileSystem.Presets_Path + path_offset + File.separator + createname.getText());
             PresetHelper.write_preset(file, entity, model);
-            this.client.setScreen(new PresetsGui(entity, entityViewScale));
+            this.client.setScreen(new PresetsGui(entity, entityViewScale, this.entityRotation));
         }));
         addButton(new FlatButtonWidget(125, 35, 55, 10, Text("pcm.gui.Rename"), (btn) -> {
             File file = new File(selectedPreset);
@@ -120,7 +121,7 @@ public class PresetsGui extends EntityGuiHandler {
 
             file.renameTo(new File(new_path));
             selectedPreset = new_path;
-            this.client.setScreen(new PresetsGui(entity, entityViewScale));
+            this.client.setScreen(new PresetsGui(entity, entityViewScale, this.entityRotation));
         }));
 
         addButton(new FlatButtonWidget(125, 15, 55, 10, Text("pcm.gui.Delete"), (btn) -> {
@@ -131,7 +132,7 @@ public class PresetsGui extends EntityGuiHandler {
             } catch (IOException e) {}
             
             selectedPreset = "";
-            this.client.setScreen(new PresetsGui(entity, entityViewScale));
+            this.client.setScreen(new PresetsGui(entity, entityViewScale, this.entityRotation));
         }));
     }
 
@@ -155,16 +156,15 @@ public class PresetsGui extends EntityGuiHandler {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = 0;
+        /*float entityMouseX = 0;
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX = (float)(this.width/2)+65 - mouseX;
             entityMouseY = (float)(this.height/2+37-125) - mouseY;
-        }
+        }*/
 
-        if (entity != null)
-            drawEntity(this.width/2+65, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
+        drawEntity(this.width/2+65, this.height/2+37, 0, 0);
 
         drawColor(matrices, 0, 0, 185, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 185, 9, this.height, 0, 0, 0, 255);

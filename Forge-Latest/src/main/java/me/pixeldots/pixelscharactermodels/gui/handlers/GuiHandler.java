@@ -185,9 +185,9 @@ public class GuiHandler extends Screen {
 		fill(matrices, x0, y0, x1, y1, argb);
     }
 
-	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity, boolean block) {
-		float f = (float)Math.atan((double)(mouseX / 40.0F));
-		float f1 = (float)Math.atan((double)(mouseY / 40.0F));
+	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, Vector3f rotation, LivingEntity entity, boolean block) {
+		/*float f = (float)Math.atan((double)(mouseX / 40.0F));
+		float f1 = (float)Math.atan((double)(mouseY / 40.0F));*/
 		PoseStack posestack = RenderSystem.getModelViewStack();
 		posestack.pushPose();
 		posestack.translate((double)x, (double)y, 1050.0D);
@@ -196,8 +196,10 @@ public class GuiHandler extends Screen {
 		PoseStack matrixStack2 = new PoseStack();
 		matrixStack2.translate(0.0D, 0.0D, 1000.0D);
 		matrixStack2.scale((float)size, (float)size, (float)size);
-		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
+		Vector3f quaternion_rotation = Vector3f.ZP.rotationDegrees(180.0F).toXYZ();
+		quaternion_rotation.add(rotation);
+		Quaternion quaternion = Quaternion.fromXYZ(quaternion_rotation);//Vector3f.ZP.rotationDegrees(180.0F);
+		Quaternion quaternion1 = Quaternion.ONE;//Vector3f.XP.rotationDegrees(f1 * 20.0F);
 		quaternion.mul(quaternion1);
 		matrixStack2.mulPose(quaternion);
 		float f2 = entity.yBodyRot;
@@ -205,9 +207,9 @@ public class GuiHandler extends Screen {
 		float f4 = entity.getXRot();
 		float f5 = entity.yHeadRotO;
 		float f6 = entity.yHeadRot;
-		entity.yBodyRot = 180.0F + f * 20.0F;
-		entity.setYRot(180.0F + f * 40.0F);
-		entity.setXRot(-f1 * 20.0F);
+		entity.yBodyRot = 180.0F; //entity.yBodyRot = 180.0F + f * 20.0F;
+		entity.setYRot(180.0F); //entity.setYRot(180.0F + f * 40.0F);
+		entity.setXRot(0); //entity.setXRot(-f1 * 20.0F);
 		entity.yHeadRot = entity.getYRot();
 		entity.yHeadRotO = entity.getYRot();
 		Lighting.setupForEntityInInventory();

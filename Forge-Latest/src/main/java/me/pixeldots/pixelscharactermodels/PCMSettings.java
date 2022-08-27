@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class PCMSettings {
     
     @OnlyIn(Dist.CLIENT) public boolean show_block_under_player_ui = true; // if enabled, render a block under the player in the GUI
-    @OnlyIn(Dist.CLIENT) public boolean player_faces_cursor_ui = true; // if enabled, the rendered player faces the cursor in the GUI
+    @OnlyIn(Dist.CLIENT) public float player_rotation_sensitivity = 2f; // the sensitivity for the player rotation in the GUI
     @OnlyIn(Dist.CLIENT) public boolean keybinding_opens_editor = false; // if enabled, pressing the openGUI keybinding opens the Editor GUI
     @OnlyIn(Dist.CLIENT) public boolean preview_preset = false; // if enabled, to use a preset you have to press select in the Presets GUI
     @OnlyIn(Dist.CLIENT) public boolean radians_instead_of_degress = false; // if enabled, rotate and angle will show degress instead of radians

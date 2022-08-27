@@ -62,7 +62,7 @@ public class PresetsGui extends EntityGuiHandler {
             setScreen(new EditorGui(entity, this.entityViewScale));
         }));
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
-            setScreen(new AnimationGui(entity, this.entityViewScale));
+            setScreen(new AnimationGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
             setScreen(new SettingsGui(entity, this.entityViewScale));
@@ -156,16 +156,15 @@ public class PresetsGui extends EntityGuiHandler {
 
     @Override
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = 0;
+        /*float entityMouseX = 0;
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX = (float)(this.width/2)+65 - mouseX;
             entityMouseY = (float)(this.height/2+37-125) - mouseY;
-        }
+        }*/
 
-        if (entity != null)
-            drawEntity(this.width/2+65, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
+        drawEntity(this.width/2+65, this.height/2+37, 0, 0);
 
         drawColor(matrices, 0, 0, 185, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 185, 9, this.height, 0, 0, 0, 255);

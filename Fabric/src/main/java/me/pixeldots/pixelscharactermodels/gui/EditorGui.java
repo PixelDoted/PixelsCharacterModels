@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
-import me.pixeldots.pixelscharactermodels.PCMMain;
-import me.pixeldots.pixelscharactermodels.files.PresetHelper;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
@@ -28,6 +26,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3f;
 
 public class EditorGui extends EntityGuiHandler {
 
@@ -43,7 +42,6 @@ public class EditorGui extends EntityGuiHandler {
 
     public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
     public float stored_pehkuiscale = 1;
-    public float entityViewScale = 75;
     
     public EditorGui(LivingEntity _entity) {
         super("Editor");
@@ -52,9 +50,10 @@ public class EditorGui extends EntityGuiHandler {
         uuid = _entity.getUuid();
     }
 
-    public EditorGui(LivingEntity _entity, float _entityViewScale) {
+    public EditorGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
         this(_entity);
-        entityViewScale = _entityViewScale;
+        this.entityViewScale = _entityViewScale;
+        this.entityRotation = _entityRotation;
     }
 
     public void setScreen(GuiHandler gui) {
@@ -72,14 +71,14 @@ public class EditorGui extends EntityGuiHandler {
         super.init();
         // Top Bar
         addButton(new NoBackButtonWidget(0, 0, 50, 10, Text("pcm.menu.Presets"), (btn) -> {
-            setScreen(new PresetsGui(entity, this.entityViewScale));
+            setScreen(new PresetsGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(50, 0, 50, 10, Text("pcm.menu.Editor"), (btn) -> {})).active = false;
         addButton(new NoBackButtonWidget(100, 0, 50, 10, Text("pcm.menu.Animation"), (btn) -> {
-            setScreen(new AnimationGui(entity, this.entityViewScale));
+            setScreen(new AnimationGui(entity, this.entityViewScale, this.entityRotation));
         }));
         addButton(new NoBackButtonWidget(150, 0, 50, 10, Text("pcm.menu.Settings"), (btn) -> {
-            setScreen(new SettingsGui(entity, this.entityViewScale));
+            setScreen(new SettingsGui(entity, this.entityViewScale, this.entityRotation));
         }));
 
         // Left Panel
@@ -138,17 +137,15 @@ public class EditorGui extends EntityGuiHandler {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = 0;
+        /*float entityMouseX = 0;
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX = (float)(this.width/2) - mouseX;
             entityMouseY = (float)(this.height/2+37-125) - mouseY;
-        }
+        }*/
 
-        if (entity != null) {
-            drawEntity(this.width/2, this.height/2+37, Math.round(entityViewScale), entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
-        }
+        drawEntity(this.width/2, this.height/2+37, 0, 0);
         
         drawColor(matrices, 0, 0, 120, this.height, 0, 4, 17, 222);
         drawVerticalLine(matrices, 120, -1, this.height, 0, 0, 0, 255);
@@ -190,7 +187,7 @@ public class EditorGui extends EntityGuiHandler {
                 decompile_script(null);
             }
 
-            this.client.setScreen(new EditorGui(entity, entityViewScale));
+            this.client.setScreen(new EditorGui(entity, entityViewScale, this.entityRotation));
         }));
         btn_widget.visible = !(btn_widget.y < 0);
 
@@ -235,7 +232,7 @@ public class EditorGui extends EntityGuiHandler {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                this.client.setScreen(new EditorGui(entity, entityViewScale, this.entityRotation));
             }, (dragged, scroll) -> {
                 int d = -(int)Math.round(scroll/15d);
                 int move = (dragged + d)+num;
@@ -244,7 +241,7 @@ public class EditorGui extends EntityGuiHandler {
                 nodes.add(move, nodes.remove(num));
                 nodes.get(move).changed = true;
                 
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                this.client.setScreen(new EditorGui(entity, entityViewScale, this.entityRotation));
             }));
             B.visible = !(B.y < 0);
 
@@ -253,13 +250,13 @@ public class EditorGui extends EntityGuiHandler {
 
                 if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
                 else nodes.get(0).changed = true;
-                this.client.setScreen(new EditorGui(entity, entityViewScale));
+                this.client.setScreen(new EditorGui(entity, entityViewScale, this.entityRotation));
             }, this, TextArray("pcm.gui.Remove")));
             A.visible = !(A.y < 0);
         }
 
         ButtonWidget widget = addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
-            this.client.setScreen(new NodeSelectGui(entity, entityViewScale, false));
+            this.client.setScreen(new NodeSelectGui(entity, entityViewScale, this.entityRotation, false));
         }));
         widget.visible = !(widget.y < 0);
 
@@ -280,7 +277,7 @@ public class EditorGui extends EntityGuiHandler {
                 decompile_script(part);
             }
 
-            this.client.setScreen(new EditorGui(entity, entityViewScale));
+            this.client.setScreen(new EditorGui(entity, entityViewScale, this.entityRotation));
         }));
     }
 

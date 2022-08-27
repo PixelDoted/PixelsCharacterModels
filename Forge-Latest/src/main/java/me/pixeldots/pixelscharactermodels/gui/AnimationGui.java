@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import me.pixeldots.pixelscharactermodels.PCMFileSystem;
-import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
@@ -46,8 +46,6 @@ public class AnimationGui extends EntityGuiHandler {
 
     public List<Button> scrollable_widgets = new ArrayList<>();
     public List<Button> animation_widgets = new ArrayList<>();
-    public float stored_pehkuiscale = 1;
-    public float entityViewScale = 75;
     
     public AnimationGui(LivingEntity _entity) {
         super("Animation");
@@ -56,9 +54,10 @@ public class AnimationGui extends EntityGuiHandler {
         uuid = _entity.getUUID();
     }
 
-    public AnimationGui(LivingEntity _entity, float _entityViewScale) {
+    public AnimationGui(LivingEntity _entity, float _entityViewScale, Vector3f _entityRotation) {
         this(_entity);
-        entityViewScale = _entityViewScale;
+        this.entityViewScale = _entityViewScale;
+        this.entityRotation = _entityRotation;
     }
 
     public void setScreen(GuiHandler gui) {
@@ -105,7 +104,7 @@ public class AnimationGui extends EntityGuiHandler {
                     if (file.isDirectory()) path_offset += "/" + file.getName();
                     else selectAnimation(file);
 
-                    this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                    this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
                 }));
                 Button save_widget = addButton(new FlatButtonWidget(5, 15+(i*10)+animation_yscroll, 10, 10, Component.literal("S"), (btn) -> {
                     boolean result = AnimationHelper.write(file, animation);
@@ -126,7 +125,7 @@ public class AnimationGui extends EntityGuiHandler {
                     this.minecraft.player.displayClientMessage(Component.literal("File \"" + file.getAbsolutePath() + "\" could not be created"), false);
 
                 animation_file = file;
-                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
             }));
             addButton(new FlatButtonWidget(125, 35, 55, 10, Text("pcm.gui.Rename"), (btn) -> {
                 if (animation_file != null && !animation_file.exists()) return;
@@ -136,7 +135,7 @@ public class AnimationGui extends EntityGuiHandler {
                 File new_file = new File(new_path);
                 animation_file.renameTo(new_file);
                 animation_file = new_file;
-                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
             }));
     
             addButton(new FlatButtonWidget(125, 15, 55, 10, Text("pcm.gui.Delete"), (btn) -> {
@@ -144,7 +143,7 @@ public class AnimationGui extends EntityGuiHandler {
                 animation_file.delete();
                 
                 animation_file = null;
-                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
             }));
         } else {
             addButton(new FlatButtonWidget(5, 15, 110, 10, Text("pcm.gui.Save"), (btn) -> {
@@ -169,12 +168,12 @@ public class AnimationGui extends EntityGuiHandler {
         addButton(new FlatButtonWidget(155+125, this.height-65, 30, 10, Text("pcm.gui.Add"), (btn) -> {
             animation.frames.add(animation.frames.get(animation.frames.size()-1));
             frame_index_value = animation.frames.size()-1;
-            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
         }));
         addButton(new FlatButtonWidget(190+125, this.height-65, 50, 10, Text("pcm.gui.Remove"), (btn) -> {
             animation.frames.remove(frame_index_value);
             frame_index_value--;
-            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
         }));
 
         IntFieldWidget frame_count = new IntFieldWidget(textRenderer, 125+125, this.height-40, 40, 10, animation.frames.get(frame_index_value).run_frame); addTextField(frame_count);
@@ -184,7 +183,7 @@ public class AnimationGui extends EntityGuiHandler {
             if (animation.frames.size() <= frame_index_value)
                 frame_index_value = animation.frames.size()-1;
 
-            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
         });
         frame_count.setResponder((s) -> {
             animation.frames.get(frame_index_value).run_frame = Math.round(frame_count.value);
@@ -221,16 +220,15 @@ public class AnimationGui extends EntityGuiHandler {
     
     @Override
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        float entityMouseX = 0;
+        /*float entityMouseX = 0;
         float entityMouseY = 0;
 
         if (PCMMain.settings.player_faces_cursor_ui) { 
             entityMouseX = (float)(this.width/2+32) - mouseX;
             entityMouseY = (float)(this.height/2+37-128) - mouseY;
-        }
+        }*/
 
-        if (entity != null)
-            drawEntity(this.width/2+32, this.height/2-3, Math.round(entityViewScale)-10, entityMouseX, entityMouseY, entity, PCMMain.settings.show_block_under_player_ui);
+        drawEntity(this.width/2+32, this.height/2-3, 0, 0);
 
         drawColor(matrices, 185, this.height-80, this.width-240, 80, 0, 4, 17, 222);
         drawHorizontalLine(matrices, 185, this.width-120, this.height-80, 0, 0, 0, 255);
@@ -287,7 +285,7 @@ public class AnimationGui extends EntityGuiHandler {
                 decompile_script();
             }
 
-            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
         }));
 
         int row = 1 + showNodes(-2, 0, x, y);
@@ -331,7 +329,7 @@ public class AnimationGui extends EntityGuiHandler {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
-                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
             }, (dragged, scroll) -> {
                 int d = -(int)Math.round(scroll/15d);
                 int move = (dragged + d)+num;
@@ -340,7 +338,7 @@ public class AnimationGui extends EntityGuiHandler {
                 nodes.add(move, nodes.remove(num));
                 nodes.get(move).changed = true;
                 
-                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
             }));
             B.visible = !(B.y < 0);
 
@@ -349,13 +347,13 @@ public class AnimationGui extends EntityGuiHandler {
 
                 if (nodes.size() == 0) compile_nodes(uuid, true);
                 else nodes.get(0).changed = true;
-                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+                this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
             }, this, TextArray("pcm.gui.Remove")));
             A.visible = !(A.y < 0);
         }
 
         addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Component.literal("+"), (btn) -> {
-            this.minecraft.setScreen(new NodeSelectGui(entity, entityViewScale, true));
+            this.minecraft.setScreen(new NodeSelectGui(entity, entityViewScale, this.entityRotation, true));
         }));
 
         return nodes.size()+1;
@@ -375,7 +373,7 @@ public class AnimationGui extends EntityGuiHandler {
                 decompile_script();
             }
 
-            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale));
+            this.minecraft.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
         }));
     }
 
