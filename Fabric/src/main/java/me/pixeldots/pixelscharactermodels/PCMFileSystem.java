@@ -20,16 +20,38 @@ public class PCMFileSystem {
         Path Animations = Path.of(path + File.separator + Animations_Path);
         Path Models = Path.of(path + File.separator + Models_Path);
 
-        try {
-            if (Files.exists(Presets))
-                Files.createDirectories(Presets);
-
-            if (Files.exists(Animations))
-                Files.createDirectories(Animations);
-                
-            if (Files.exists(Models))
-                Files.createDirectories(Models);
-        } catch (IOException e) {}
+		IOException presets_err = init_directory(Presets);
+		IOException animations_err = init_directory(Animations);
+		IOException models_err = init_directory(Models);
+		
+		if (presets_err != null) {
+			System.out.println("-- Presets File Error Start --");
+			presets_err.printStackTrace();
+			System.out.println("-- Presets File Error End");
+		}
+		
+		if (animations_err != null) {
+			System.out.println("-- Animations File Error Start --");
+			animations_err.printStackTrace();
+			System.out.println("-- Animations File Error End --");
+		}
+		
+		if (models_err != null) {
+			System.out.println("-- Models File Error Start --");
+			models_err.printStackTrace();
+			System.out.println("-- Models File Error End --");
+		}
+    }
+    
+    static IOException init_directory(Path path) {
+    	try {
+    		if (!Files.exists(path))
+    			Files.createDirectories(path);
+    	} catch (IOException e) {
+    		return e;
+    	}
+    	
+    	return null;
     }
 
 }

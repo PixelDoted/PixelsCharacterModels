@@ -88,6 +88,13 @@ public class PresetsGui extends EntityGuiHandler {
         presets_offset += 10;
 
         File[] files = new File(this.minecraft.gameDirectory.getAbsolutePath() + File.separator + PCMFileSystem.Presets_Path + path_offset).listFiles();
+        if (files == null) {
+            PCMFileSystem.init(this.minecraft.gameDirectory.getAbsolutePath());
+            this.minecraft.setScreen(null);
+            this.minecraft.player.sendSystemMessage(Text("Error reading presets folder"));
+            return;
+        }
+        
         for (int i = 0; i < files.length; i++) {
             final File file = files[i];
             if (!file.isDirectory() && !file.getName().endsWith(".json")) continue;

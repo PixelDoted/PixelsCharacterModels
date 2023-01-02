@@ -88,6 +88,13 @@ public class PresetsGui extends EntityGuiHandler {
         presets_offset += 10;
 
         File[] files = new File(this.client.runDirectory.getAbsolutePath() + File.separator + PCMFileSystem.Presets_Path + path_offset).listFiles();
+        if (files == null) {
+            PCMFileSystem.init(this.client.runDirectory.getAbsolutePath());
+            this.client.setScreen(null);
+            this.client.player.sendMessage(Text("Error reading presets folder"), false);
+            return;
+        }
+        
         for (int i = 0; i < files.length; i++) {
             final File file = files[i];
             if (!file.isDirectory() && !file.getName().endsWith(".json")) continue;
