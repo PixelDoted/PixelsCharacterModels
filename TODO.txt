@@ -1,6 +1,7 @@
 +
 
 - change Eye Height in animations
+- move scripted models networking to pixel's character models
 
 > old
 + Mesh to Vertices and Back
