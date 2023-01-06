@@ -6,7 +6,7 @@ import me.pixeldots.pixelscharactermodels.files.MeshReader;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -109,12 +109,12 @@ public class PCMUtils {
         if (mesh != null) {
             for (MeshReader.Point[] points : mesh.faces) {
                 for (MeshReader.Point point : points) {
-                    Vec3f vertex = mesh.vertices.get(point.vertex-1);
+                    Vector3f vertex = mesh.vertices.get(point.vertex-1);
                     Vec2f uv = mesh.uvs.get(point.uv-1);
-                    Vec3f normal = mesh.normals.get(point.normal-1);
+                    Vector3f normal = mesh.normals.get(point.normal-1);
 
-                    output += "vertex " + vertex.getX() + " " + vertex.getY() + " " + vertex.getZ() + " ";
-                    output += normal.getX() + " " + normal.getY() + " " + normal.getZ() + " ";
+                    output += "vertex " + vertex.x + " " + vertex.y + " " + vertex.z + " ";
+                    output += normal.x + " " + normal.y + " " + normal.z + " ";
                     output += uv.x + " " + uv.y + " 255 255 255 255\n";
                     line_count++;
                 }

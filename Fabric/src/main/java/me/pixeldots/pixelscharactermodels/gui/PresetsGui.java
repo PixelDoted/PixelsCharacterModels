@@ -12,25 +12,25 @@ import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.files.PresetHelper;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.widgets.DrawableWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.network.ClientNetwork;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class PresetsGui extends EntityGuiHandler {
 
     private int yscroll = 0;
 
     public String selectedPreset = "";
-    public List<ButtonWidget> presetButtons = new ArrayList<>();
+    public List<DrawableWidget> presetButtons = new ArrayList<>();
 
     public static String path_offset = "";
 
@@ -41,7 +41,7 @@ public class PresetsGui extends EntityGuiHandler {
         uuid = _entity.getUuid();
     }
 
-    public PresetsGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
+    public PresetsGui(LivingEntity _entity, float _entityViewScale, Vector3f _entityRotation) {
         this(_entity);
         this.entityViewScale = _entityViewScale;
         this.entityRotation = _entityRotation;
@@ -77,7 +77,7 @@ public class PresetsGui extends EntityGuiHandler {
             }));
         }
 
-        ButtonWidget default_preset = addButton(new FlatButtonWidget(5, presets_offset+yscroll, 110, 10, Text(path_offset == "" ? "pcm.gui.Default" : "pcm.gui.Back"), (btn) -> {
+        DrawableWidget default_preset = addButton(new FlatButtonWidget(5, presets_offset+yscroll, 110, 10, Text(path_offset == "" ? "pcm.gui.Default" : "pcm.gui.Back"), (btn) -> {
             if (path_offset == "") defaultPreset(false);
             else {
                 path_offset = path_offset.substring(0, path_offset.lastIndexOf(File.separator));
@@ -100,14 +100,14 @@ public class PresetsGui extends EntityGuiHandler {
             if (!file.isDirectory() && !file.getName().endsWith(".json")) continue;
 
             final boolean is_preset = (file.isDirectory() && containsRoot(file.listFiles())) || file.getName().endsWith(".json");
-            ButtonWidget widget = addButton(new FlatButtonWidget(15, presets_offset+(i*10)+yscroll, 100, 10, Text.of((is_preset ? "" : "~") + file.getName()), (btn) -> {
+            DrawableWidget widget = addButton(new FlatButtonWidget(15, presets_offset+(i*10)+yscroll, 100, 10, Text.of((is_preset ? "" : "~") + file.getName()), (btn) -> {
                 if (is_preset) selectPreset(file, false);
                 else { 
                     path_offset += "/" + file.getName();
                     this.client.setScreen(new PresetsGui(entity, entityViewScale, this.entityRotation));
                 }
             }));
-            ButtonWidget save_widget = addButton(new FlatButtonWidget(5, presets_offset+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
+            DrawableWidget save_widget = addButton(new FlatButtonWidget(5, presets_offset+(i*10)+yscroll, 10, 10, Text.of("S"), (btn) -> {
                 PresetHelper.write_preset(file, entity, model);
             }, this, TextArray("pcm.gui.Save") ));
 
@@ -149,7 +149,7 @@ public class PresetsGui extends EntityGuiHandler {
             yscroll += amount*10;
             if (yscroll > 0) yscroll = 0;
             else {
-                for (ButtonWidget widget : presetButtons) {
+                for (DrawableWidget widget : presetButtons) {
                     widget.y += amount*10;
                     widget.visible = !((PCMMain.settings.preview_preset && widget.y < 35) || widget.y < 10);
                 }

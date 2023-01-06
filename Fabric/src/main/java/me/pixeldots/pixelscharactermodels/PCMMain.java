@@ -25,6 +25,8 @@ public class PCMMain implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// TODO: support versions older then 1.19.x (JOML)
+
 		SettingsPath = Paths.get(".", "config/PCM.json"); // set the config path
 		settings = PCMSettings.load(SettingsPath); // load settings
 		ServerNetwork.register(); // register all server receivers

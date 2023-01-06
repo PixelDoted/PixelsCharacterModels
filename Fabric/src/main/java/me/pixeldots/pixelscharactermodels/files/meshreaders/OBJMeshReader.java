@@ -5,7 +5,7 @@ import me.pixeldots.pixelscharactermodels.files.MeshReader.MeshTypeReader;
 import me.pixeldots.pixelscharactermodels.files.MeshReader.Point;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class OBJMeshReader implements MeshTypeReader {
     
@@ -16,11 +16,11 @@ public class OBJMeshReader implements MeshTypeReader {
         for (String line : lines) {
             String[] args = line.split(" ");
             if (args[0].equals("v")) { // add vertex
-                mesh.vertices.add(new Vec3f(PCMUtils.getFloat(args[1]), PCMUtils.getFloat(args[2]), PCMUtils.getFloat(args[3])));
+                mesh.vertices.add(new Vector3f(PCMUtils.getFloat(args[1]), PCMUtils.getFloat(args[2]), PCMUtils.getFloat(args[3])));
             } else if (args[0].equals("vt")) { // add vertex uv
                 mesh.uvs.add(new Vec2f(PCMUtils.getFloat(args[1]), 1-PCMUtils.getFloat(args[2])));
             } else if (args[0].equals("vn")) { // add vertex normal
-                mesh.normals.add(new Vec3f(PCMUtils.getFloat(args[1]), PCMUtils.getFloat(args[2]), PCMUtils.getFloat(args[3])));
+                mesh.normals.add(new Vector3f(PCMUtils.getFloat(args[1]), PCMUtils.getFloat(args[2]), PCMUtils.getFloat(args[3])));
             } else if (args[0].equals("f")) { // add face/quad
                 Point[] points = new Point[args.length-1 == 4 ? args.length-1 : args.length];
                 for (int i = 0; i < points.length; i++) {

@@ -13,7 +13,7 @@ import me.pixeldots.pixelscharactermodels.PCMFileSystem;
 import me.pixeldots.pixelscharactermodels.files.meshreaders.OBJMeshReader;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class MeshReader {
 
@@ -55,9 +55,9 @@ public class MeshReader {
     }
 
     public static class Mesh {
-        public List<Vec3f> vertices = new ArrayList<>();
+        public List<Vector3f> vertices = new ArrayList<>();
         public List<Vec2f> uvs = new ArrayList<>();
-        public List<Vec3f> normals = new ArrayList<>();
+        public List<Vector3f> normals = new ArrayList<>();
         public List<Point[]> faces = new ArrayList<>();
     }
 

@@ -11,6 +11,7 @@ import me.pixeldots.pixelscharactermodels.files.AnimationFile;
 import me.pixeldots.pixelscharactermodels.files.AnimationHelper;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.widgets.DrawableWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NodeButtonWidget;
@@ -20,13 +21,12 @@ import me.pixeldots.pixelscharactermodels.other.ModelPartNames;
 import me.pixeldots.pixelscharactermodels.other.Node;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class AnimationGui extends EntityGuiHandler {
 
@@ -43,8 +43,8 @@ public class AnimationGui extends EntityGuiHandler {
     public static boolean isDragging = false;
     public static String path_offset = "";
 
-    public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
-    public List<ButtonWidget> animation_widgets = new ArrayList<>();
+    public List<DrawableWidget> scrollable_widgets = new ArrayList<>();
+    public List<DrawableWidget> animation_widgets = new ArrayList<>();
     public float stored_pehkuiscale = 1;
     
     public AnimationGui(LivingEntity _entity) {
@@ -54,7 +54,7 @@ public class AnimationGui extends EntityGuiHandler {
         uuid = _entity.getUuid();
     }
 
-    public AnimationGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
+    public AnimationGui(LivingEntity _entity, float _entityViewScale, Vector3f _entityRotation) {
         this(_entity);
         this.entityViewScale = _entityViewScale;
         this.entityRotation = _entityRotation;
@@ -100,13 +100,13 @@ public class AnimationGui extends EntityGuiHandler {
             for (int i = 0; i < files.length; i++) {
                 final File file = files[i];
 
-                ButtonWidget widget = addButton(new FlatButtonWidget(15, 15+(i*10)+animation_yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
+                DrawableWidget widget = addButton(new FlatButtonWidget(15, 15+(i*10)+animation_yscroll, 100, 10, Text.of((file.isDirectory() ? "~" : "") + file.getName().replace(".json", "")), (btn) -> {
                     if (file.isDirectory()) path_offset += "/" + file.getName();
                     else selectAnimation(file);
 
                     this.client.setScreen(new AnimationGui(entity, entityViewScale, this.entityRotation));
                 }));
-                ButtonWidget save_widget = addButton(new FlatButtonWidget(5, 15+(i*10)+animation_yscroll, 10, 10, Text.of("S"), (btn) -> {
+                DrawableWidget save_widget = addButton(new FlatButtonWidget(5, 15+(i*10)+animation_yscroll, 10, 10, Text.of("S"), (btn) -> {
                     boolean result = AnimationHelper.write(file, animation);
                     if (result == false)
                         this.client.player.sendMessage(Text.of("File \"" + file.getAbsolutePath() + "\" could not be saved"), false);
@@ -196,7 +196,7 @@ public class AnimationGui extends EntityGuiHandler {
             yscroll += amount*10;
             if (yscroll > 0) yscroll = 0;
             else {
-                for (ButtonWidget widget : scrollable_widgets) {
+                for (DrawableWidget widget : scrollable_widgets) {
                     widget.y += amount*10;
                     widget.visible = !(widget.y < 0);
                 }
@@ -205,7 +205,7 @@ public class AnimationGui extends EntityGuiHandler {
             animation_yscroll += amount*10;
             if (animation_yscroll > 0) animation_yscroll = 0;
             else {
-                for (ButtonWidget widget : animation_widgets) {
+                for (DrawableWidget widget : animation_widgets) {
                     widget.y += amount*10;
                     widget.visible = !(widget.y < 10);
                 }
@@ -325,7 +325,7 @@ public class AnimationGui extends EntityGuiHandler {
             if (i == selectedNode) node.init(this, 5, 30);
 
             final int num = i;
-            ButtonWidget B = addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
+            DrawableWidget B = addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
@@ -342,7 +342,7 @@ public class AnimationGui extends EntityGuiHandler {
             }));
             B.visible = !(B.y < 0);
 
-            ButtonWidget A = addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+            DrawableWidget A = addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
                 if (nodes.size() == 0) compile_nodes(uuid, true);
@@ -425,7 +425,7 @@ public class AnimationGui extends EntityGuiHandler {
         else frame.script = script;
     }
 
-    public ButtonWidget addScrollable(ButtonWidget widget) {
+    public DrawableWidget addScrollable(DrawableWidget widget) {
         scrollable_widgets.add(widget);
         return addButton(widget);
     }

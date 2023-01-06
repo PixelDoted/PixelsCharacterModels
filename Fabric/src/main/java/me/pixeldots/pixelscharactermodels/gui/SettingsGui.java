@@ -7,6 +7,7 @@ import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.widgets.DrawableWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
@@ -16,17 +17,16 @@ import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import me.pixeldots.scriptedmodels.platform.network.ClientNetwork;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class SettingsGui extends EntityGuiHandler {
 
     public String selectedPreset = "";
-    public List<ButtonWidget> presetButtons = new ArrayList<>();
+    public List<DrawableWidget> presetButtons = new ArrayList<>();
 
     public static String path_offset = "";
 
@@ -40,7 +40,7 @@ public class SettingsGui extends EntityGuiHandler {
         version = FabricLoader.getInstance().getModContainer("pcm").get().getMetadata().getVersion().getFriendlyString();
     }
 
-    public SettingsGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
+    public SettingsGui(LivingEntity _entity, float _entityViewScale, Vector3f _entityRotation) {
         this(_entity);
         this.entityViewScale = _entityViewScale;
         this.entityRotation = _entityRotation;

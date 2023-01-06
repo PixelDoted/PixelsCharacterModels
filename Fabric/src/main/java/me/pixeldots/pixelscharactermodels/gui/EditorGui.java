@@ -7,6 +7,7 @@ import java.util.UUID;
 import me.pixeldots.pixelscharactermodels.PCMClient;
 import me.pixeldots.pixelscharactermodels.gui.handlers.EntityGuiHandler;
 import me.pixeldots.pixelscharactermodels.gui.handlers.GuiHandler;
+import me.pixeldots.pixelscharactermodels.gui.widgets.DrawableWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FlatButtonWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.FloatFieldWidget;
 import me.pixeldots.pixelscharactermodels.gui.widgets.NoBackButtonWidget;
@@ -20,13 +21,12 @@ import me.pixeldots.pixelscharactermodels.other.PCMUtils;
 import me.pixeldots.pixelscharactermodels.skin.SkinHelper;
 import me.pixeldots.scriptedmodels.ClientHelper;
 import me.pixeldots.scriptedmodels.platform.PlatformUtils;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class EditorGui extends EntityGuiHandler {
 
@@ -40,7 +40,7 @@ public class EditorGui extends EntityGuiHandler {
     public static int yscroll = 0;
     public static boolean isDragging = false;
 
-    public List<ButtonWidget> scrollable_widgets = new ArrayList<>();
+    public List<DrawableWidget> scrollable_widgets = new ArrayList<>();
     public float stored_pehkuiscale = 1;
     
     public EditorGui(LivingEntity _entity) {
@@ -50,7 +50,7 @@ public class EditorGui extends EntityGuiHandler {
         uuid = _entity.getUuid();
     }
 
-    public EditorGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation) {
+    public EditorGui(LivingEntity _entity, float _entityViewScale, Vector3f _entityRotation) {
         this(_entity);
         this.entityViewScale = _entityViewScale;
         this.entityRotation = _entityRotation;
@@ -122,7 +122,7 @@ public class EditorGui extends EntityGuiHandler {
             yscroll += amount*10;
             if (yscroll > 0) yscroll = 0;
             else {
-                for (ButtonWidget widget : scrollable_widgets) {
+                for (DrawableWidget widget : scrollable_widgets) {
                     widget.y += amount*10;
                     widget.visible = !(widget.y < 0);
                 }
@@ -174,7 +174,7 @@ public class EditorGui extends EntityGuiHandler {
     }
 
     public void listModelParts(int x, int y, LivingEntity entity) {
-        ButtonWidget btn_widget = addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + String("pcm.entity.Root")), (btn) -> {
+        DrawableWidget btn_widget = addScrollable(new OffsetFlatButtonWidget(x, y, 110, 10, Text.of((selectedPart == -2 ? "- " : "+ ") + String("pcm.entity.Root")), (btn) -> {
             selectedNode = -1;
             if (-2 == selectedPart) { 
                 selectedPart = -1;
@@ -197,7 +197,7 @@ public class EditorGui extends EntityGuiHandler {
             boolean isSelected = selectedPart == index;
             Text name = Text.of((isSelected ? "- " : "+ ") + String("pcm.entity." + ModelPartNames.getHeadName(entity, index-100)));
 
-            ButtonWidget widget = createSelectableModelPart(part, x, y, row, index, name);
+            DrawableWidget widget = createSelectableModelPart(part, x, y, row, index, name);
             row += showNodes(index, row, x, y);
             widget.visible = !(widget.y < 0);
 
@@ -210,7 +210,7 @@ public class EditorGui extends EntityGuiHandler {
             boolean isSelected = selectedPart == index;
             Text name = Text.of((isSelected ? "- " : "+ ") + String("pcm.entity." + ModelPartNames.getBodyName(entity, index)));
 
-            ButtonWidget widget = createSelectableModelPart(part, x, y, row, index, name);
+            DrawableWidget widget = createSelectableModelPart(part, x, y, row, index, name);
             row += showNodes(index, row, x, y);
             widget.visible = !(widget.y < 0);
 
@@ -228,7 +228,7 @@ public class EditorGui extends EntityGuiHandler {
             if (i == selectedNode) node.init(this, 5, 30);
 
             final int num = i;
-            ButtonWidget B = addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
+            DrawableWidget B = addScrollable(new NodeButtonWidget(x+20, y+((row+i)*11), 90, 10, Text.of(node.type.name().toLowerCase()), (btn) -> {
                 if (num == selectedNode) { selectedNode = -1; }
                 else selectedNode = num;
                 
@@ -245,7 +245,7 @@ public class EditorGui extends EntityGuiHandler {
             }));
             B.visible = !(B.y < 0);
 
-            ButtonWidget A = addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
+            DrawableWidget A = addScrollable(new FlatButtonWidget(x+10, y+((row+i)*11), 10, 10, Text.of("-"), (btn) -> {
                 nodes.remove(num);
 
                 if (nodes.size() == 0) compile_nodes(uuid, selectedPartModel, true);
@@ -255,7 +255,7 @@ public class EditorGui extends EntityGuiHandler {
             A.visible = !(A.y < 0);
         }
 
-        ButtonWidget widget = addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
+        DrawableWidget widget = addScrollable(new FlatButtonWidget(x+20, y+((row+nodes.size())*11), 90, 10, Text.of("+"), (btn) -> {
             this.client.setScreen(new NodeSelectGui(entity, entityViewScale, this.entityRotation, false));
         }));
         widget.visible = !(widget.y < 0);
@@ -263,7 +263,7 @@ public class EditorGui extends EntityGuiHandler {
         return nodes.size()+1;
     }
 
-    public ButtonWidget createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
+    public DrawableWidget createSelectableModelPart(final ModelPart part, int x, int y, int row, final int index, Text name) {
         return addScrollable(new OffsetFlatButtonWidget(x, y+(row*11), 110, 10, name, (btn) -> {
             selectedNode = -1;
             if (index == selectedPart) {
@@ -322,7 +322,7 @@ public class EditorGui extends EntityGuiHandler {
         ClientHelper.change_script(uuid, part, selectedPart, script.trim());
     }
 
-    public ButtonWidget addScrollable(ButtonWidget widget) {
+    public DrawableWidget addScrollable(DrawableWidget widget) {
         scrollable_widgets.add(widget);
         return addButton(widget);
     }

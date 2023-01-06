@@ -43,7 +43,7 @@ public class FloatFieldWidget extends TextFieldWidget {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + this.width) && mouseY < (double)(this.y + this.height))
+        if (mouseX >= (double)this.getX() && mouseY >= (double)this.getY() && mouseX < (double)(this.getX() + this.getWidth()) && mouseY < (double)(this.getY() + this.getHeight()))
             setNumber(value+Math.round(amount));
         
         return super.mouseScrolled(mouseX, mouseY, amount);
