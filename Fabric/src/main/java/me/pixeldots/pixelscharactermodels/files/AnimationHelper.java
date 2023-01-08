@@ -23,7 +23,7 @@ import me.pixeldots.scriptedmodels.script.line.LineUtils;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class AnimationHelper {
 
@@ -210,12 +210,12 @@ public class AnimationHelper {
     }
 
     private static List<String> getInbetweenScripts(String[] A, String[] B, int frame_difference) {
-        Map<String, List<Vec3f>> values_a = new HashMap<>();
+        Map<String, List<Vector3f>> values_a = new HashMap<>();
         for (String s : A) {
             String[] split = s.split(" ");
             if (split.length != 4) continue;
 
-            Vec3f value = new Vec3f(PCMUtils.getFloat(split[1]), PCMUtils.getFloat(split[2]), PCMUtils.getFloat(split[3]));
+            Vector3f value = new Vector3f(PCMUtils.getFloat(split[1]), PCMUtils.getFloat(split[2]), PCMUtils.getFloat(split[3]));
             if (!values_a.containsKey(split[0])) values_a.put(split[0], new ArrayList<>());
 
             values_a.get(split[0]).add(value);
@@ -233,13 +233,13 @@ public class AnimationHelper {
                     continue;
                 }
 
-                Vec3f a = values_a.get(split[0]).get(value_index.get(split[0]));
-                Vec3f b = new Vec3f(PCMUtils.getFloat(split[1]), PCMUtils.getFloat(split[2]), PCMUtils.getFloat(split[3]));
+                Vector3f a = values_a.get(split[0]).get(value_index.get(split[0]));
+                Vector3f b = new Vector3f(PCMUtils.getFloat(split[1]), PCMUtils.getFloat(split[2]), PCMUtils.getFloat(split[3]));
                 
                 float diff = i/(float)frame_difference;
-                Vec3f v = new Vec3f(a.getX()+(b.getX()-a.getX())*diff, a.getY()+(b.getY()-a.getY())*diff, a.getZ()+(b.getZ()-a.getZ())*diff);
-
-                script += split[0] + " " + v.getX() + " " + v.getY() + " " + v.getZ() + "\n";
+                Vector3f v = new Vector3f(a.x+(b.x-a.x)*diff, a.y+(b.y-a.y)*diff, a.z+(b.z-a.z)*diff);
+                
+                script += split[0] + " " + v.x + " " + v.y + " " + v.z + "\n";
                 value_index.put(split[0], value_index.get(split[0])+1);
             }
 

@@ -1,6 +1,6 @@
 package me.pixeldots.pixelscharactermodels.files.old;
 
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 @Deprecated
 public class OldMapVec3 {
@@ -54,8 +54,8 @@ public class OldMapVec3 {
 		return this.X+this.Y+this.Z;
 	}
 	
-	public Vec3f toVec() {
-		return new Vec3f(X, Y, Z);
+	public Vector3f toVec() {
+		return new Vector3f(X, Y, Z);
 	}
 	
 	

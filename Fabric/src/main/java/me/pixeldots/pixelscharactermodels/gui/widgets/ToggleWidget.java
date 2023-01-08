@@ -12,12 +12,13 @@ public class ToggleWidget extends OffsetFlatButtonWidget {
         super(x, y, width, height, Text.of((_toggled ? "[X] " : "[ ] ") + message), (btn) -> {});
         this.base_message = message;
         this.on_toggle = _ontoggle;
+        this.toggled = _toggled;
     }
 
     @Override
-    public void onPress() {
+    public void onClick() {
         toggled = !toggled;
-        this.setMessage(Text.of((toggled ? "[X] " : "[ ] ") + base_message));
+        this.message = Text.of((toggled ? "[X] " : "[ ] ") + base_message);
         on_toggle.invoke(toggled);
     }
 

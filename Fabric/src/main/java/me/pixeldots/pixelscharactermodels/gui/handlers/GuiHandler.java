@@ -6,13 +6,13 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.pixeldots.pixelscharactermodels.PCMClient;
+import me.pixeldots.pixelscharactermodels.gui.widgets.DrawableWidget;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.DiffuseLighting;
@@ -24,8 +24,9 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class GuiHandler extends Screen {
 	
@@ -118,7 +119,7 @@ public class GuiHandler extends Screen {
 		return TextField;
 	}
 
-	public ButtonWidget addButton(ButtonWidget button) {
+	public DrawableWidget addButton(DrawableWidget button) {
 		addDrawableElement(button);
 		return button;
 	}
@@ -185,7 +186,7 @@ public class GuiHandler extends Screen {
 		DrawableHelper.fill(matrices, x0, y0, x1, y1, argb);
     }
 
-	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, Vec3f rotation, LivingEntity entity, boolean block) {
+	public static void drawEntity(int x, int y, int size, float mouseX, float mouseY, Vector3f rotation, LivingEntity entity, boolean block) {
 		/*float f = (float)Math.atan(mouseX / 40.0f);
         float g = (float)Math.atan(mouseY / 40.0f);*/
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
@@ -196,12 +197,10 @@ public class GuiHandler extends Screen {
         MatrixStack matrixStack2 = new MatrixStack();
         matrixStack2.translate(0.0, 0.0, 1000.0);
         matrixStack2.scale(size, size, size);
-		Vec3f quaternion_rotation = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f).toEulerXyz();
-		quaternion_rotation.add(rotation);
-        Quaternion quaternion = Quaternion.fromEulerXyz(quaternion_rotation);
-        Quaternion quaternion2 = Quaternion.IDENTITY;//Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
-        quaternion.hamiltonProduct(quaternion2);
-        matrixStack2.multiply(quaternion);
+        Quaternionf quaternionf = new Quaternionf().rotateXYZ(rotation.x, rotation.y, rotation.z + (float)Math.PI);//.fromEulerXyz(quaternion_rotation);
+        Quaternionf quaternionf2 = new Quaternionf();//Vector3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
+        quaternionf.mul(quaternionf2);
+        matrixStack2.multiply(quaternionf);
         float h = entity.bodyYaw;
         float i = entity.getYaw();
         float j = entity.getPitch();
@@ -215,8 +214,8 @@ public class GuiHandler extends Screen {
         DiffuseLighting.method_34742();
 		BlockRenderManager blockRenderManager = PCMClient.minecraft.getBlockRenderManager();
         EntityRenderDispatcher entityRenderDispatcher = PCMClient.minecraft.getEntityRenderDispatcher();
-        quaternion2.conjugate();
-        entityRenderDispatcher.setRotation(quaternion2);
+        quaternionf2.conjugate();
+        entityRenderDispatcher.setRotation(quaternionf2);
         entityRenderDispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate immediate = PCMClient.minecraft.getBufferBuilders().getEntityVertexConsumers();
         RenderSystem.runAsFancy(() -> {
@@ -251,8 +250,8 @@ public class GuiHandler extends Screen {
         MatrixStack matrixStack2 = new MatrixStack();
         matrixStack2.translate(0.0, 0.0, 1000.0);
         matrixStack2.scale(size, size, size);
-        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f);
-        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
+        Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0f);
+        Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
         quaternion.hamiltonProduct(quaternion2);
         matrixStack2.multiply(quaternion);
         float h = entity.bodyYaw;

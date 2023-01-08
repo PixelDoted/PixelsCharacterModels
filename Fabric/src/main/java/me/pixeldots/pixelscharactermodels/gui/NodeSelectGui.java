@@ -8,17 +8,17 @@ import me.pixeldots.pixelscharactermodels.other.Node.NodeType;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class NodeSelectGui extends GuiHandler {
 
     public LivingEntity entity;
     public float entityViewScale = 75;
-    public Vec3f entityRotation = Vec3f.ZERO;
+    public Vector3f entityRotation = new Vector3f();
 
     public boolean is_animation = false;
 
-    public NodeSelectGui(LivingEntity _entity, float _entityViewScale, Vec3f _entityRotation, boolean _isanimation) {
+    public NodeSelectGui(LivingEntity _entity, float _entityViewScale, Vector3f _entityRotation, boolean _isanimation) {
         super("Node Selector");
         entity = _entity;
         entityViewScale = _entityViewScale;

@@ -54,17 +54,19 @@ public class ClientNetwork {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(request_skinsuffixs, (client, handler, buf, sender) -> {
-            int count = buf.readInt();
-            for (int i = 0; i < count; i++) {
-                UUID uuid = buf.readUuid();
-                String suffix = buf.readString();
+        if (PCMClient.offlineskins_loaded) {
+            ClientPlayNetworking.registerGlobalReceiver(request_skinsuffixs, (client, handler, buf, sender) -> {
+                int count = buf.readInt();
+                for (int i = 0; i < count; i++) {
+                    UUID uuid = buf.readUuid();
+                    String suffix = buf.readString();
 
-                PCMClient.PlayerSkinList.clear();
-                SkinHelper.setSkinSuffix(uuid, suffix);
-                SkinHelper.reloadSkins();
-            }
-        });
+                    PCMClient.PlayerSkinList.clear();
+                    SkinHelper.setSkinSuffix(uuid, suffix);
+                    SkinHelper.reloadSkins();
+                }
+            });
+        }
     }
 
     // sends and updates an entity's pehkui scale

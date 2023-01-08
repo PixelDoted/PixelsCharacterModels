@@ -50,8 +50,8 @@ public class TextureWidget implements Drawable {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         DrawableHelper.fill(matrices, x, y, x+width, y+height, 0xFF000000);
-        
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);//GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.texture);
         RenderSystem.enableDepthTest();
         DrawableHelper.drawTexture(matrices, x, y, 0, 0, width, height, textureWidth, textureHeight);

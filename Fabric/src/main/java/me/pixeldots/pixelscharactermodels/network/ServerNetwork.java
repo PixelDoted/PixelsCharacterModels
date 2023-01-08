@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import me.pixeldots.pixelscharactermodels.other.PCMUtils;
-import me.pixeldots.scriptedmodels.platform.PlatformUtils;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,8 +21,11 @@ public class ServerNetwork {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(scale_pehkui, (server, player, handler, buf, sender) -> {
             float scale = buf.readFloat();
-            LivingEntity entity = PlatformUtils.getLivingEntity(buf.readUuid());
-            PCMUtils.setPehkuiScale(entity, scale);
+
+            Entity entity = player.getWorld().getEntity(buf.readUuid());
+            if (entity instanceof LivingEntity) {
+                PCMUtils.setPehkuiScale((LivingEntity)entity, scale);
+            }
         });
 
         ServerPlayNetworking.registerGlobalReceiver(skin_suffix, (server, player, handler, buf, sender) -> {

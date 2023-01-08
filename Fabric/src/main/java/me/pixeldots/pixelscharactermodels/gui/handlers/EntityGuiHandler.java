@@ -5,7 +5,7 @@ import java.util.UUID;
 import me.pixeldots.pixelscharactermodels.PCMMain;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class EntityGuiHandler extends GuiHandler {
 
@@ -14,7 +14,7 @@ public class EntityGuiHandler extends GuiHandler {
     public UUID uuid;
     
     public float entityViewScale = 75;
-    public Vec3f entityRotation = Vec3f.ZERO;
+    public Vector3f entityRotation = new Vector3f();
 
     public EntityGuiHandler(String title) {
         super(title);
